@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kingmakers RP — Mobile Roleplay</title>
+    <style>
+        :root {
+            --km-gold: #FFC83D;
+            --km-gold-glow: rgba(255, 200, 61, 0.35);
+            --km-bg: #0A0A10;
+            --km-card: #141520;
+            --km-border: #232438;
+            --km-text: #FFFFFF;
+            --km-muted: #8E8EA0;
+            --km-green: #5CE65C;
+            --km-red: #FF4B4B;
+            --km-blue: #6FC3FF;
+            --km-purple: #C2A2DA;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--km-bg);
+            color: var(--km-text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        header {
+            background: linear-gradient(180deg, rgba(20,21,32,0.95) 0%, rgba(10,10,16,0.8) 100%);
+            border-bottom: 1px solid var(--km-border);
+            padding: 18px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .brand-logo {
+            height: 48px;
+            filter: drop-shadow(0 0 12px var(--km-gold-glow));
+        }
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--km-gold);
+        }
+        .brand-text p {
+            font-size: 11px;
+            color: var(--km-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--km-card);
+            border: 1px solid var(--km-border);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--km-green);
+            box-shadow: 0 0 8px var(--km-green);
+        }
+        .dot.offline { background: var(--km-red); box-shadow: 0 0 8px var(--km-red); }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 64px 36px 48px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 20%, rgba(255, 200, 61, 0.12) 0%, transparent 60%);
+        }
+        .hero h2 {
+            font-size: 44px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #FFF 0%, var(--km-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 17px;
+            color: var(--km-muted);
+            max-width: 620px;
+            margin: 0 auto 28px;
+        }
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-gold {
+            background: var(--km-gold);
+            color: #000;
+            box-shadow: 0 4px 18px var(--km-gold-glow);
+        }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--km-gold-glow); }
+        .btn-outline {
+            background: var(--km-card);
+            color: var(--km-text);
+            border: 1px solid var(--km-border);
+        }
+        .btn-outline:hover { border-color: var(--km-gold); color: var(--km-gold); }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 36px 64px;
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 36px;
+        }
+        .metric-card {
+            background: var(--km-card);
+            border: 1px solid var(--km-border);
+            border-radius: 12px;
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--km-gold);
+        }
+        .metric-label { font-size: 12px; color: var(--km-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .metric-value { font-size: 28px; font-weight: 800; color: var(--km-text); margin-top: 6px; }
+
+        /* Two columns */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 860px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--km-card);
+            border: 1px solid var(--km-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .panel h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--km-gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+        }
+        .feature-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--km-border);
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .feature-item strong { display: block; color: var(--km-text); margin-bottom: 4px; font-size: 14px; }
+        .feature-item p { font-size: 12px; color: var(--km-muted); }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .table th {
+            text-align: left;
+            color: var(--km-muted);
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--km-border);
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .turf-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .turf-grove { background: rgba(45, 184, 45, 0.2); color: #5CE65C; border: 1px solid rgba(45, 184, 45, 0.4); }
+        .turf-ballas { background: rgba(176, 64, 224, 0.2); color: #C2A2DA; border: 1px solid rgba(176, 64, 224, 0.4); }
+
+        footer {
+            border-top: 1px solid var(--km-border);
+            padding: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--km-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="/assets/kingmakers_logo_transparent.png" alt="Kingmakers RP" class="brand-logo" onerror="this.style.display='none'">
+            <div class="brand-text">
+                <h1>KINGMAKERS RP</h1>
+                <p>Mobile Roleplay Portal</p>
+            </div>
+        </div>
+        <div class="status-badge">
+            <div id="statusDot" class="dot"></div>
+            <span id="statusText">Server Online</span>
+            <span style="color: var(--km-muted);">|</span>
+            <strong id="playerCount" style="color: var(--km-gold);">0 / 100</strong>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h2>RULE THE STREETS OF LOS SANTOS</h2>
+        <p>Complete mobile multiplayer roleplay inspired by Grand Mobile RP, built from scratch on modern open.mp architecture. Ready for Android, CRMP & PC.</p>
+        <div class="cta-group">
+            <a href="#download" class="btn btn-gold">Download Mobile Client</a>
+            <a href="#server" class="btn btn-outline">Server Connection (7777)</a>
+            <a href="#vultr" class="btn btn-outline">Deploy to Vultr VPS</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Live Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Online Players</div>
+                <div class="metric-value" id="mPlayers">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Registered Accounts</div>
+                <div class="metric-value" id="mAccounts">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Registered Vehicles</div>
+                <div class="metric-value" id="mVehicles">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Properties & Shops</div>
+                <div class="metric-value" id="mProperties">19</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div>
+                <!-- Features -->
+                <div class="panel">
+                    <h3>Kingmakers RP Systems</h3>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <strong>Roleplay Accounts</strong>
+                            <p>Firstname_Lastname auth, SHA256 hashed passwords, gender, age, 10 starter skins and SQLite auto-save.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>Economy & Payday</strong>
+                            <p>Cash, bank, 8 city ATMs, bank transfers, paychecks with income/property tax and respect levels.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>Vehicles & Dealership</strong>
+                            <p>20 dealership cars/bikes, owned vehicle persistence, fuel consumption, /engine, /lock, /park, /refuel.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>Civilian Jobs</strong>
+                            <p>Taxi (NPC & player fares), Ocean Docks Trucker, Hunter Quarry Miner (ore carry), and Mechanic.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>Factions & Turfs</strong>
+                            <p>LSPD (/cuff, /arrest, /su, /ticket), EMS (/heal, /revive, hospital fee), and Grove/Ballas turf wars.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>KingPhone Mobile</strong>
+                            <p>Contacts, live 2-way calls, persistent SMS inbox, 13-location GPS navigator, and 911 dispatch.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>Properties & Businesses</strong>
+                            <p>14 seeded houses with private virtual worlds, 24/7 stores, Ammu-Nation and Binco clothes shops.</p>
+                        </div>
+                        <div class="feature-item">
+                            <strong>Staff Administration</strong>
+                            <p>5-tier admin system: /a, /aduty, /check, /spec, /slap, /freeze, /kick, /mute, /jail, /ban, /veh, /createhouse.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Server Info -->
+                <div class="panel" id="server">
+                    <h3>Connection Details</h3>
+                    <table class="table">
+                        <tr><td>Server Name</td><td><strong style="color:var(--km-gold);">Kingmakers RP | Mobile Roleplay | v1.0.0</strong></td></tr>
+                        <tr><td>Mode</td><td>Kingmakers RP v1.0.0 (open.mp / CRMP)</td></tr>
+                        <tr><td>Map</td><td>Los Santos</td></tr>
+                        <tr><td>Default Port</td><td><code>7777 UDP</code> (standard SA-MP / open.mp)</td></tr>
+                        <tr><td>API & Web Dashboard</td><td><code>http://YOUR_SERVER_IP:8080</code></td></tr>
+                        <tr><td>Database</td><td>SQLite3 (<code>scriptfiles/kingmakers.db</code>, WAL mode)</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+                <!-- Turf Control -->
+                <div class="panel">
+                    <h3>Gang Turf Control</h3>
+                    <table class="table" id="turfTable">
+                        <thead>
+                            <tr><th>Zone</th><th>Controlling Faction</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ganton</td><td><span class="turf-badge turf-grove">Grove Street</span></td></tr>
+                            <tr><td>Idlewood</td><td><span class="turf-badge turf-grove">Grove Street</span></td></tr>
+                            <tr><td>Glen Park</td><td><span class="turf-badge turf-ballas">Ballas</span></td></tr>
+                            <tr><td>Jefferson</td><td><span class="turf-badge turf-ballas">Ballas</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Leaderboards -->
+                <div class="panel">
+                    <h3>Top Citizens</h3>
+                    <table class="table" id="richTable">
+                        <thead>
+                            <tr><th>#</th><th>Name</th><th>Level</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="3" style="color:var(--km-muted); text-align:center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quick Vultr Deploy -->
+                <div class="panel" id="vultr">
+                    <h3>Vultr VPS 1-Click</h3>
+                    <p style="font-size:12px; color:var(--km-muted); margin-bottom:12px;">Deploy Kingmakers RP server + backend onto an Ubuntu/Debian Vultr instance in 2 minutes:</p>
+                    <pre style="background:#0D0D14; padding:10px; border-radius:6px; font-size:11px; color:var(--km-gold); overflow-x:auto;">curl -sSL https://raw.githubusercontent.com/.../vultr_deploy.sh | bash</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Kingmakers RP. All custom systems, gamemode code, and branding built for Kingmakers RP.</p>
+    </footer>
+
+    <script>
+        async function refresh() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                document.getElementById('statusDot').className = data.online ? 'dot' : 'dot offline';
+                document.getElementById('statusText').innerText = data.online ? 'Server Online' : 'Server Offline';
+                document.getElementById('playerCount').innerText = `${data.players} / ${data.maxPlayers}`;
+                document.getElementById('mPlayers').innerText = data.players;
+                document.getElementById('mAccounts').innerText = data.stats.accounts;
+                document.getElementById('mVehicles').innerText = data.stats.vehicles;
+                document.getElementById('mProperties').innerText = data.stats.houses + data.stats.businesses;
+            } catch (e) {}
+
+            try {
+                const res = await fetch('/api/leaderboards');
+                const data = await res.json();
+                const tb = document.querySelector('#richTable tbody');
+                if (data.topLevel && data.topLevel.length > 0) {
+                    tb.innerHTML = data.topLevel.map((p, i) => `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td><strong>${p.name.replace('_', ' ')}</strong></td>
+                            <td style="color:var(--km-gold); font-weight:700;">Lv ${p.level}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tb.innerHTML = '<tr><td colspan="3" style="color:var(--km-muted); text-align:center;">No citizens registered yet.</td></tr>';
+                }
+            } catch (e) {}
+        }
+        refresh();
+        setInterval(refresh, 5000);
+    </script>
+</body>
+</html>

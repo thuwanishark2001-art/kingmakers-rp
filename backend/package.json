@@ -1,0 +1,14 @@
+{
+  "name": "kingmakers-rp-backend",
+  "version": "1.0.0",
+  "description": "Backend API, launcher updater & live web dashboard for Kingmakers RP",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5"
+  }
+}

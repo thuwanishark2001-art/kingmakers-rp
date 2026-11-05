@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/km_night_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SERVER CONNECTION SETTINGS"
+        android:textColor="@color/km_gold"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="480dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#DD181926"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server IP (Vultr / Host)"
+            android:textColor="@color/km_grey" />
+
+        <EditText
+            android:id="@+id/editServerIp"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="6dp"
+            android:background="#2C2D3E"
+            android:hint="e.g. 45.76.12.34"
+            android:inputType="text"
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/km_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Server Port"
+            android:textColor="@color/km_grey" />
+
+        <EditText
+            android:id="@+id/editServerPort"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="6dp"
+            android:background="#2C2D3E"
+            android:hint="7777"
+            android:inputType="number"
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/km_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Asset CDN Cache URL"
+            android:textColor="@color/km_grey" />
+
+        <EditText
+            android:id="@+id/editCdnUrl"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="6dp"
+            android:background="#2C2D3E"
+            android:hint="https://cdn.kingmakers-rp.com/cache.zip"
+            android:inputType="textUri"
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/km_white" />
+
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="18dp"
+            android:backgroundTint="@color/km_gold"
+            android:text="SAVE SETTINGS"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

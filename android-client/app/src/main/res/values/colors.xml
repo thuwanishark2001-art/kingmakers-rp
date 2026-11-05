@@ -1,0 +1,11 @@
+<resources>
+    <color name="km_gold">#FFC83D</color>
+    <color name="km_gold_dark">#D49B1F</color>
+    <color name="km_night_bg">#0D0D14</color>
+    <color name="km_card_bg">#181926</color>
+    <color name="km_card_border">#2C2D3E</color>
+    <color name="km_white">#FFFFFF</color>
+    <color name="km_grey">#9E9EA8</color>
+    <color name="km_green">#5CE65C</color>
+    <color name="km_red">#FF4B4B</color>
+</resources>
