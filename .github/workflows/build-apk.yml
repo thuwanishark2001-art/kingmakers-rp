@@ -18,21 +18,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android Build-Tools & Platform 34
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
       - name: Install Gradle 8.0
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.0'
 
-      - name: Build Debug APK
+      - name: Build Debug APK with Verbose Info
         working-directory: android-client
         run: |
-          gradle assembleDebug --stacktrace
+          gradle assembleDebug --info --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: Kingmakers_RP_v1.0_Debug
-          path: |
-            android-client/app/build/outputs/apk/**/*.apk
-            android-client/app/build/reports/
+          path: android-client/app/build/outputs/apk/debug/*.apk
