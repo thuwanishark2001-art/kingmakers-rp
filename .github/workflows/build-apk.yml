@@ -18,18 +18,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Gradle
+      - name: Install Gradle 8.0
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.5'
+          gradle-version: '8.0'
 
       - name: Build Debug APK
         working-directory: android-client
         run: |
-          gradle assembleDebug --no-daemon --stacktrace
+          gradle assembleDebug --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: Kingmakers_RP_v1.0_Debug
-          path: android-client/app/build/outputs/apk/debug/*.apk
+          path: |
+            android-client/app/build/outputs/apk/**/*.apk
+            android-client/app/build/reports/
