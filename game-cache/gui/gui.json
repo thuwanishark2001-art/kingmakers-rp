@@ -1,0 +1,27 @@
+{
+  "theme": "kingmakers_gold",
+  "colors": {
+    "primary": "#FFC83D",
+    "primary_dark": "#D49B1F",
+    "background": "#0D0D14",
+    "card": "#181926",
+    "card_border": "#2C2D3E",
+    "text": "#FFFFFF",
+    "muted": "#9E9EA8",
+    "success": "#5CE65C",
+    "danger": "#FF4B4B"
+  },
+  "hud": {
+    "speedometer": {
+      "enabled": true,
+      "position": "bottom_right",
+      "show_fuel": true,
+      "show_engine_status": true,
+      "show_doors_status": true
+    },
+    "radar": {
+      "shape": "rounded_rect",
+      "border_color": "#FFC83D"
+    }
+  }
+}
