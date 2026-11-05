@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Kingmakers RP</string>
-    <string name="server_default_ip">127.0.0.1</string>
+    <string name="server_default_ip">139.180.185.57</string>
     <string name="server_default_port">7777</string>
-    <string name="backend_api_url">http://127.0.0.1:8080</string>
+    <string name="backend_api_url">http://139.180.185.57:8080</string>
     <string name="website_url">https://kingmakers-rp.com</string>
     <string name="discord_url">https://discord.gg/kingmakersrp</string>
 </resources>
