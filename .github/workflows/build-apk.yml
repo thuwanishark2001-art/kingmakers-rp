@@ -18,28 +18,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build Debug APK with Output Capture
+      - name: Build Debug APK
         working-directory: android-client
         run: |
-          chmod +x gradlew || true
-          ./gradlew assembleDebug --no-daemon 2>&1 | tee /tmp/gradle_build.log || true
-          if [ ! -f app/build/outputs/apk/debug/app-debug.apk ]; then
-            echo "Build failed. Uploading log as artifact."
-            mkdir -p /tmp/build_artifacts
-            cp /tmp/gradle_build.log /tmp/build_artifacts/
-            exit 1
-          fi
-
-      - name: Upload Logs on Failure
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: Gradle_Error_Log
-          path: /tmp/build_artifacts/
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: Kingmakers_RP_v1.0_Debug
           path: android-client/app/build/outputs/apk/debug/*.apk
