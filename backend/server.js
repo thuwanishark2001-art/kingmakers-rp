@@ -127,10 +127,10 @@ app.get('/api/launcher/config', (req, res) => {
     res.json({
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
-        clientApkUrl: 'https://cdn.kingmakers-rp.com/apk/kingmakers_rp_v1.0.apk',
-        cacheZipUrl: 'http://139.180.185.57:8080/downloads/kingmakers_game_cache_v1.0.zip',
-        cacheSizeMb: 4.5,
-        cacheSha256: 'a872f52b24b015eac202d7e0453e8a44',
+        clientApkUrl: 'http://139.180.185.57:8080/downloads/Kingmakers_RP_Full_Project_v1.0.zip',
+        cacheZipUrl: 'http://139.180.185.57:8080/downloads/kingmakers_full_game_cache_v1.0.zip',
+        cacheSizeMb: 9.0,
+        cacheSha256: 'c84435978d934ca3fc08c98c2a4bc3307027c9a49c6be8ac46d98c2428415af0',
         defaultServer: {
             name: 'Kingmakers RP #1 [Los Santos]',
             ip: SAMP_HOST,
