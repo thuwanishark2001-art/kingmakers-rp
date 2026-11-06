@@ -19,22 +19,28 @@ cd "$REPO_DIR"
 echo "[1/4] Pulling latest repository updates..."
 git pull origin main
 
-# 2. Sync backend and server code to the service directory
-echo "[2/4] Syncing backend, server, and public files to $SERVICE_DIR..."
+# 2. Stop running services temporarily for clean file synchronization (prevents "Text file busy")
+echo "[2/5] Stopping services for clean update..."
+systemctl stop km-server km-backend 2>/dev/null || true
+
+# 3. Sync backend and server code to the service directory
+echo "[3/5] Syncing backend, server, and public files to $SERVICE_DIR..."
 mkdir -p "$SERVICE_DIR/backend" "$SERVICE_DIR/server" "$SERVICE_DIR/backend/public/downloads"
 cp -r "$REPO_DIR/backend"/* "$SERVICE_DIR/backend/"
 if [ -d "$REPO_DIR/server" ]; then
     cp -r "$REPO_DIR/server"/* "$SERVICE_DIR/server/"
 fi
 
-# 3. Fix permissions for kingmakers service user
-echo "[3/4] Updating user permissions..."
-chown -R kingmakers:kingmakers "$SERVICE_DIR"
+# 4. Fix permissions and executable flags
+echo "[4/5] Updating user permissions and executable flags..."
+chmod +x "$REPO_DIR"/*.sh "$REPO_DIR/server"/*.sh "$REPO_DIR/server/qawno/pawncc" 2>/dev/null || true
+chmod +x "$SERVICE_DIR"/*.sh "$SERVICE_DIR/server"/*.sh "$SERVICE_DIR/server/omp-server" 2>/dev/null || true
 chmod +x "$SERVICE_DIR/backend"/*.py 2>/dev/null || true
+chown -R kingmakers:kingmakers "$SERVICE_DIR"
 
-# 4. Restart services
-echo "[4/4] Restarting km-server and km-backend services..."
-systemctl restart km-server km-backend
+# 5. Start services
+echo "[5/5] Starting km-server and km-backend services..."
+systemctl start km-server km-backend
 
 echo ""
 echo "=========================================================="

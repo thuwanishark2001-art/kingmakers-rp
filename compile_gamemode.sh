@@ -18,12 +18,16 @@ echo "=========================================================="
 echo "  KINGMAKERS RP - GAMEMODE COMPILER"
 echo "=========================================================="
 
+PAWNDIR="$SCRIPT_DIR/server/qawno"
+PAWNCC="$PAWNDIR/pawncc"
+export LD_LIBRARY_PATH="$PAWNDIR:${LD_LIBRARY_PATH}"
+
 chmod +x "$PAWNCC" 2>/dev/null || true
 
-if [ -x "$PAWNCC" ] && "$PAWNCC" -? >/dev/null 2>&1; then
+if [ -f /lib/ld-linux.so.2 ]; then
+    /lib/ld-linux.so.2 --library-path "$PAWNDIR:/lib/i386-linux-gnu:/usr/lib/i386-linux-gnu" "$PAWNCC" "$SRC" -o"$OUT" $INCLUDES -d3 -Z+
+elif [ -x "$PAWNCC" ]; then
     "$PAWNCC" "$SRC" -o"$OUT" $INCLUDES -d3 -Z+
-elif [ -f /lib/ld-linux.so.2 ]; then
-    /lib/ld-linux.so.2 "$PAWNCC" "$SRC" -o"$OUT" $INCLUDES -d3 -Z+
 else
     echo "Notice: pawncc is a 32-bit compiler tool. On Ubuntu/Debian run:"
     echo "  sudo dpkg --add-architecture i386 && sudo apt-get update && sudo apt-get install libc6:i386 libstdc++6:i386"
