@@ -22,8 +22,12 @@ import glob
 
 def package_splits(splits_dir, output_dir, zip_name="Kingmakers_RP_Split_APKs_v1.0.zip"):
     os.makedirs(output_dir, exist_ok=True)
-    out_zip_path = os.path.join(output_dir, zip_name)
-    apks_zip_alias = os.path.join(output_dir, "apks.zip")
+    if os.path.dirname(zip_name):
+        out_zip_path = os.path.abspath(zip_name)
+    else:
+        out_zip_path = os.path.join(output_dir, zip_name)
+    os.makedirs(os.path.dirname(out_zip_path), exist_ok=True)
+    apks_zip_alias = os.path.join(os.path.dirname(out_zip_path), "apks.zip")
 
     print("==========================================================")
     print("  PACKAGING GRAND MOBILE STYLE SPLIT APK BUNDLE")
