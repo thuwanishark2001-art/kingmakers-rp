@@ -343,6 +343,19 @@ public class DownloaderActivity extends AppCompatActivity {
                     copyFile(sampGtaDat, dataGtaDat);
                 }
 
+                // Patch gta.dat directive from CDIMAGE to IMG
+                for (File gtaFile : new File[] { dataGtaDat, sampGtaDat }) {
+                    if (gtaFile.exists()) {
+                        try {
+                            String content = new String(java.nio.file.Files.readAllBytes(gtaFile.toPath()), java.nio.charset.StandardCharsets.UTF_8);
+                            if (content.contains("CDIMAGE")) {
+                                content = content.replace("CDIMAGE", "IMG");
+                                java.nio.file.Files.write(gtaFile.toPath(), content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                }
+
                 File dataHandling = new File(dataDir, "handling.cfg");
                 File sampHandling = new File(sampDir, "handling.cfg");
                 if (dataHandling.exists() && !sampHandling.exists()) {
@@ -351,7 +364,35 @@ public class DownloaderActivity extends AppCompatActivity {
                     copyFile(sampHandling, dataHandling);
                 }
 
-                // 4. Extract bundled engine assets from assets/game/ if missing
+                // 4. Ensure default.dat exists (CGame::Initialise requires DATA/DEFAULT.DAT)
+                String defaultDatContent = "# Kingmakers RP - Default Data Definition\nIDE DATA/DEFAULT.IDE\nIDE DATA/VEHICLES.IDE\nIDE DATA/PEDS.IDE\n";
+                File dataDefault = new File(dataDir, "default.dat");
+                if (!dataDefault.exists() || dataDefault.length() == 0) {
+                    try (java.io.FileWriter fw = new java.io.FileWriter(dataDefault, false)) {
+                        fw.write(defaultDatContent);
+                    } catch (Exception ignored) {}
+                }
+                File sampDefault = new File(sampDir, "default.dat");
+                if (!sampDefault.exists() || sampDefault.length() == 0) {
+                    try (java.io.FileWriter fw = new java.io.FileWriter(sampDefault, false)) {
+                        fw.write(defaultDatContent);
+                    } catch (Exception ignored) {}
+                }
+
+                // 5. Ensure anim/ped.ifp exists with ANP3 header
+                File animDir = new File(baseDir, "anim");
+                if (!animDir.exists()) animDir.mkdirs();
+                File pedIfpFile = new File(animDir, "ped.ifp");
+                if (!pedIfpFile.exists() || pedIfpFile.length() == 0) {
+                    try (FileOutputStream fos = new FileOutputStream(pedIfpFile)) {
+                        byte[] ifpHeader = new byte[32];
+                        System.arraycopy("ANP3".getBytes(java.nio.charset.StandardCharsets.US_ASCII), 0, ifpHeader, 0, 4);
+                        System.arraycopy("ped".getBytes(java.nio.charset.StandardCharsets.US_ASCII), 0, ifpHeader, 4, 3);
+                        fos.write(ifpHeader);
+                    } catch (Exception ignored) {}
+                }
+
+                // 6. Extract bundled engine assets from assets/game/
                 extractAssetFolder(ctx, "game", baseDir);
 
             } catch (Exception e) {
@@ -389,7 +430,10 @@ public class DownloaderActivity extends AppCompatActivity {
                     extractAssetFolder(ctx, subAsset, subTarget);
                 } else {
                     File outFile = new File(targetDir, file);
-                    if (!outFile.exists() || outFile.length() == 0) {
+                    boolean forceOverwrite = file.equalsIgnoreCase("gta.dat") ||
+                                             file.equalsIgnoreCase("default.dat") ||
+                                             file.equalsIgnoreCase("ped.ifp");
+                    if (!outFile.exists() || outFile.length() == 0 || forceOverwrite) {
                         try (InputStream in = ctx.getAssets().open(subAsset);
                              OutputStream out = new FileOutputStream(outFile)) {
                             byte[] buf = new byte[32768];

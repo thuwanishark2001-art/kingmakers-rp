@@ -175,11 +175,6 @@ void handler3(int signum, siginfo_t* info, void* contextPtr)
 {
 	ucontext* context = (ucontext_t*)contextPtr;
 
-	if (act3_old.sa_sigaction)
-	{
-		act3_old.sa_sigaction(signum, info, contextPtr);
-	}
-
 	if (info->si_signo == SIGBUS)
 	{
 		PrintBuildCrashInfo();
@@ -191,16 +186,15 @@ void handler3(int signum, siginfo_t* info, void* contextPtr)
 		CStackTrace::printBacktrace();
 	}
 
+	if (act3_old.sa_sigaction)
+	{
+		act3_old.sa_sigaction(signum, info, contextPtr);
+	}
 }
 
 void handler(int signum, siginfo_t *info, void* contextPtr)
 {
 	ucontext* context = (ucontext_t*)contextPtr;
-
-	if (act_old.sa_sigaction)
-	{
-		act_old.sa_sigaction(signum, info, contextPtr);
-	}
 
 	if(info->si_signo == SIGSEGV)
 	{
@@ -213,16 +207,16 @@ void handler(int signum, siginfo_t *info, void* contextPtr)
 
 		CStackTrace::printBacktrace();
 	}
+
+	if (act_old.sa_sigaction)
+	{
+		act_old.sa_sigaction(signum, info, contextPtr);
+	}
 }
 
 void handler2(int signum, siginfo_t* info, void* contextPtr)
 {
 	ucontext* context = (ucontext_t*)contextPtr;
-
-	if (act2_old.sa_sigaction)
-	{
-		act2_old.sa_sigaction(signum, info, contextPtr);
-	}
 
 	if (info->si_signo == SIGFPE)
 	{
@@ -233,19 +227,17 @@ void handler2(int signum, siginfo_t* info, void* contextPtr)
 		PRINT_CRASH_STATES(context);
 
 		CStackTrace::printBacktrace();
-
 	}
 
+	if (act2_old.sa_sigaction)
+	{
+		act2_old.sa_sigaction(signum, info, contextPtr);
+	}
 }
 
 void handler1(int signum, siginfo_t* info, void* contextPtr)
 {
 	auto context = (ucontext_t*)contextPtr;
-
-	if (act1_old.sa_sigaction)
-	{
-		act1_old.sa_sigaction(signum, info, contextPtr);
-	}
 
 	if (info->si_signo == SIGABRT)
 	{
@@ -259,6 +251,10 @@ void handler1(int signum, siginfo_t* info, void* contextPtr)
 		CStackTrace::printBacktrace();
 	}
 
+	if (act1_old.sa_sigaction)
+	{
+		act1_old.sa_sigaction(signum, info, contextPtr);
+	}
 }
 
 extern "C"
@@ -366,64 +362,6 @@ void LogLong(const char* message)
 
 void Log(const char *fmt, ...)
 {
-	static char buffer[512] {};
-
-	memset(buffer, 0, sizeof(buffer));
-
-	va_list arg;
-	va_start(arg, fmt);
-	vsnprintf(buffer, sizeof(buffer), fmt, arg);
-	va_end(arg);
-
-	firebase::crashlytics::Log(buffer);
-	__android_log_write(ANDROID_LOG_INFO, "AXL", buffer);
-
-#if USE_FILE_LOG
-	//if(pDebug) pDebug->AddMessage(buffer);
-	static FILE* flLog = nullptr;
-
-	if(flLog == nullptr && g_pszStorage != nullptr)
-	{
-		sprintf(buffer, "%slog.txt", g_pszStorage);
-		flLog = fopen(buffer, "ab");
-	}
-
-	if(flLog == nullptr) return;
-	fprintf(flLog, "%s\n", buffer);
-	fflush(flLog);
-#endif
-}
-
-void CrashLog(const char* fmt, ...)
-{
-	static char buffer[512] {};
-	memset(buffer, 0, sizeof(buffer));
-
-	va_list arg;
-	va_start(arg, fmt);
-	vsnprintf(buffer, sizeof(buffer), fmt, arg);
-	va_end(arg);
-
-#ifdef NDEBUG
-	firebase::crashlytics::Log(buffer);
-#endif
-	__android_log_write(ANDROID_LOG_FATAL, "AXL", buffer);
-
-#if USE_FILE_LOG
-	static FILE* flLog = nullptr;
-
-	if (flLog == nullptr && g_pszStorage != nullptr)
-	{
-		sprintf(buffer, "%scrash_log.txt", g_pszStorage);
-		flLog = fopen(buffer, "ab");
-	}
-
-	if (flLog == nullptr) return;
-	fprintf(flLog, "%s\n", buffer);
-	fflush(flLog);
-#endif
-}
-
 const char* GetStorageDirectory()
 {
 	if (g_pszStorage && g_pszStorage[0] != '\0') return g_pszStorage;
@@ -437,6 +375,74 @@ const char* GetStorageDirectory()
 	if (access("/data/data/com.russia.game/files/SAMP/settings.ini", F_OK) == 0)
 		return "/data/data/com.russia.game/files/";
 	return "/storage/emulated/0/Android/data/com.russia.game/files/";
+}
+
+void Log(const char *fmt, ...)
+{
+	static char buffer[1024] {};
+	memset(buffer, 0, sizeof(buffer));
+
+	va_list arg;
+	va_start(arg, fmt);
+	vsnprintf(buffer, sizeof(buffer), fmt, arg);
+	va_end(arg);
+
+	firebase::crashlytics::Log(buffer);
+	__android_log_write(ANDROID_LOG_INFO, "AXL", buffer);
+
+#if USE_FILE_LOG
+	static FILE* flLog = nullptr;
+
+	if (flLog == nullptr)
+	{
+		const char* storage = (g_pszStorage && g_pszStorage[0] != '\0') ? g_pszStorage : GetStorageDirectory();
+		if (storage != nullptr) {
+			char logPath[512];
+			snprintf(logPath, sizeof(logPath), "%slog.txt", storage);
+			flLog = fopen(logPath, "ab");
+		}
+	}
+
+	if (flLog != nullptr) {
+		fprintf(flLog, "%s\n", buffer);
+		fflush(flLog);
+	}
+#endif
+}
+
+void CrashLog(const char* fmt, ...)
+{
+	static char buffer[1024] {};
+	memset(buffer, 0, sizeof(buffer));
+
+	va_list arg;
+	va_start(arg, fmt);
+	vsnprintf(buffer, sizeof(buffer), fmt, arg);
+	va_end(arg);
+
+#ifdef NDEBUG
+	firebase::crashlytics::Log(buffer);
+#endif
+	__android_log_write(ANDROID_LOG_FATAL, "AXL", buffer);
+
+#if USE_FILE_LOG
+	static FILE* flCrashLog = nullptr;
+
+	if (flCrashLog == nullptr)
+	{
+		const char* storage = (g_pszStorage && g_pszStorage[0] != '\0') ? g_pszStorage : GetStorageDirectory();
+		if (storage != nullptr) {
+			char crashPath[512];
+			snprintf(crashPath, sizeof(crashPath), "%scrash_log.txt", storage);
+			flCrashLog = fopen(crashPath, "ab");
+		}
+	}
+
+	if (flCrashLog != nullptr) {
+		fprintf(flCrashLog, "%s\n", buffer);
+		fflush(flCrashLog);
+	}
+#endif
 }
 
 uint32_t GetTickCount()

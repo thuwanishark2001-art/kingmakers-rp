@@ -21,7 +21,7 @@ try {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'server/scriptfiles/kingmakers.db');
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../server/scriptfiles/kingmakers.db');
 const SAMP_HOST = process.env.SAMP_HOST || '127.0.0.1';
 const SAMP_PORT = parseInt(process.env.SAMP_PORT || '7777', 10);
 const PUBLIC_HOST = process.env.PUBLIC_HOST || process.env.SERVER_IP || '139.180.185.57';
@@ -29,14 +29,8 @@ const PUBLIC_HOST = process.env.PUBLIC_HOST || process.env.SERVER_IP || '139.180
 app.use(cors());
 app.use(express.json());
 
-// Serve web frontend and production assets
-const publicDir = fs.existsSync(path.join(__dirname, 'backend/public'))
-    ? path.join(__dirname, 'backend/public')
-    : path.join(__dirname, 'public');
-
-const assetsDir = fs.existsSync(path.join(__dirname, 'assets/production'))
-    ? path.join(__dirname, 'assets/production')
-    : path.join(__dirname, '../assets/production');
+const publicDir = path.join(__dirname, 'public');
+const assetsDir = path.join(__dirname, '../assets/production');
 
 app.use(express.static(publicDir));
 app.use('/assets', express.static(assetsDir));
@@ -71,7 +65,6 @@ function getDB() {
         }
     }
 
-    // In-memory mock database implementation for standalone execution
     return {
         prepare: (query) => {
             const q = query.toLowerCase();
@@ -125,7 +118,6 @@ function querySampServer(host, port, timeout = 400) {
             });
         }
 
-        // Packet header: "SAMP" + IP (4 bytes) + Port (2 bytes LE) + Opcode ('i')
         const packet = Buffer.alloc(11);
         packet.write('SAMP', 0);
         packet[4] = parts[0];
@@ -137,7 +129,6 @@ function querySampServer(host, port, timeout = 400) {
 
         let timer = setTimeout(() => {
             try { socket.close(); } catch (e) {}
-            // Graceful fallback showing online status in web preview
             resolve({
                 online: true,
                 password: false,
@@ -244,11 +235,11 @@ app.get('/api/status', async (req, res) => {
 });
 
 app.get('/api/launcher/config', (req, res) => {
-    let cacheSha256 = '99a51f60d2f207c7315346b55c6a96f4b04599259c1ea3a7186898f356de9b5e';
-    let cacheSizeMb = 1459.0;
+    let cacheSha256 = '84d18d876da3951ec11ecc8e2a23344cddabea449c92181ac14e28c9795e298f';
+    let cacheSizeMb = 1497.0;
     const searchDirs = [
         path.join(publicDir, 'downloads'),
-        path.join(__dirname, 'backend/public/downloads')
+        path.join(__dirname, 'public/downloads')
     ];
     for (const d of searchDirs) {
         const shaPath = path.join(d, 'kingmakers_full_game_cache_1.5gb_uncompressed.zip.sha256');
@@ -267,7 +258,11 @@ app.get('/api/launcher/config', (req, res) => {
     res.json({
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
-        clientApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Full_Project_v1.0.zip`,
+        clientApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Launcher_v1.0.apk`,
+        splitApksUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_APKs_v1.0.zip`,
+        splitApksZipAlias: `http://${PUBLIC_HOST}:${PORT}/downloads/apks.zip`,
+        splitBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_Bundle_v1.0.apks`,
+        appBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_AppBundle_v1.0.aab`,
         cacheZipUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip`,
         cacheSizeMb,
         cacheSha256,
@@ -317,33 +312,20 @@ app.get('/api/turfs', (req, res) => {
     }
 });
 
-// Download handler endpoint with information if static zip file is not locally hosted
 app.get('/downloads/:filename', (req, res) => {
     const filePath = path.join(publicDir, 'downloads', req.params.filename);
     if (fs.existsSync(filePath)) {
         return res.sendFile(filePath);
     }
-    res.setHeader('Content-Type', 'text/html');
-    res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head><title>Download Kingmakers RP</title><style>body{background:#0A0A10;color:#fff;font-family:sans-serif;padding:40px;line-height:1.6;}a{color:#FFC83D;}</style></head>
-        <body>
-            <h2>Kingmakers RP - Download Package</h2>
-            <p>Package requested: <strong>${req.params.filename}</strong></p>
-            <p>Full game package and client builds can be deployed and hosted via the VPS deployment script: <code>vultr_deploy.sh</code>.</p>
-            <p><a href="/">Return to Dashboard</a></p>
-        </body>
-        </html>
-    `);
+    const githubReleaseBase = 'https://github.com/thuwanishark2001-art/kingmakers-rp/releases/download/v1.0.0-standalone';
+    return res.redirect(302, `${githubReleaseBase}/${encodeURIComponent(req.params.filename)}`);
 });
 
-// Fallback to SPA dashboard
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicDir, 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`[KM Backend] API & Web Dashboard running on http://0.0.0.0:${PORT}`);
-    console.log(`[KM Backend] SA-MP target server set to ${PUBLIC_HOST}:${SAMP_PORT}`);
+    console.log(`[KM Backend] Querying SA-MP server at ${SAMP_HOST}:${SAMP_PORT}`);
 });

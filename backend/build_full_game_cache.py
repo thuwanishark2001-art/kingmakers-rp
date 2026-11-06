@@ -37,6 +37,7 @@ dirs = [
     "data/maps",
     "data/paths",
     "data/script",
+    "anim",
     "SAMP",
     "SAMP/fonts",
     "fonts",
@@ -78,10 +79,20 @@ IPL DATA/MAPS/generic/barriers.IPL
 IPL DATA/MAPS/interior/gen_int1.IPL
 IPL DATA/MAPS/interior/gen_int2.IPL
 IPL DATA/MAPS/interior/savehous.IPL
-CDIMAGE MODELS/GTA3.IMG
-CDIMAGE MODELS/GTA_INT.IMG
-CDIMAGE MODELS/PLAYER.IMG
+IMG MODELS/GTA3.IMG
+IMG MODELS/GTA_INT.IMG
+IMG MODELS/PLAYER.IMG
 """)
+
+with open(f"{CACHE_ROOT}/data/default.dat", "w") as f:
+    f.write("""# Kingmakers RP - Default Data Definition
+IDE DATA/DEFAULT.IDE
+IDE DATA/VEHICLES.IDE
+IDE DATA/PEDS.IDE
+""")
+
+with open(f"{CACHE_ROOT}/anim/ped.ifp", "wb") as f:
+    f.write(b"ANP3" + b"ped".ljust(24, b"\x00") + (0).to_bytes(4, "little"))
 
 with open(f"{CACHE_ROOT}/data/handling.cfg", "w") as f:
     f.write("""; Kingmakers RP - Optimized Mobile Vehicle Handling Data
@@ -161,8 +172,22 @@ if os.path.exists(ENGINE_DIR):
 
 if os.path.exists(f"{CACHE_ROOT}/data/gta.dat"):
     shutil.copy2(f"{CACHE_ROOT}/data/gta.dat", f"{CACHE_ROOT}/SAMP/gta.dat")
+if os.path.exists(f"{CACHE_ROOT}/data/default.dat"):
+    shutil.copy2(f"{CACHE_ROOT}/data/default.dat", f"{CACHE_ROOT}/SAMP/default.dat")
 if os.path.exists(f"{CACHE_ROOT}/data/handling.cfg"):
     shutil.copy2(f"{CACHE_ROOT}/data/handling.cfg", f"{CACHE_ROOT}/SAMP/handling.cfg")
+
+# Sync critical runtime files into android-client assets/game/
+ASSETS_GAME_DIR = os.path.join(REPO_ROOT, "android-client/app/src/main/assets/game")
+if os.path.exists(ASSETS_GAME_DIR):
+    os.makedirs(f"{ASSETS_GAME_DIR}/anim", exist_ok=True)
+    os.makedirs(f"{ASSETS_GAME_DIR}/data", exist_ok=True)
+    os.makedirs(f"{ASSETS_GAME_DIR}/SAMP", exist_ok=True)
+    shutil.copy2(f"{CACHE_ROOT}/data/gta.dat", f"{ASSETS_GAME_DIR}/data/gta.dat")
+    shutil.copy2(f"{CACHE_ROOT}/data/gta.dat", f"{ASSETS_GAME_DIR}/SAMP/gta.dat")
+    shutil.copy2(f"{CACHE_ROOT}/data/default.dat", f"{ASSETS_GAME_DIR}/data/default.dat")
+    shutil.copy2(f"{CACHE_ROOT}/data/default.dat", f"{ASSETS_GAME_DIR}/SAMP/default.dat")
+    shutil.copy2(f"{CACHE_ROOT}/anim/ped.ifp", f"{ASSETS_GAME_DIR}/anim/ped.ifp")
 
 with open(f"{CACHE_ROOT}/SAMP/settings.ini", "w") as f:
     f.write("""[client]

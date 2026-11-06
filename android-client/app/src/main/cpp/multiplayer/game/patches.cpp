@@ -100,6 +100,10 @@ void ApplyPatches_level0()
 
     // entryexit
     CHook::RET("_ZN17CEntryExitManager22PostEntryExitsCreationEv");
+
+    // Prevent CCustomCarPlateMgr crash when vehicle txd / platecharset is missing
+    CHook::Redirect("_ZN18CCustomCarPlateMgr10InitialiseEv", (void*)+[]() -> bool { return true; });
+    CHook::RET("_ZN18CCustomCarPlateMgr8ShutdownEv");
 }
 
 void ApplyShadowPatch()

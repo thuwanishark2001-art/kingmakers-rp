@@ -101,6 +101,8 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 		sampOverrideFile = "handling.cfg";
 	} else if (strcasestr(cleanName, "weapon.dat")) {
 		sampOverrideFile = "weapon.dat";
+	} else if (strcasestr(cleanName, "default.dat")) {
+		sampOverrideFile = "default.dat";
 	}
 
 	if (sampOverrideFile) {
@@ -137,6 +139,8 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 	if (!f) {
 		const char* fallbackSubPath = nullptr;
 		if (strcasestr(cleanName, "gta.dat")) fallbackSubPath = "data/gta.dat";
+		else if (strcasestr(cleanName, "default.dat")) fallbackSubPath = "data/default.dat";
+		else if (strcasestr(cleanName, "ped.ifp")) fallbackSubPath = "anim/ped.ifp";
 		else if (strcasestr(cleanName, "handling.cfg")) fallbackSubPath = "data/handling.cfg";
 		else if (strcasestr(cleanName, "carcols.dat")) fallbackSubPath = "data/carcols.dat";
 		else if (strcasestr(cleanName, "timecyc.dat")) fallbackSubPath = "data/timecyc.dat";
@@ -360,7 +364,95 @@ int32_t NVEventGetNextEvent_hook(NVEvent* ev, int waitMSecs)
 signed int (*OS_FileOpen)(unsigned int a1, OSFile *intoFile, const char *filename, int a4);
 signed int OS_FileOpen_hook(unsigned int a1, OSFile *intoFile, const char *filename, int a4)
 {
+    if (!filename) {
+        return OS_FileOpen(a1, intoFile, filename, a4);
+    }
+
+    // 1. Normalize Windows backslashes to Linux forward slashes
+    char cleanPath[512];
+    strncpy(cleanPath, filename, sizeof(cleanPath) - 1);
+    cleanPath[sizeof(cleanPath) - 1] = '\0';
+    for (char* p = cleanPath; *p; ++p) {
+        if (*p == '\\') *p = '/';
+    }
+
+    signed int result = OS_FileOpen(a1, intoFile, cleanPath, a4);
+    if (result == 0) return 0;
+
+    // 2. Try lowercase variant for Linux ext4
+    char lowerPath[512];
+    strncpy(lowerPath, cleanPath, sizeof(lowerPath) - 1);
+    lowerPath[sizeof(lowerPath) - 1] = '\0';
+    for (char* p = lowerPath; *p; ++p) {
+        *p = tolower((unsigned char)*p);
+    }
+    result = OS_FileOpen(a1, intoFile, lowerPath, a4);
+    if (result == 0) return 0;
+
+    // 3. Try canonical fallback subpaths
+    const char* subPath = nullptr;
+    if (strcasestr(cleanPath, "default.dat")) subPath = "data/default.dat";
+    else if (strcasestr(cleanPath, "gta.dat")) subPath = "data/gta.dat";
+    else if (strcasestr(cleanPath, "default.ide")) subPath = "data/default.ide";
+    else if (strcasestr(cleanPath, "vehicles.ide")) subPath = "data/vehicles.ide";
+    else if (strcasestr(cleanPath, "peds.ide")) subPath = "data/peds.ide";
+    else if (strcasestr(cleanPath, "ped.ifp")) subPath = "anim/ped.ifp";
+    else if (strcasestr(cleanPath, "handling.cfg")) subPath = "data/handling.cfg";
+    else if (strcasestr(cleanPath, "carcols.dat")) subPath = "data/carcols.dat";
+    else if (strcasestr(cleanPath, "surface.dat")) subPath = "data/surface.dat";
+    else if (strcasestr(cleanPath, "timecyc.dat")) subPath = "data/timecyc.dat";
+    else if (strcasestr(cleanPath, "weapon.dat")) subPath = "data/weapon.dat";
+    else if (strcasestr(cleanPath, "fonts.dat")) subPath = "data/fonts.dat";
+    else if (strcasestr(cleanPath, "gta3.img")) subPath = "models/gta3.img";
+    else if (strcasestr(cleanPath, "gta_int.img")) subPath = "models/gta_int.img";
+    else if (strcasestr(cleanPath, "player.img")) subPath = "models/player.img";
+
+    if (subPath) {
+        result = OS_FileOpen(a1, intoFile, subPath, a4);
+        if (result == 0) return 0;
+    }
+
     return OS_FileOpen(a1, intoFile, filename, a4);
+}
+
+// CAnimManager safety hooks
+void (*orig_CAnimManager_LoadAnimFile)(void* stream, bool b, void* c) = nullptr;
+void CAnimManager_LoadAnimFile_hook(void* stream, bool b, void* c)
+{
+    if (!stream) {
+        Log("CAnimManager::LoadAnimFile called with null stream! Guarding against crash.");
+        return;
+    }
+    if (orig_CAnimManager_LoadAnimFile) {
+        orig_CAnimManager_LoadAnimFile(stream, b, c);
+    }
+}
+
+void CAnimManager_LoadAnimFiles_hook()
+{
+    Log("CAnimManager::LoadAnimFiles_hook executing safely...");
+    void* pStream = ((void*(*)(int, int, const void*))(g_libGTASA + (VER_x32 ? 0x001B6468 + 1 : 0x280E44)))(2, 1, "anim/ped.ifp");
+    if (!pStream) {
+        pStream = ((void*(*)(int, int, const void*))(g_libGTASA + (VER_x32 ? 0x001B6468 + 1 : 0x280E44)))(2, 1, "ANIM/PED.IFP");
+    }
+    if (!pStream) {
+        pStream = ((void*(*)(int, int, const void*))(g_libGTASA + (VER_x32 ? 0x001B6468 + 1 : 0x280E44)))(2, 1, "ANIM\\PED.IFP");
+    }
+
+    if (pStream) {
+        ((void(*)(void*, bool, void*))(g_libGTASA + (VER_x32 ? 0x0033BD5C + 1 : 0x46776C)))(pStream, true, nullptr);
+        ((void(*)(void*, void*))(g_libGTASA + (VER_x32 ? 0x001B63E0 + 1 : 0x280D24)))(pStream, nullptr);
+    } else {
+        Log("Warning: anim/ped.ifp stream could not be opened, bypassing animation load safely.");
+    }
+
+    // Call CreateAnimAssocGroups
+    ((void(*)())(g_libGTASA + (VER_x32 ? 0x0033B91C + 1 : 0x467328)))();
+}
+
+bool CCustomCarPlateMgr_Initialise_stub()
+{
+    return true;
 }
 
 size_t (*OS_FileRead)(OSFile a1, void *buffer, size_t numBytes);
@@ -883,6 +975,14 @@ void InstallSpecialHooks()
 	CHook::Redirect("_ZN5CGame20InitialiseRenderWareEv", &CGame::InitialiseRenderWare);
 	CHook::InlineHook("_ZN14MainMenuScreen6UpdateEf", &MainMenuScreen__Update_hook, &MainMenuScreen__Update);
 	CHook::InlineHook("_Z11OS_FileOpen14OSFileDataAreaPPvPKc16OSFileAccessType", &OS_FileOpen_hook, &OS_FileOpen);
+
+	// Prevent crash when platecharset texture is not found
+	CHook::Redirect("_ZN18CCustomCarPlateMgr10InitialiseEv", (void*)CCustomCarPlateMgr_Initialise_stub);
+	CHook::RET("_ZN18CCustomCarPlateMgr8ShutdownEv");
+
+	// Safely load anim files and guard LoadAnimFile against null stream
+	CHook::Redirect("_ZN12CAnimManager13LoadAnimFilesEv", (void*)CAnimManager_LoadAnimFiles_hook);
+	CHook::InlineHook("_ZN12CAnimManager12LoadAnimFileEP8RwStreambPA32_Kc", (void*)CAnimManager_LoadAnimFile_hook, (void**)&orig_CAnimManager_LoadAnimFile);
 
 	CHook::InlineHook("_Z19NVEventGetNextEventP7NVEventi", NVEventGetNextEvent_hook, &NVEventGetNextEvent_hooked);
 
