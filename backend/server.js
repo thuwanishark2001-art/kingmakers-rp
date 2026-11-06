@@ -317,19 +317,8 @@ app.get('/downloads/:filename', (req, res) => {
     if (fs.existsSync(filePath)) {
         return res.sendFile(filePath);
     }
-    res.setHeader('Content-Type', 'text/html');
-    res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head><title>Download Kingmakers RP</title><style>body{background:#0A0A10;color:#fff;font-family:sans-serif;padding:40px;line-height:1.6;}a{color:#FFC83D;}</style></head>
-        <body>
-            <h2>Kingmakers RP - Download Package</h2>
-            <p>Package requested: <strong>${req.params.filename}</strong></p>
-            <p>Full game package and client builds can be deployed and hosted via the VPS deployment script: <code>vultr_deploy.sh</code>.</p>
-            <p><a href="/">Return to Dashboard</a></p>
-        </body>
-        </html>
-    `);
+    const githubReleaseBase = 'https://github.com/thuwanishark2001-art/kingmakers-rp/releases/download/v1.0.0-standalone';
+    return res.redirect(302, `${githubReleaseBase}/${encodeURIComponent(req.params.filename)}`);
 });
 
 app.get('*', (req, res) => {

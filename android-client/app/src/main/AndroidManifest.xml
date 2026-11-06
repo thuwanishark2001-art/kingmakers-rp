@@ -30,7 +30,6 @@
         android:smallScreens="true" />
 
     <application
-        android:gwpAsanMode="always"
         android:icon="@mipmap/ic_launcher"
         android:isGame="true"
         android:appCategory="game"
@@ -38,6 +37,7 @@
         android:largeHeap="true"
         android:logo="@drawable/logo_splash"
         android:usesCleartextTraffic="true"
+        android:extractNativeLibs="true"
         tools:replace="android:icon, android:label"
        >
 

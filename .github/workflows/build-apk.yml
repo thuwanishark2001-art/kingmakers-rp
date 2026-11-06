@@ -65,15 +65,12 @@ jobs:
           # 2. Android App Bundle (.aab)
           cp android-client/app/build/outputs/bundle/release/*.aab build-out/Kingmakers_RP_AppBundle_v1.0.aab
           
-          # 3. Download Google Bundletool
+          # 3. Download Google Bundletool and Uber APK Signer
           curl -sSL https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o /tmp/bundletool.jar
+          curl -sSL https://github.com/patrickfav/uber-apk-signer/releases/download/v1.3.0/uber-apk-signer-1.3.0.jar -o /tmp/uber-apk-signer.jar
           
-          # 4. Generate debug keystore if absent
-          KEYSTORE="$HOME/.android/debug.keystore"
-          if [ ! -f "$KEYSTORE" ]; then
-            mkdir -p "$HOME/.android"
-            keytool -genkey -v -keystore "$KEYSTORE" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          fi
+          # 4. Use tracked repository release keystore
+          KEYSTORE="android-client/keystore/release.keystore"
           
           # 5. Build .apks (Split APKs archive)
           java -jar /tmp/bundletool.jar build-apks \
@@ -81,13 +78,32 @@ jobs:
             --output=build-out/Kingmakers_RP_Split_Bundle_v1.0.apks \
             --mode=default \
             --ks="$KEYSTORE" \
-            --ks-pass=pass:android \
-            --ks-key-alias=androiddebugkey \
-            --key-pass=pass:android
+            --ks-pass=pass:kingmakers \
+            --ks-key-alias=kingmakers \
+            --key-pass=pass:kingmakers
             
-          # 6. Unpack splits and structure into Grand Mobile RP schema (apks.zip)
+          # 6. Unpack splits and structure into Grand Mobile RP schema
           unzip -q build-out/Kingmakers_RP_Split_Bundle_v1.0.apks -d /tmp/extracted_splits
-          python3 backend/tools/package_grand_splits.py /tmp/extracted_splits build-out/split_apks build-out/Kingmakers_RP_Split_APKs_v1.0.zip
+          python3 backend/tools/package_grand_splits.py /tmp/extracted_splits build-out/split_apks /tmp/temp_splits.zip
+          
+          # 7. Sign Monolithic Standalone APK and all individual split APKs (v1, v2, v3 schemes + zipalign)
+          java -jar /tmp/uber-apk-signer.jar \
+            -a build-out/Kingmakers_RP_Standalone_v1.0.apk build-out/split_apks/*.apk \
+            --ks "$KEYSTORE" \
+            --ksAlias kingmakers \
+            --ksPass kingmakers \
+            --ksKeyPass kingmakers \
+            --allowResign \
+            --overwrite \
+            --verbose
+            
+          # 8. Thoroughly verify all signed packages
+          java -jar /tmp/uber-apk-signer.jar -y \
+            -a build-out/Kingmakers_RP_Standalone_v1.0.apk build-out/split_apks/*.apk \
+            --verbose
+            
+          # 9. Pack final Grand Mobile RP split zip bundles from verified signed splits
+          (cd build-out/split_apks && zip -q -r ../Kingmakers_RP_Split_APKs_v1.0.zip ./*.apk)
           cp build-out/Kingmakers_RP_Split_APKs_v1.0.zip build-out/apks.zip
           
           ls -lh build-out/
@@ -118,16 +134,18 @@ jobs:
       - name: Deploy Distribution Files to Repository Downloads
         run: |
           git checkout main
+          git pull --rebase origin main || true
           mkdir -p backend/public/downloads
           cp build-out/Kingmakers_RP_Standalone_v1.0.apk backend/public/downloads/Kingmakers_RP_Standalone_v1.0.apk
           cp build-out/Kingmakers_RP_Standalone_v1.0.apk backend/public/downloads/Kingmakers_RP_Launcher_v1.0.apk
-          cp build-out/Kingmakers_RP_Split_Bundle_v1.0.apks backend/public/downloads/Kingmakers_RP_Split_Bundle_v1.0.apks
           cp build-out/Kingmakers_RP_Split_APKs_v1.0.zip backend/public/downloads/Kingmakers_RP_Split_APKs_v1.0.zip
           cp build-out/apks.zip backend/public/downloads/apks.zip
-          cp build-out/Kingmakers_RP_AppBundle_v1.0.aab backend/public/downloads/Kingmakers_RP_AppBundle_v1.0.aab
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add backend/public/downloads/
+          git add backend/public/downloads/Kingmakers_RP_Standalone_v1.0.apk \
+                  backend/public/downloads/Kingmakers_RP_Launcher_v1.0.apk \
+                  backend/public/downloads/Kingmakers_RP_Split_APKs_v1.0.zip \
+                  backend/public/downloads/apks.zip || true
           git commit -m "feat(release): publish Standalone and Grand Mobile Split APK bundles v1.0.0 [skip ci]" || true
           git push origin main || true
 
