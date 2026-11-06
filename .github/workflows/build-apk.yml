@@ -68,6 +68,29 @@ jobs:
           path: build-out/Kingmakers_RP_Standalone_v1.0.apk
           if-no-files-found: error
 
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete v1.0.0-standalone -y 2>/dev/null || true
+          git tag -d v1.0.0-standalone 2>/dev/null || true
+          git push origin :refs/tags/v1.0.0-standalone 2>/dev/null || true
+          gh release create v1.0.0-standalone build-out/Kingmakers_RP_Standalone_v1.0.apk \
+            --title "Kingmakers RP Standalone APK v1.0.0" \
+            --notes "Standalone Mobile Client with integrated RenderWare 3D Engine (libGTASA.so + libmultiplayer.so). Direct VPS connection to 139.180.185.57:7777."
+
+      - name: Deploy Standalone APK to Repository Downloads
+        run: |
+          git checkout main
+          mkdir -p backend/public/downloads
+          cp build-out/Kingmakers_RP_Standalone_v1.0.apk backend/public/downloads/Kingmakers_RP_Standalone_v1.0.apk
+          cp build-out/Kingmakers_RP_Standalone_v1.0.apk backend/public/downloads/Kingmakers_RP_Launcher_v1.0.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backend/public/downloads/
+          git commit -m "feat(release): publish compiled Standalone APK v1.0.0 [skip ci]" || true
+          git push origin main || true
+
       - name: Save Build Log to Branch
         if: always()
         run: |
