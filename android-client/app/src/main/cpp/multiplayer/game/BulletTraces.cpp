@@ -209,7 +209,9 @@ void CBulletTraces::LoadTraceInfo() {
 
     using json = nlohmann::json;
 
-    std::string filename = std::string(g_pszStorage) + "SAMP/BulletsPreset.json";
+    const char* storage = (g_pszStorage && g_pszStorage[0] != '\0') ? g_pszStorage :
+        ((g_pszRootStorage && g_pszRootStorage[0] != '\0') ? g_pszRootStorage : "/storage/emulated/0/Android/data/com.russia.game/files/");
+    std::string filename = std::string(storage) + "SAMP/BulletsPreset.json";
     std::ifstream inputFile(filename.c_str());
     if (!inputFile.is_open()) {
         DLOG("not load filename: %s", filename.c_str());

@@ -499,7 +499,7 @@ void CKeyBoard::InitENG()
 	key.type = KEY_HISTORY;
 	key.id = 0;
 
-	// 1-ый ряд
+	// 1-С‹Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_ENG][0];
 	curPos = ImVec2(0, m_Pos.y + m_fKeySizeY);
 
@@ -634,7 +634,7 @@ void CKeyBoard::InitENG()
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// 2-й ряд
+	// 2-Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_ENG][1];
 	curPos.x = defWidth * 0.5;
 	curPos.y += m_fKeySizeY;
@@ -756,7 +756,7 @@ void CKeyBoard::InitENG()
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// 3-й ряд
+	// 3-Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_ENG][2];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -881,7 +881,7 @@ void CKeyBoard::InitENG()
 	it = row->begin();
 	row->insert(it, key);
 
-	// 4-я строка
+	// 4-СЏ СЃС‚СЂРѕРєР°
 	row = &m_Rows[LAYOUT_ENG][3];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -1026,302 +1026,302 @@ void CKeyBoard::InitRU()
 	key.type = KEY_DEFAULT;
 	key.id = 0;
 
-	// 1-ый ряд
+	// 1-С‹Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_RUS][0];
 	curPos = ImVec2(0, m_Pos.y + m_fKeySizeY);
 
-	// й/Й
+	// Р№/Р™
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'й';
-	key.code[UPPER_CASE] = 'Й';
-	cp1251_to_utf8(key.name[LOWER_CASE], "й");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Й");
+	key.code[LOWER_CASE] = 'Р№';
+	key.code[UPPER_CASE] = 'Р™';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Р№");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р™");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ц/Ц
+	// С†/Р¦
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ц';
-	key.code[UPPER_CASE] = 'Ц';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ц");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ц");
+	key.code[LOWER_CASE] = 'С†';
+	key.code[UPPER_CASE] = 'Р¦';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С†");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р¦");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// у/У
+	// Сѓ/РЈ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'у';
-	key.code[UPPER_CASE] = 'У';
-	cp1251_to_utf8(key.name[LOWER_CASE], "у");
-	cp1251_to_utf8(key.name[UPPER_CASE], "У");
+	key.code[LOWER_CASE] = 'Сѓ';
+	key.code[UPPER_CASE] = 'РЈ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Сѓ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "РЈ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// к/К
+	// Рє/Рљ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'к';
-	key.code[UPPER_CASE] = 'К';
-	cp1251_to_utf8(key.name[LOWER_CASE], "к");
-	cp1251_to_utf8(key.name[UPPER_CASE], "К");
+	key.code[LOWER_CASE] = 'Рє';
+	key.code[UPPER_CASE] = 'Рљ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рє");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рљ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// е/Е
+	// Рµ/Р•
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'е';
-	key.code[UPPER_CASE] = 'Е';
-	cp1251_to_utf8(key.name[LOWER_CASE], "е");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Е");
+	key.code[LOWER_CASE] = 'Рµ';
+	key.code[UPPER_CASE] = 'Р•';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рµ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р•");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// н/Н
+	// РЅ/Рќ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'н';
-	key.code[UPPER_CASE] = 'Н';
-	cp1251_to_utf8(key.name[LOWER_CASE], "н");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Н");
+	key.code[LOWER_CASE] = 'РЅ';
+	key.code[UPPER_CASE] = 'Рќ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "РЅ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рќ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// г/Г
+	// Рі/Р“
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'г';
-	key.code[UPPER_CASE] = 'Г';
-	cp1251_to_utf8(key.name[LOWER_CASE], "г");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Г");
+	key.code[LOWER_CASE] = 'Рі';
+	key.code[UPPER_CASE] = 'Р“';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рі");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р“");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ш/Ш
+	// С€/РЁ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ш';
-	key.code[UPPER_CASE] = 'Ш';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ш");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ш");
+	key.code[LOWER_CASE] = 'С€';
+	key.code[UPPER_CASE] = 'РЁ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С€");
+	cp1251_to_utf8(key.name[UPPER_CASE], "РЁ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// щ/Щ
+	// С‰/Р©
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'щ';
-	key.code[UPPER_CASE] = 'Щ';
-	cp1251_to_utf8(key.name[LOWER_CASE], "щ");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Щ");
+	key.code[LOWER_CASE] = 'С‰';
+	key.code[UPPER_CASE] = 'Р©';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С‰");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р©");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// з/З
+	// Р·/Р—
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'з';
-	key.code[UPPER_CASE] = 'З';
-	cp1251_to_utf8(key.name[LOWER_CASE], "з");
-	cp1251_to_utf8(key.name[UPPER_CASE], "З");
+	key.code[LOWER_CASE] = 'Р·';
+	key.code[UPPER_CASE] = 'Р—';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Р·");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р—");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// х/Х
+	// С…/РҐ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'х';
-	key.code[UPPER_CASE] = 'Х';
-	cp1251_to_utf8(key.name[LOWER_CASE], "х");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Х");
+	key.code[LOWER_CASE] = 'С…';
+	key.code[UPPER_CASE] = 'РҐ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С…");
+	cp1251_to_utf8(key.name[UPPER_CASE], "РҐ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// 2-й ряд
+	// 2-Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_RUS][1];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
 
-	// ф/Ф
+	// С„/Р¤
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ф';
-	key.code[UPPER_CASE] = 'Ф';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ф");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ф");
+	key.code[LOWER_CASE] = 'С„';
+	key.code[UPPER_CASE] = 'Р¤';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С„");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р¤");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ы/Ы
+	// С‹/Р«
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ы';
-	key.code[UPPER_CASE] = 'Ы';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ы");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ы");
+	key.code[LOWER_CASE] = 'С‹';
+	key.code[UPPER_CASE] = 'Р«';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С‹");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р«");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// в/В
+	// РІ/Р’
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'в';
-	key.code[UPPER_CASE] = 'В';
-	cp1251_to_utf8(key.name[LOWER_CASE], "в");
-	cp1251_to_utf8(key.name[UPPER_CASE], "В");
+	key.code[LOWER_CASE] = 'РІ';
+	key.code[UPPER_CASE] = 'Р’';
+	cp1251_to_utf8(key.name[LOWER_CASE], "РІ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р’");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// а/А
+	// Р°/Рђ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'а';
-	key.code[UPPER_CASE] = 'А';
-	cp1251_to_utf8(key.name[LOWER_CASE], "а");
-	cp1251_to_utf8(key.name[UPPER_CASE], "А");
+	key.code[LOWER_CASE] = 'Р°';
+	key.code[UPPER_CASE] = 'Рђ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Р°");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рђ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// п/П
+	// Рї/Рџ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'п';
-	key.code[UPPER_CASE] = 'П';
-	cp1251_to_utf8(key.name[LOWER_CASE], "п");
-	cp1251_to_utf8(key.name[UPPER_CASE], "П");
+	key.code[LOWER_CASE] = 'Рї';
+	key.code[UPPER_CASE] = 'Рџ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рї");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рџ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// р/Р
+	// СЂ/Р 
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'р';
-	key.code[UPPER_CASE] = 'Р';
-	cp1251_to_utf8(key.name[LOWER_CASE], "р");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Р");
+	key.code[LOWER_CASE] = 'СЂ';
+	key.code[UPPER_CASE] = 'Р ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "СЂ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// о/О
+	// Рѕ/Рћ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'о';
-	key.code[UPPER_CASE] = 'О';
-	cp1251_to_utf8(key.name[LOWER_CASE], "о");
-	cp1251_to_utf8(key.name[UPPER_CASE], "О");
+	key.code[LOWER_CASE] = 'Рѕ';
+	key.code[UPPER_CASE] = 'Рћ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рѕ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рћ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// л/Л
+	// Р»/Р›
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'л';
-	key.code[UPPER_CASE] = 'Л';
-	cp1251_to_utf8(key.name[LOWER_CASE], "л");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Л");
+	key.code[LOWER_CASE] = 'Р»';
+	key.code[UPPER_CASE] = 'Р›';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Р»");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р›");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// д/Д
+	// Рґ/Р”
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'д';
-	key.code[UPPER_CASE] = 'Д';
-	cp1251_to_utf8(key.name[LOWER_CASE], "д");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Д");
+	key.code[LOWER_CASE] = 'Рґ';
+	key.code[UPPER_CASE] = 'Р”';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рґ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р”");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ж/Ж
+	// Р¶/Р–
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ж';
-	key.code[UPPER_CASE] = 'Ж';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ж");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ж");
+	key.code[LOWER_CASE] = 'Р¶';
+	key.code[UPPER_CASE] = 'Р–';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Р¶");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р–");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// э/Э
+	// СЌ/Р­
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'э';
-	key.code[UPPER_CASE] = 'Э';
-	cp1251_to_utf8(key.name[LOWER_CASE], "э");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Э");
+	key.code[LOWER_CASE] = 'СЌ';
+	key.code[UPPER_CASE] = 'Р­';
+	cp1251_to_utf8(key.name[LOWER_CASE], "СЌ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р­");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// 3-й ряд
+	// 3-Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_RUS][2];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -1342,118 +1342,118 @@ void CKeyBoard::InitRU()
 
 	key.type = KEY_DEFAULT;
 
-	// я/Я
+	// СЏ/РЇ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'я';
-	key.code[UPPER_CASE] = 'Я';
-	cp1251_to_utf8(key.name[LOWER_CASE], "я");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Я");
+	key.code[LOWER_CASE] = 'СЏ';
+	key.code[UPPER_CASE] = 'РЇ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "СЏ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "РЇ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ч/Ч
+	// С‡/Р§
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ч';
-	key.code[UPPER_CASE] = 'Ч';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ч");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ч");
+	key.code[LOWER_CASE] = 'С‡';
+	key.code[UPPER_CASE] = 'Р§';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С‡");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р§");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// с/С
+	// СЃ/РЎ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'с';
-	key.code[UPPER_CASE] = 'С';
-	cp1251_to_utf8(key.name[LOWER_CASE], "с");
-	cp1251_to_utf8(key.name[UPPER_CASE], "С");
+	key.code[LOWER_CASE] = 'СЃ';
+	key.code[UPPER_CASE] = 'РЎ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "СЃ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "РЎ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// м/М
+	// Рј/Рњ
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'м';
-	key.code[UPPER_CASE] = 'М';
-	cp1251_to_utf8(key.name[LOWER_CASE], "м");
-	cp1251_to_utf8(key.name[UPPER_CASE], "М");
+	key.code[LOWER_CASE] = 'Рј';
+	key.code[UPPER_CASE] = 'Рњ';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рј");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рњ");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// и/И
+	// Рё/Р
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'и';
-	key.code[UPPER_CASE] = 'И';
-	cp1251_to_utf8(key.name[LOWER_CASE], "и");
-	cp1251_to_utf8(key.name[UPPER_CASE], "И");
+	key.code[LOWER_CASE] = 'Рё';
+	key.code[UPPER_CASE] = 'Р';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Рё");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// т/Т
+	// С‚/Рў
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'т';
-	key.code[UPPER_CASE] = 'Т';
-	cp1251_to_utf8(key.name[LOWER_CASE], "т");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Т");
+	key.code[LOWER_CASE] = 'С‚';
+	key.code[UPPER_CASE] = 'Рў';
+	cp1251_to_utf8(key.name[LOWER_CASE], "С‚");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Рў");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ь/Ь
+	// СЊ/Р¬
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ь';
-	key.code[UPPER_CASE] = 'Ь';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ь");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ь");
+	key.code[LOWER_CASE] = 'СЊ';
+	key.code[UPPER_CASE] = 'Р¬';
+	cp1251_to_utf8(key.name[LOWER_CASE], "СЊ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р¬");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// б/Б
+	// Р±/Р‘
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'б';
-	key.code[UPPER_CASE] = 'Б';
-	cp1251_to_utf8(key.name[LOWER_CASE], "б");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Б");
+	key.code[LOWER_CASE] = 'Р±';
+	key.code[UPPER_CASE] = 'Р‘';
+	cp1251_to_utf8(key.name[LOWER_CASE], "Р±");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р‘");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// ю/Ю
+	// СЋ/Р®
 	key.pos = curPos;
 	key.symPos = ImVec2(curPos.x + defWidth * 0.4, curPos.y + m_fKeySizeY * 0.2);
 	key.width = defWidth;
-	key.code[LOWER_CASE] = 'ю';
-	key.code[UPPER_CASE] = 'Ю';
-	cp1251_to_utf8(key.name[LOWER_CASE], "ю");
-	cp1251_to_utf8(key.name[UPPER_CASE], "Ю");
+	key.code[LOWER_CASE] = 'СЋ';
+	key.code[UPPER_CASE] = 'Р®';
+	cp1251_to_utf8(key.name[LOWER_CASE], "СЋ");
+	cp1251_to_utf8(key.name[UPPER_CASE], "Р®");
 	key.id++;
 	it = row->begin();
 	row->insert(it, key);
@@ -1472,7 +1472,7 @@ void CKeyBoard::InitRU()
 	it = row->begin();
 	row->insert(it, key);
 
-	// 4-я строка
+	// 4-СЏ СЃС‚СЂРѕРєР°
 	row = &m_Rows[LAYOUT_RUS][3];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -1618,7 +1618,7 @@ void CKeyBoard::InitNUM()
 	key.type = KEY_DEFAULT;
 	key.id = 0;
 
-	// 1-ый ряд
+	// 1-С‹Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_NUM][0];
 	curPos = ImVec2(0, m_Pos.y + m_fKeySizeY);
 
@@ -1752,7 +1752,7 @@ void CKeyBoard::InitNUM()
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// 2-й ряд
+	// 2-Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_NUM][1];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -1887,7 +1887,7 @@ void CKeyBoard::InitNUM()
 	row->insert(it, key);
 	curPos.x += key.width;
 
-	// 3-й ряд
+	// 3-Р№ СЂСЏРґ
 	row = &m_Rows[LAYOUT_NUM][2];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -2022,7 +2022,7 @@ void CKeyBoard::InitNUM()
 	it = row->begin();
 	row->insert(it, key);
 
-	// 4-я строка
+	// 4-СЏ СЃС‚СЂРѕРєР°
 	row = &m_Rows[LAYOUT_NUM][3];
 	curPos.x = 0;
 	curPos.y += m_fKeySizeY;
@@ -2176,7 +2176,7 @@ bool ProcessLocalCommands(const char str[])
 		float size = 0;
 		if (sscanf(str, "%*s%f", &size) == -1)
 		{
-			CChatWindow::AddMessage("Используйте: /fontsize [scale]");
+			CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /fontsize [scale]");
 			return true;
 		}
 		size = 27 * size;
@@ -2189,7 +2189,7 @@ bool ProcessLocalCommands(const char str[])
 		std::string msg;
 		if (sscanf(str, "%*s%s", &msg) == -1)
 		{
-			CChatWindow::AddMessage("Используйте: /fontsize [scale]");
+			CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /fontsize [scale]");
 			return true;
 		}
 
@@ -2198,11 +2198,13 @@ bool ProcessLocalCommands(const char str[])
 		uint32_t dwVehicleID;
 		float fZAngle = 0.0f;
 
-		char ff[0xFF];
-		sprintf(ff, "%sSAMP/savedposition.txt", g_pszStorage);
+		char ff[512];
+		snprintf(ff, sizeof(ff), "%sSAMP/savedposition.txt", GetStorageDirectory());
 		fileOut = fopen(ff, "a");
-		if(!fileOut)
+		if(!fileOut) {
 			CChatWindow::AddMessage("Cant open savedposition.txt");
+			return;
+		}
 
 		if(pPlayer->m_pPed->IsInVehicle())
 		{
@@ -2260,12 +2262,12 @@ bool ProcessLocalCommands(const char str[])
 		int fps = 0;
 		if (sscanf(str, "%*s%d", &fps) == -1)
 		{
-			CChatWindow::AddMessage("Используйте: /fpslimit [fps]");
+			CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /fpslimit [fps]");
 			return true;
 		}
 		ApplyFPSPatch(fps);
 
-		CChatWindow::AddMessage("-> Новый лимит FPS: %d", fps);
+		CChatWindow::AddMessage("-> РќРѕРІС‹Р№ Р»РёРјРёС‚ FPS: %d", fps);
 
 		CSettings::m_Settings.iFPS = fps;
         CSettings::save();
@@ -2295,7 +2297,7 @@ bool ProcessLocalCommands(const char str[])
 //    }
 	if(strcmp(str, "/headmove") == 0) {
 		g_uiHeadMoveEnabled = !g_uiHeadMoveEnabled;
-		CChatWindow::AddMessage("Движение головы x");
+		CChatWindow::AddMessage("Р”РІРёР¶РµРЅРёРµ РіРѕР»РѕРІС‹ x");
 		return true;
 	}
     if (strstr(str, "/vmute")) {
@@ -2309,7 +2311,7 @@ bool ProcessLocalCommands(const char str[])
 			}
             return true;
         } else {
-            CChatWindow::AddMessage("Используйте: /vmute [id]");
+            CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /vmute [id]");
             return true;
         }
     }
@@ -2318,7 +2320,7 @@ bool ProcessLocalCommands(const char str[])
 		int type;
 		if (sscanf(str, "%*s%d", &type) == -1)
 		{
-			CChatWindow::AddMessage("Используйте: /tmpobj [id]");
+			CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /tmpobj [id]");
 			return true;
 		}
 		auto pos = CGame::FindPlayerPed()->m_pPed->GetPosition();
@@ -2333,7 +2335,7 @@ bool ProcessLocalCommands(const char str[])
         int type;
         if (sscanf(str, "%*s%d", &type) == -1)
         {
-            CChatWindow::AddMessage("Используйте: /testsprite [id]");
+            CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /testsprite [id]");
             return true;
         }
         testSpriteTmpObject.id = type;
@@ -2345,7 +2347,7 @@ bool ProcessLocalCommands(const char str[])
 		int type;
 		if (sscanf(str, "%*s%d", &type) == -1)
 		{
-			CChatWindow::AddMessage("Используйте: /vin [id]");
+			CChatWindow::AddMessage("РСЃРїРѕР»СЊР·СѓР№С‚Рµ: /vin [id]");
 			return true;
 		}
         //CBuyPlate::Constructor();

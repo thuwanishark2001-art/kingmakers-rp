@@ -49,6 +49,16 @@ class Samp : GTASA() {
         }
         if (maxFps <= 0f) maxFps = 60f
 
+        val nick = intent?.getStringExtra("player_name") ?: intent?.getStringExtra("name") ?: "Marcus_King"
+        val ip = intent?.getStringExtra("server_ip") ?: intent?.getStringExtra("ip") ?: "139.180.185.57"
+        val port = intent?.getIntExtra("server_port", 7777) ?: 7777
+
+        try {
+            com.kingmakers.rp.DownloaderActivity.ensureGameFiles(this, nick, ip, port)
+        } catch (e: Exception) {
+            Log.e("Samp", "ensureGameFiles note: ${e.message}")
+        }
+
         try {
             val internalDir = File(filesDir, "AudioConfig")
             clearDir(internalDir)
@@ -62,16 +72,15 @@ class Samp : GTASA() {
             Log.e("Samp", "AudioConfig init note: ${e.message}")
         }
 
-        val gameDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
+        val gameStorage = com.kingmakers.rp.DownloaderActivity.getGameStorageDir(this)
+        val gameDir = gameStorage?.absolutePath ?: (getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath)
         val storagePath = if (gameDir.endsWith("/")) gameDir else "$gameDir/"
 
         try {
-            val nick = intent?.getStringExtra("player_name") ?: intent?.getStringExtra("name") ?: "Marcus_King"
-            val ip = intent?.getStringExtra("server_ip") ?: intent?.getStringExtra("ip") ?: "139.180.185.57"
-            val port = intent?.getIntExtra("server_port", 7777) ?: 7777
-            com.kingmakers.rp.DownloaderActivity.ensureGameFiles(this, nick, ip, port)
+            com.nvidia.devtech.NvUtil.getInstance().setActivity(this)
+            com.nvidia.devtech.NvAPKFileHelper.getInstance().setContext(this)
         } catch (e: Exception) {
-            Log.e("Samp", "ensureGameFiles note: ${e.message}")
+            Log.e("Samp", "NvUtil setup note: ${e.message}")
         }
 
         try {

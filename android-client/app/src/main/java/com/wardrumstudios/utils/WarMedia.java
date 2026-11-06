@@ -18,19 +18,43 @@ public class WarMedia extends WarGamepad
     private String baseDirectoryRoot;
 
     public String GetGameBaseDirectory() {
-        if (Environment.getExternalStorageState().equals("mounted"))
-        {
-            try
-            {
-                File externalFilesDir = getExternalFilesDir(null);
-                String absolutePath = externalFilesDir.getAbsolutePath();
-                this.baseDirectoryRoot = absolutePath.substring(0, absolutePath.indexOf("/Android"));
-                return externalFilesDir.getAbsolutePath() + "/";
-            } catch (Exception e)
-            {
+        File[] candidates = new File[] {
+                getExternalFilesDir(null),
+                new File("/storage/emulated/0/Android/data/com.kingmakers.rp/files"),
+                new File("/storage/emulated/0/Android/data/com.russia.game/files"),
+                getFilesDir(),
+                new File("/data/data/com.kingmakers.rp/files"),
+                new File("/data/data/com.russia.game/files")
+        };
+
+        for (File dir : candidates) {
+            if (dir == null || !dir.exists()) continue;
+            File gtaDat = new File(dir, "data/gta.dat");
+            File sampDat = new File(dir, "SAMP/gta.dat");
+            File sampDir = new File(dir, "SAMP");
+            File texdbDir = new File(dir, "texdb");
+            if (gtaDat.exists() || sampDat.exists() || sampDir.exists() || texdbDir.exists()) {
+                String abs = dir.getAbsolutePath();
+                if (abs.contains("/Android")) {
+                    this.baseDirectoryRoot = abs.substring(0, abs.indexOf("/Android"));
+                } else {
+                    this.baseDirectoryRoot = "/storage/emulated/0";
+                }
+                return abs.endsWith("/") ? abs : (abs + "/");
             }
         }
-        return "";
+
+        try {
+            File ext = getExternalFilesDir(null);
+            if (ext != null) {
+                String abs = ext.getAbsolutePath();
+                this.baseDirectoryRoot = abs.contains("/Android") ? abs.substring(0, abs.indexOf("/Android")) : "/storage/emulated/0";
+                return abs.endsWith("/") ? abs : (abs + "/");
+            }
+        } catch (Exception ignored) {}
+
+        this.baseDirectoryRoot = "/storage/emulated/0";
+        return "/storage/emulated/0/Android/data/com.russia.game/files/";
     }
 
     public void onCreate(Bundle bundle)

@@ -235,8 +235,8 @@ app.get('/api/status', async (req, res) => {
 });
 
 app.get('/api/launcher/config', (req, res) => {
-    let cacheSha256 = '99a51f60d2f207c7315346b55c6a96f4b04599259c1ea3a7186898f356de9b5e';
-    let cacheSizeMb = 1459.0;
+    let cacheSha256 = '84d18d876da3951ec11ecc8e2a23344cddabea449c92181ac14e28c9795e298f';
+    let cacheSizeMb = 1497.0;
     const searchDirs = [
         path.join(publicDir, 'downloads'),
         path.join(__dirname, 'public/downloads')

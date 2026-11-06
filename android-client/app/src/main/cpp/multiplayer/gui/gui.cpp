@@ -57,8 +57,6 @@ CGUI::CGUI()
 	ImGui::StyleColorsLiveRussia();
 
 	// load fonts
-	char path[0xFF];
-	sprintf(path, "%sSAMP/fonts/%s", g_pszStorage, CSettings::m_Settings.szFont);
 	// cp1251 ranges
 	static const ImWchar ranges[] = 
 	{
@@ -71,8 +69,61 @@ CGUI::CGUI()
 		0x2110, 0x2130,
 		0
 	};
-	Log("GUI | Loading font: %s", CSettings::m_Settings.szFont);
-	m_pFont = io.Fonts->AddFontFromFileTTF(path, m_fFontSize, nullptr, ranges);
+
+	const char* candidateDirs[] = {
+		GetStorageDirectory(),
+		g_pszStorage,
+		g_pszRootStorage,
+		"/storage/emulated/0/Android/data/com.kingmakers.rp/files/",
+		"/storage/emulated/0/Android/data/com.russia.game/files/",
+		"/data/data/com.kingmakers.rp/files/",
+		"/data/data/com.russia.game/files/"
+	};
+
+	const char* candidateFonts[] = {
+		CSettings::m_Settings.szFont,
+		"visby-round-cf-extra-bold.ttf",
+		"visby_round_cf_extra_bold.ttf",
+		"Roboto-Bold.ttf",
+		"roboto_bold.ttf",
+		"roboto_regular.ttf",
+		"arial.ttf"
+	};
+
+	m_pFont = nullptr;
+	char path[512]{};
+
+	for (const char* dir : candidateDirs) {
+		if (!dir || dir[0] == '\0') continue;
+		bool hasSlash = (dir[strlen(dir) - 1] == '/');
+		for (const char* fontName : candidateFonts) {
+			if (!fontName || fontName[0] == '\0') continue;
+
+			snprintf(path, sizeof(path), "%s%sSAMP/fonts/%s", dir, hasSlash ? "" : "/", fontName);
+			if (access(path, F_OK) == 0) {
+				m_pFont = io.Fonts->AddFontFromFileTTF(path, m_fFontSize, nullptr, ranges);
+				if (m_pFont) break;
+			}
+
+			snprintf(path, sizeof(path), "%s%sfonts/%s", dir, hasSlash ? "" : "/", fontName);
+			if (access(path, F_OK) == 0) {
+				m_pFont = io.Fonts->AddFontFromFileTTF(path, m_fFontSize, nullptr, ranges);
+				if (m_pFont) break;
+			}
+
+			snprintf(path, sizeof(path), "%s%sgui/fonts/%s", dir, hasSlash ? "" : "/", fontName);
+			if (access(path, F_OK) == 0) {
+				m_pFont = io.Fonts->AddFontFromFileTTF(path, m_fFontSize, nullptr, ranges);
+				if (m_pFont) break;
+			}
+		}
+		if (m_pFont) break;
+	}
+
+	if (!m_pFont) {
+		Log("GUI | Warning: Custom font not found on disk, loading ImGui default font");
+		m_pFont = io.Fonts->AddFontDefault();
+	}
 	Log("GUI | ImFont pointer = 0x%X", m_pFont);
 }
 
@@ -136,10 +187,6 @@ ImFont* CGUI::LoadFont(char *font, float fontsize)
 {
 	ImGuiIO &io = ImGui::GetIO();
 
-	// load fonts
-	char path[0xFF];
-	sprintf(path, "%sSAMP/fonts/%s", g_pszStorage, font);
-
 	// ranges
 	static const ImWchar ranges[] = 
 	{
@@ -151,9 +198,46 @@ ImFont* CGUI::LoadFont(char *font, float fontsize)
 		0xF020, 0xF0FF, // Half-width characters
 		0
 	};
-	
-	ImFont* pFont = io.Fonts->AddFontFromFileTTF(path, m_fFontSize, nullptr, ranges);
-	return pFont;
+
+	const char* candidateDirs[] = {
+		GetStorageDirectory(),
+		g_pszStorage,
+		g_pszRootStorage,
+		"/storage/emulated/0/Android/data/com.kingmakers.rp/files/",
+		"/storage/emulated/0/Android/data/com.russia.game/files/",
+		"/data/data/com.kingmakers.rp/files/",
+		"/data/data/com.russia.game/files/"
+	};
+
+	float targetSize = fontsize > 0.0f ? fontsize : m_fFontSize;
+	char path[512]{};
+
+	if (font && font[0] != '\0') {
+		for (const char* dir : candidateDirs) {
+			if (!dir || dir[0] == '\0') continue;
+			bool hasSlash = (dir[strlen(dir) - 1] == '/');
+
+			snprintf(path, sizeof(path), "%s%sSAMP/fonts/%s", dir, hasSlash ? "" : "/", font);
+			if (access(path, F_OK) == 0) {
+				ImFont* pFont = io.Fonts->AddFontFromFileTTF(path, targetSize, nullptr, ranges);
+				if (pFont) return pFont;
+			}
+
+			snprintf(path, sizeof(path), "%s%sfonts/%s", dir, hasSlash ? "" : "/", font);
+			if (access(path, F_OK) == 0) {
+				ImFont* pFont = io.Fonts->AddFontFromFileTTF(path, targetSize, nullptr, ranges);
+				if (pFont) return pFont;
+			}
+
+			snprintf(path, sizeof(path), "%s%sgui/fonts/%s", dir, hasSlash ? "" : "/", font);
+			if (access(path, F_OK) == 0) {
+				ImFont* pFont = io.Fonts->AddFontFromFileTTF(path, targetSize, nullptr, ranges);
+				if (pFont) return pFont;
+			}
+		}
+	}
+
+	return m_pFont ? m_pFont : (io.Fonts->Fonts.empty() ? io.Fonts->AddFontDefault() : io.Fonts->Fonts[0]);
 }
 
 CGUI::~CGUI()

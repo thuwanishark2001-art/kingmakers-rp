@@ -13,26 +13,49 @@ void CFileMgr::SetDir(const char *path) {
 FILE* CFileMgr::OpenFile(const char *path, const char *mode) {
     if (!path) return nullptr;
 
-    const char* storage = (g_pszStorage && g_pszStorage[0] != '\0')
-        ? g_pszStorage
-        : ((g_pszRootStorage && g_pszRootStorage[0] != '\0') ? g_pszRootStorage : "/storage/emulated/0/Android/data/com.russia.game/files/");
-
-    sprintf(ms_path, "%s%s", storage, path);
-
-    auto file = fopen(ms_path, mode);
-    if (!file) {
-        char lowerPath[512];
-        strncpy(lowerPath, ms_path, sizeof(lowerPath) - 1);
-        lowerPath[sizeof(lowerPath) - 1] = '\0';
-        for (char* p = lowerPath; *p; ++p) *p = tolower((unsigned char)*p);
-        file = fopen(lowerPath, mode);
-        if (file) {
-            strncpy(ms_path, lowerPath, sizeof(ms_path) - 1);
-        }
+    char cleanPath[512];
+    strncpy(cleanPath, path, sizeof(cleanPath) - 1);
+    cleanPath[sizeof(cleanPath) - 1] = '\0';
+    for (char* p = cleanPath; *p; ++p) {
+        if (*p == '\\') *p = '/';
     }
 
-    if(!file) {
-        Log("Fail open file %s", ms_path);
+    char lowerPath[512];
+    strncpy(lowerPath, cleanPath, sizeof(lowerPath) - 1);
+    lowerPath[sizeof(lowerPath) - 1] = '\0';
+    for (char* p = lowerPath; *p; ++p) {
+        *p = tolower((unsigned char)*p);
+    }
+
+    const char* candidateDirs[] = {
+        g_pszStorage,
+        g_pszRootStorage,
+        "/storage/emulated/0/Android/data/com.russia.game/files/",
+        "/storage/emulated/0/Android/data/com.kingmakers.rp/files/",
+        "/data/data/com.russia.game/files/",
+        "/data/data/com.kingmakers.rp/files/",
+        "/data/user/0/com.russia.game/files/",
+        "/data/user/0/com.kingmakers.rp/files/"
+    };
+    const size_t numCandidateDirs = sizeof(candidateDirs) / sizeof(candidateDirs[0]);
+
+    FILE* file = nullptr;
+    for (size_t i = 0; i < numCandidateDirs; ++i) {
+        const char* dir = candidateDirs[i];
+        if (!dir || dir[0] == '\0') continue;
+        bool hasSlash = (dir[strlen(dir) - 1] == '/');
+
+        snprintf(ms_path, sizeof(ms_path), "%s%s%s", dir, hasSlash ? "" : "/", cleanPath);
+        file = fopen(ms_path, mode);
+        if (file) break;
+
+        snprintf(ms_path, sizeof(ms_path), "%s%s%s", dir, hasSlash ? "" : "/", lowerPath);
+        file = fopen(ms_path, mode);
+        if (file) break;
+    }
+
+    if (!file) {
+        Log("Fail open file %s", path);
     }
     return file;
 }

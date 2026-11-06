@@ -113,38 +113,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void writeSampSettings(String nick, String ip, int port) {
-        try {
-            File baseDir = DownloaderActivity.getGameStorageDir(this);
-            File sampDir = new File(baseDir, "SAMP");
-            if (!sampDir.exists()) sampDir.mkdirs();
-            File iniFile = new File(sampDir, "settings.ini");
-            String iniContent = "[client]\n" +
-                    "name=" + nick + "\n" +
-                    "host=" + ip + "\n" +
-                    "port=" + port + "\n" +
-                    "debug=0\n";
-            try (FileWriter fw = new FileWriter(iniFile, false)) {
-                fw.write(iniContent);
-            }
-
-            File kmDir = new File(baseDir, "kingmakers");
-            if (!kmDir.exists()) kmDir.mkdirs();
-            File kmIni = new File(kmDir, "server.ini");
-            String kmContent = "[Connection]\n" +
-                    "host = " + ip + "\n" +
-                    "port = " + port + "\n" +
-                    "server_name = Kingmakers RP | Mobile Roleplay | v1.0.0\n" +
-                    "version = 1.0.0\n" +
-                    "[Client]\n" +
-                    "name = " + nick + "\n" +
-                    "fast_load = true\n" +
-                    "skip_intro_movies = true\n" +
-                    "high_fps_mode = true\n" +
-                    "fps_cap = 60\n";
-            try (FileWriter fw = new FileWriter(kmIni, false)) {
-                fw.write(kmContent);
-            }
-        } catch (Exception ignored) {}
+        DownloaderActivity.ensureGameFiles(this, nick, ip, port);
     }
 
     private void launchGameClient(String nick, String ip, int port) {

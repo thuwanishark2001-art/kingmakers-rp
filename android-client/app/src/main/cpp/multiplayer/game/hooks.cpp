@@ -53,106 +53,114 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 	strncpy(lastFile, r1, sizeof(lastFile) - 1);
 	lastFile[sizeof(lastFile) - 1] = '\0';
 
-	const char* storage = (g_pszStorage && g_pszStorage[0] != '\0')
-		? g_pszStorage
-		: ((g_pszRootStorage && g_pszRootStorage[0] != '\0')
-			? g_pszRootStorage
-			: "/storage/emulated/0/Android/data/com.russia.game/files/");
-
-	static char path[512]{};
-	memset(path, 0, sizeof(path));
-
-	char sampPath[512]{};
-	bool isSampRedirect = false;
-
-	if (strstr(r1, "mainV1.scm") || strstr(r1, "main.scm")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/main.scm", storage);
-		isSampRedirect = true;
-	} else if (strstr(r1, "SCRIPTV1.IMG") || strstr(r1, "script.img") || strstr(r1, "SCRIPT.IMG")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/script.img", storage);
-		isSampRedirect = true;
-	} else if (strcasestr(r1, "PEDS.IDE")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/peds.ide", storage);
-		isSampRedirect = true;
-	} else if (strcasestr(r1, "VEHICLES.IDE")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/vehicles.ide", storage);
-		isSampRedirect = true;
-	} else if (strcasestr(r1, "GTA.DAT")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/gta.dat", storage);
-		isSampRedirect = true;
-	} else if (strcasestr(r1, "HANDLING.CFG")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/handling.cfg", storage);
-		isSampRedirect = true;
-	} else if (strcasestr(r1, "WEAPON.DAT")) {
-		snprintf(sampPath, sizeof(sampPath), "%sSAMP/weapon.dat", storage);
-		isSampRedirect = true;
+	// 1. Normalize path: replace all backslashes with forward slashes
+	char cleanName[512];
+	strncpy(cleanName, r1, sizeof(cleanName) - 1);
+	cleanName[sizeof(cleanName) - 1] = '\0';
+	for (char* p = cleanName; *p; ++p) {
+		if (*p == '\\') *p = '/';
 	}
+
+	// Lowercase variant for Linux ext4 case-insensitivity
+	char lowerName[512];
+	strncpy(lowerName, cleanName, sizeof(lowerName) - 1);
+	lowerName[sizeof(lowerName) - 1] = '\0';
+	for (char* p = lowerName; *p; ++p) {
+		*p = tolower((unsigned char)*p);
+	}
+
+	// 2. Candidate storage directories across potential installations
+	const char* candidateDirs[] = {
+		g_pszStorage,
+		g_pszRootStorage,
+		"/storage/emulated/0/Android/data/com.russia.game/files/",
+		"/storage/emulated/0/Android/data/com.kingmakers.rp/files/",
+		"/data/data/com.russia.game/files/",
+		"/data/data/com.kingmakers.rp/files/",
+		"/data/user/0/com.russia.game/files/",
+		"/data/user/0/com.kingmakers.rp/files/"
+	};
+	const size_t numCandidateDirs = sizeof(candidateDirs) / sizeof(candidateDirs[0]);
 
 	FILE *f = nullptr;
+	char path[512]{};
 
-	// 1. If redirected to SAMP/, check if the file actually exists on disk
-	if (isSampRedirect && access(sampPath, F_OK) == 0) {
-		f = fopen(sampPath, "rb");
-		if (f) {
-			strncpy(path, sampPath, sizeof(path) - 1);
-			Log("NVFOpen: loaded from SAMP/ -> %s", sampPath);
+	// 3. Known SAMP overrides
+	const char* sampOverrideFile = nullptr;
+	if (strcasestr(cleanName, "mainV1.scm") || strcasestr(cleanName, "main.scm")) {
+		sampOverrideFile = "main.scm";
+	} else if (strcasestr(cleanName, "scriptv1.img") || strcasestr(cleanName, "script.img")) {
+		sampOverrideFile = "script.img";
+	} else if (strcasestr(cleanName, "peds.ide")) {
+		sampOverrideFile = "peds.ide";
+	} else if (strcasestr(cleanName, "vehicles.ide")) {
+		sampOverrideFile = "vehicles.ide";
+	} else if (strcasestr(cleanName, "gta.dat")) {
+		sampOverrideFile = "gta.dat";
+	} else if (strcasestr(cleanName, "handling.cfg")) {
+		sampOverrideFile = "handling.cfg";
+	} else if (strcasestr(cleanName, "weapon.dat")) {
+		sampOverrideFile = "weapon.dat";
+	}
+
+	if (sampOverrideFile) {
+		for (size_t i = 0; i < numCandidateDirs; ++i) {
+			const char* dir = candidateDirs[i];
+			if (!dir || dir[0] == '\0') continue;
+			bool hasSlash = (dir[strlen(dir) - 1] == '/');
+			snprintf(path, sizeof(path), "%s%sSAMP/%s", dir, hasSlash ? "" : "/", sampOverrideFile);
+			if (access(path, F_OK) == 0) {
+				f = fopen(path, "rb");
+				if (f) break;
+			}
 		}
 	}
 
-	// 2. Try default path: storage + r1
+	// 4. Try clean direct path & lowercase path across candidate directories
 	if (!f) {
-		snprintf(path, sizeof(path), "%s%s", storage, r1);
-		f = fopen(path, "rb");
-	}
+		for (size_t i = 0; i < numCandidateDirs; ++i) {
+			const char* dir = candidateDirs[i];
+			if (!dir || dir[0] == '\0') continue;
+			bool hasSlash = (dir[strlen(dir) - 1] == '/');
 
-	// 3. Try lowercase relative path on Linux ext4
-	if (!f) {
-		char lowerR1[512];
-		strncpy(lowerR1, r1, sizeof(lowerR1) - 1);
-		lowerR1[sizeof(lowerR1) - 1] = '\0';
-		for (char* p = lowerR1; *p; ++p) *p = tolower((unsigned char)*p);
+			snprintf(path, sizeof(path), "%s%s%s", dir, hasSlash ? "" : "/", cleanName);
+			f = fopen(path, "rb");
+			if (f) break;
 
-		snprintf(path, sizeof(path), "%s%s", storage, lowerR1);
-		f = fopen(path, "rb");
-	}
-
-	// 4. Try known fallback locations
-	if (!f) {
-		if (strcasestr(r1, "gta.dat")) {
-			snprintf(path, sizeof(path), "%sdata/gta.dat", storage);
+			snprintf(path, sizeof(path), "%s%s%s", dir, hasSlash ? "" : "/", lowerName);
 			f = fopen(path, "rb");
-		} else if (strcasestr(r1, "handling.cfg")) {
-			snprintf(path, sizeof(path), "%sdata/handling.cfg", storage);
-			f = fopen(path, "rb");
-		} else if (strcasestr(r1, "mainV1.scm") || strcasestr(r1, "main.scm")) {
-			snprintf(path, sizeof(path), "%sdata/script/mainV1.scm", storage);
-			f = fopen(path, "rb");
-		} else if (strcasestr(r1, "scriptv1.img") || strcasestr(r1, "script.img")) {
-			snprintf(path, sizeof(path), "%sdata/script/scriptv1.img", storage);
-			f = fopen(path, "rb");
-		} else if (strcasestr(r1, "vehicles.ide")) {
-			snprintf(path, sizeof(path), "%sdata/vehicles.ide", storage);
-			f = fopen(path, "rb");
-		} else if (strcasestr(r1, "peds.ide")) {
-			snprintf(path, sizeof(path), "%sdata/peds.ide", storage);
-			f = fopen(path, "rb");
-		} else if (strcasestr(r1, "weapon.dat")) {
-			snprintf(path, sizeof(path), "%sdata/weapon.dat", storage);
-			f = fopen(path, "rb");
+			if (f) break;
 		}
 	}
 
-	// 5. Try root storage if different from storage
-	if (!f && g_pszRootStorage && strcmp(g_pszRootStorage, storage) != 0) {
-		snprintf(path, sizeof(path), "%s%s", g_pszRootStorage, r1);
-		f = fopen(path, "rb");
-		if (!f) {
-			char lowerR1[512];
-			strncpy(lowerR1, r1, sizeof(lowerR1) - 1);
-			lowerR1[sizeof(lowerR1) - 1] = '\0';
-			for (char* p = lowerR1; *p; ++p) *p = tolower((unsigned char)*p);
-			snprintf(path, sizeof(path), "%s%s", g_pszRootStorage, lowerR1);
-			f = fopen(path, "rb");
+	// 5. Try known relative canonical fallback locations
+	if (!f) {
+		const char* fallbackSubPath = nullptr;
+		if (strcasestr(cleanName, "gta.dat")) fallbackSubPath = "data/gta.dat";
+		else if (strcasestr(cleanName, "handling.cfg")) fallbackSubPath = "data/handling.cfg";
+		else if (strcasestr(cleanName, "carcols.dat")) fallbackSubPath = "data/carcols.dat";
+		else if (strcasestr(cleanName, "timecyc.dat")) fallbackSubPath = "data/timecyc.dat";
+		else if (strcasestr(cleanName, "surface.dat")) fallbackSubPath = "data/surface.dat";
+		else if (strcasestr(cleanName, "mainV1.scm") || strcasestr(cleanName, "main.scm")) fallbackSubPath = "data/script/mainV1.scm";
+		else if (strcasestr(cleanName, "scriptv1.img") || strcasestr(cleanName, "script.img")) fallbackSubPath = "data/script/scriptv1.img";
+		else if (strcasestr(cleanName, "vehicles.ide")) fallbackSubPath = "data/vehicles.ide";
+		else if (strcasestr(cleanName, "peds.ide")) fallbackSubPath = "data/peds.ide";
+		else if (strcasestr(cleanName, "default.ide")) fallbackSubPath = "data/default.ide";
+		else if (strcasestr(cleanName, "weapon.dat")) fallbackSubPath = "data/weapon.dat";
+		else if (strcasestr(cleanName, "fonts.dat")) fallbackSubPath = "data/fonts.dat";
+		else if (strcasestr(cleanName, "gta3.img")) fallbackSubPath = "models/gta3.img";
+		else if (strcasestr(cleanName, "gta_int.img")) fallbackSubPath = "models/gta_int.img";
+		else if (strcasestr(cleanName, "player.img")) fallbackSubPath = "models/player.img";
+
+		if (fallbackSubPath) {
+			for (size_t i = 0; i < numCandidateDirs; ++i) {
+				const char* dir = candidateDirs[i];
+				if (!dir || dir[0] == '\0') continue;
+				bool hasSlash = (dir[strlen(dir) - 1] == '/');
+				snprintf(path, sizeof(path), "%s%s%s", dir, hasSlash ? "" : "/", fallbackSubPath);
+				f = fopen(path, "rb");
+				if (f) break;
+			}
 		}
 	}
 
@@ -163,7 +171,7 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 #else
 		auto *st = (stFile*)malloc(0x10);
 #endif
-		st->isFileExist = true;
+		st->isFileExist = 1;
 		st->f = f;
 		return st;
 	}
@@ -171,6 +179,12 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 	// 7. Fallback to original NvFOpen inside libGTASA.so
 	if (orig_NvFOpen) {
 		stFile* origRes = orig_NvFOpen(r0, r1, r2, r3);
+		if (origRes) return origRes;
+
+		origRes = orig_NvFOpen(r0, cleanName, r2, r3);
+		if (origRes) return origRes;
+
+		origRes = orig_NvFOpen(r0, lowerName, r2, r3);
 		if (origRes) return origRes;
 	}
 

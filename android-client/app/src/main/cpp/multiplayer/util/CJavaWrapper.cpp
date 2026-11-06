@@ -225,23 +225,24 @@ CJavaWrapper::CJavaWrapper(JNIEnv *env, jobject activity) {
 
     if (!nvEventClass) {
         Log("nvEventClass null");
+        if (env->ExceptionCheck()) env->ExceptionClear();
         return;
     }
 
-//    s_GetClipboardText = env->GetMethodID(nvEventClass, "getClipboardText", "()[B");
-
     s_ShowClientSettings = env->GetMethodID(nvEventClass, "showClientSettings", "()V");
+    if (env->ExceptionCheck()) env->ExceptionClear();
 
     j_Vibrate = env->GetMethodID(nvEventClass, "goVibrate", "(I)V");
+    if (env->ExceptionCheck()) env->ExceptionClear();
 
     s_setPauseState = env->GetMethodID(nvEventClass, "setPauseState", "(Z)V");
+    if (env->ExceptionCheck()) env->ExceptionClear();
 
     s_ExitGame = env->GetMethodID(nvEventClass, "exitGame", "()V");
-
-    //s_showSplash = env->GetMethodID(nvEventClass, "showSplash", "()V");
+    if (env->ExceptionCheck()) env->ExceptionClear();
 
     env->DeleteLocalRef(nvEventClass);
-    env->DeleteLocalRef(activity);
+    // Note: Do NOT delete activity local ref here; activity is 'thiz' owned by the JNI caller frame.
 }
 
 CJavaWrapper::~CJavaWrapper() {

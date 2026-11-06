@@ -41,3 +41,4 @@ void Log(const char *fmt, ...);
 #endif
 
 uint32_t GetTickCount();
+const char* GetStorageDirectory();

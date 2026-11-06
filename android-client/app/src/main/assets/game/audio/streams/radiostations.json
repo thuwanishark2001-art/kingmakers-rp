@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Kingmakers Radio 24/7", "url": "http://139.180.185.57:8080/radio/live", "genre": "Hip Hop / Synthwave" },
+  { "id": 2, "name": "Los Santos Police Band", "url": "http://139.180.185.57:8080/radio/police", "genre": "Scanner" },
+  { "id": 3, "name": "Radio Los Santos", "url": "http://139.180.185.57:8080/radio/rls", "genre": "West Coast Classics" }
+]

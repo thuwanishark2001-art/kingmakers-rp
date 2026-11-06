@@ -13,15 +13,15 @@
 extern CGUI* pGUI;
 
 char CLocalisation::m_szMessages[E_MSG::MSG_COUNT][MAX_LOCALISATION_LENGTH] = {
-	"{bbbbbb}Соединение к LIVE RUSSIA{ffffff}",
-	"{bbbbbb}Соединено. Подготовка к игре...{ffffff}",
-	"{bbbbbb}Сервер прервал соединение{ffffff}",
-	"{ff0000}Некоторые файлы были модифицированы, переустановите клиент{ffffff}",
+	"{bbbbbb}РЎРѕРµРґРёРЅРµРЅРёРµ Рє LIVE RUSSIA{ffffff}",
+	"{bbbbbb}РЎРѕРµРґРёРЅРµРЅРѕ. РџРѕРґРіРѕС‚РѕРІРєР° Рє РёРіСЂРµ...{ffffff}",
+	"{bbbbbb}РЎРµСЂРІРµСЂ РїСЂРµСЂРІР°Р» СЃРѕРµРґРёРЅРµРЅРёРµ{ffffff}",
+	"{ff0000}РќРµРєРѕС‚РѕСЂС‹Рµ С„Р°Р№Р»С‹ Р±С‹Р»Рё РјРѕРґРёС„РёС†РёСЂРѕРІР°РЅС‹, РїРµСЂРµСѓСЃС‚Р°РЅРѕРІРёС‚Рµ РєР»РёРµРЅС‚{ffffff}",
 	"{bbbbbb}unused{ffffff}",
-	"{ff0000}Вас отсоединило от сервера. Перезайдите в игру{ffffff}",
-	"{bbbbbb}Сервер не отвечает. Повторное соединение...{ffffff}",
-	"{bbbbbb}Проблемы с сетью, переподключение...{ffffff}",
-	"{bbbbbb}Сервер полон{ffffff}"};
+	"{ff0000}Р’Р°СЃ РѕС‚СЃРѕРµРґРёРЅРёР»Рѕ РѕС‚ СЃРµСЂРІРµСЂР°. РџРµСЂРµР·Р°Р№РґРёС‚Рµ РІ РёРіСЂСѓ{ffffff}",
+	"{bbbbbb}РЎРµСЂРІРµСЂ РЅРµ РѕС‚РІРµС‡Р°РµС‚. РџРѕРІС‚РѕСЂРЅРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ...{ffffff}",
+	"{bbbbbb}РџСЂРѕР±Р»РµРјС‹ СЃ СЃРµС‚СЊСЋ, РїРµСЂРµРїРѕРґРєР»СЋС‡РµРЅРёРµ...{ffffff}",
+	"{bbbbbb}РЎРµСЂРІРµСЂ РїРѕР»РѕРЅ{ffffff}"};
 
 
 void CLocalisation::Initialise()
@@ -31,9 +31,7 @@ void CLocalisation::Initialise()
 
 void CLocalisation::Initialise(const char* szFile)
 {
-	char buff[MAX_LOCALISATION_LENGTH];
-
-	sprintf(&buff[0], "%sSAMP/%s", g_pszStorage, szFile);
+	snprintf(&buff[0], sizeof(buff), "%sSAMP/%s", GetStorageDirectory(), szFile);
 
 	FILE* pFile = fopen(&buff[0], "r");
 	if (!pFile)

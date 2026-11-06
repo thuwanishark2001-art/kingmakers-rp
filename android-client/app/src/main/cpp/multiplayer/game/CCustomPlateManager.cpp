@@ -56,9 +56,44 @@ void CCustomPlateManager::Initialise()
 	m_pRuPoliceSprite = new CSprite2d();
 
     m_pRuSprite->m_pTexture = CUtil::LoadTextureFromDB("samp", "plate_ru");
-    char path[0xFF];
-    sprintf(path, "%sfonts/Roboto-Bold.ttf", g_pszStorage);
-    m_pRuFont = io.Fonts->AddFontFromFileTTF(path, 30.0f);
+    m_pRuFont = nullptr;
+    const char* candidatePlateDirs[] = {
+        GetStorageDirectory(),
+        g_pszStorage,
+        g_pszRootStorage,
+        "/storage/emulated/0/Android/data/com.kingmakers.rp/files/",
+        "/storage/emulated/0/Android/data/com.russia.game/files/",
+        "/data/data/com.kingmakers.rp/files/",
+        "/data/data/com.russia.game/files/"
+    };
+    const char* candidatePlateFonts[] = {
+        "Roboto-Bold.ttf",
+        "roboto_bold.ttf",
+        "visby-round-cf-extra-bold.ttf",
+        "visby_round_cf_extra_bold.ttf",
+        "arial.ttf"
+    };
+    char plateFontPath[512]{};
+    for (const char* dir : candidatePlateDirs) {
+        if (!dir || dir[0] == '\0') continue;
+        bool hasSlash = (dir[strlen(dir) - 1] == '/');
+        for (const char* fName : candidatePlateFonts) {
+            snprintf(plateFontPath, sizeof(plateFontPath), "%s%sfonts/%s", dir, hasSlash ? "" : "/", fName);
+            if (access(plateFontPath, F_OK) == 0) {
+                m_pRuFont = io.Fonts->AddFontFromFileTTF(plateFontPath, 30.0f);
+                if (m_pRuFont) break;
+            }
+            snprintf(plateFontPath, sizeof(plateFontPath), "%s%sSAMP/fonts/%s", dir, hasSlash ? "" : "/", fName);
+            if (access(plateFontPath, F_OK) == 0) {
+                m_pRuFont = io.Fonts->AddFontFromFileTTF(plateFontPath, 30.0f);
+                if (m_pRuFont) break;
+            }
+        }
+        if (m_pRuFont) break;
+    }
+    if (!m_pRuFont && pGUI) {
+        m_pRuFont = pGUI->GetFont();
+    }
 
 	m_pUaSprite->m_pTexture = CUtil::LoadTextureFromDB("samp", "plate_ua");
 	m_pBuSprite->m_pTexture = CUtil::LoadTextureFromDB("samp", "plate_bu");
@@ -207,7 +242,12 @@ RwTexture* CCustomPlateManager::createRuPlate(std::string& szNumber, std::string
 	ImGui::NewFrame();
 
 	// num
-    ImGui::PushFont(m_pRuFont);
+    ImFont* activeFont = m_pRuFont ? m_pRuFont : (pGUI ? pGUI->GetFont() : nullptr);
+    bool pushedFont = false;
+    if (activeFont) {
+        ImGui::PushFont(activeFont);
+        pushedFont = true;
+    }
 
     float xPos = 17.0f;
     for (auto it = szNumber.begin(); it != szNumber.end(); ++it) {
@@ -235,7 +275,7 @@ RwTexture* CCustomPlateManager::createRuPlate(std::string& szNumber, std::string
     else
         ImGui::GetBackgroundDrawList()->AddText(nullptr, 28.f, ImVec2(202, 10), ImColor(IM_COL32_BLACK), szRegion.c_str());
 
-    ImGui::PopFont();
+    if (pushedFont) ImGui::PopFont();
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplRenderWare_RenderDrawData(ImGui::GetDrawData());
@@ -244,5 +284,5 @@ RwTexture* CCustomPlateManager::createRuPlate(std::string& szNumber, std::string
 
 	return pTexture;
 
-	// y - отступ сверху. h - высота сверху
+	// y - РѕС‚СЃС‚СѓРї СЃРІРµСЂС…Сѓ. h - РІС‹СЃРѕС‚Р° СЃРІРµСЂС…Сѓ
 }

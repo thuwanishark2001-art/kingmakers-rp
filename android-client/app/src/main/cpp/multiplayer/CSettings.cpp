@@ -17,10 +17,11 @@ static void ClearBackslashN(char *pStr, size_t size) {
 	}
 }
 
+
 void CSettings::toDefaults(int iCategory)
 {
-	char buff[0x7F];
-	sprintf(buff, "%sSAMP/settings.ini", g_pszStorage);
+	char buff[512];
+	snprintf(buff, sizeof(buff), "%sSAMP/settings.ini", GetStorageDirectory());
 
 	strcpy(m_Settings.szIp, "139.180.185.57");
 	m_Settings.port = 7777;
@@ -36,8 +37,8 @@ void CSettings::toDefaults(int iCategory)
 
 void CSettings::save(int iIgnoreCategory)
 {
-	char buff[0x7F];
-	sprintf(buff, "%sSAMP/settings.ini", g_pszStorage);
+	char buff[512];
+	snprintf(buff, sizeof(buff), "%sSAMP/settings.ini", GetStorageDirectory());
 	remove(buff);
 
 	ini_table_s *config = ini_table_create();
@@ -96,8 +97,8 @@ void CSettings::LoadSettings(const char *szNickName, int iChatLines)
 
 	Log("Loading settings..");
 
-	char buff[0x7F];
-	sprintf(buff, "%sSAMP/settings.ini", g_pszStorage);
+	char buff[512];
+	snprintf(buff, sizeof(buff), "%sSAMP/settings.ini", GetStorageDirectory());
 
 	ini_table_s *config = ini_table_create();
 	Log("Opening settings: %s", buff);
@@ -116,6 +117,9 @@ void CSettings::LoadSettings(const char *szNickName, int iChatLines)
 
 	memset(m_Settings.szIp, 0, sizeof(m_Settings.szIp));
 	const char *szIp = ini_table_get_entry(config, "client", "ip");
+	if (!szIp || strlen(szIp) == 0) {
+		szIp = ini_table_get_entry(config, "client", "host");
+	}
 	if (szIp && strlen(szIp) > 0) {
 		strcpy(m_Settings.szIp, szIp);
 	} else {
@@ -125,7 +129,11 @@ void CSettings::LoadSettings(const char *szNickName, int iChatLines)
 	m_Settings.port = ini_table_get_entry_as_int(config, "client", "port", 7777);
 	if (m_Settings.port <= 0) m_Settings.port = 7777;
 
-	std::string szName = ini_table_get_entry(config, "client", "name");
+	const char *rawName = ini_table_get_entry(config, "client", "name");
+	if (!rawName) rawName = ini_table_get_entry(config, "client", "player_name");
+	if (!rawName) rawName = ini_table_get_entry(config, "client", "nickname");
+	std::string szName = rawName ? rawName : "King_Maker";
+
 	const char *szPassword = ini_table_get_entry(config, "client", "password");
 	const char *pPassword = ini_table_get_entry(config, "client", "player_password");
 
@@ -141,7 +149,8 @@ void CSettings::LoadSettings(const char *szNickName, int iChatLines)
 	m_Settings.isTestMode = ini_table_get_entry_as_int(config, "client", "test", 0);
 	g_bIsTestMode = (bool)m_Settings.isTestMode;
 
-	std::string szFontName = ini_table_get_entry(config, "gui", "Font");
+	const char *rawFont = ini_table_get_entry(config, "gui", "Font");
+	std::string szFontName = rawFont ? rawFont : "visby-round-cf-extra-bold.ttf";
 
 	if(pPassword)
 	{

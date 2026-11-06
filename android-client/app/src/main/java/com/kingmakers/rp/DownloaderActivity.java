@@ -51,20 +51,55 @@ public class DownloaderActivity extends AppCompatActivity {
     private boolean isFinished = false;
 
     public static File getGameStorageDir(Context ctx) {
-        File dir = ctx.getExternalFilesDir(null);
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
+        File[] candidates = new File[] {
+                new File("/storage/emulated/0/Android/data/com.kingmakers.rp/files"),
+                new File("/storage/emulated/0/Android/data/com.russia.game/files"),
+                ctx.getExternalFilesDir(null),
+                ctx.getFilesDir()
+        };
+
+        for (File dir : candidates) {
+            if (dir != null && dir.exists()) {
+                if (new File(dir, "data/gta.dat").exists() ||
+                    new File(dir, "SAMP/gta.dat").exists() ||
+                    new File(dir, "SAMP").exists() ||
+                    new File(dir, "models/gta3.img").exists()) {
+                    return dir;
+                }
+            }
         }
-        return dir;
+
+        File dir = ctx.getExternalFilesDir(null);
+        if (dir != null) {
+            if (!dir.exists()) dir.mkdirs();
+            return dir;
+        }
+        return ctx.getFilesDir();
     }
 
     public static boolean isCacheInstalled(Context ctx) {
-        File targetDir = getGameStorageDir(ctx);
-        if (targetDir == null) return false;
-        File gtaDat = new File(targetDir, "data/gta.dat");
-        File gtaImg = new File(targetDir, "texdb/gta3.img");
-        File sampDir = new File(targetDir, "SAMP");
-        return gtaDat.exists() || gtaImg.exists() || sampDir.exists();
+        File[] candidates = new File[] {
+                new File("/storage/emulated/0/Android/data/com.kingmakers.rp/files"),
+                new File("/storage/emulated/0/Android/data/com.russia.game/files"),
+                ctx.getExternalFilesDir(null),
+                ctx.getFilesDir(),
+                new File("/data/data/com.kingmakers.rp/files"),
+                new File("/data/data/com.russia.game/files")
+        };
+
+        for (File dir : candidates) {
+            if (dir == null || !dir.exists()) continue;
+            if (new File(dir, "data/gta.dat").exists() ||
+                new File(dir, "SAMP/gta.dat").exists() ||
+                new File(dir, "texdb/gta3.img").exists() ||
+                new File(dir, "models/gta3.img").exists() ||
+                new File(dir, "data/script/mainV1.scm").exists() ||
+                new File(dir, "SAMP/main.scm").exists() ||
+                new File(dir, "SAMP").exists()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -243,6 +278,9 @@ public class DownloaderActivity extends AppCompatActivity {
     public static void ensureGameFiles(Context ctx, String nick, String ip, int port) {
         File[] targetDirs = new File[] {
                 getGameStorageDir(ctx),
+                ctx.getExternalFilesDir(null),
+                new File("/storage/emulated/0/Android/data/com.kingmakers.rp/files"),
+                new File("/storage/emulated/0/Android/data/com.russia.game/files"),
                 ctx.getFilesDir()
         };
 
@@ -267,9 +305,16 @@ public class DownloaderActivity extends AppCompatActivity {
                 File iniFile = new File(sampDir, "settings.ini");
                 String iniContent = "[client]\n" +
                         "name=" + nick + "\n" +
+                        "ip=" + ip + "\n" +
                         "host=" + ip + "\n" +
                         "port=" + port + "\n" +
-                        "debug=0\n";
+                        "debug=0\n\n" +
+                        "[gui]\n" +
+                        "Font=visby-round-cf-extra-bold.ttf\n" +
+                        "fps=60\n" +
+                        "FontSize=30.0\n" +
+                        "ChatFontSize=-1\n" +
+                        "FontOutline=2\n";
                 try (java.io.FileWriter fw = new java.io.FileWriter(iniFile, false)) {
                     fw.write(iniContent);
                 }

@@ -69,8 +69,16 @@ RwTexture* CMaterialText::Generate(uint8_t matSize, const char* fontname, float 
 		}*/
 		
 		char path[260];
-		if (bInvalidFont) sprintf(path, "%sSAMP/fonts/arial.ttf", g_pszStorage);
-		else sprintf(path, "%sSAMP/fonts/%s.ttf", g_pszStorage, fontname);
+		const char* storage = GetStorageDirectory();
+		if (bInvalidFont) snprintf(path, sizeof(path), "%sSAMP/fonts/arial.ttf", storage);
+		else snprintf(path, sizeof(path), "%sSAMP/fonts/%s.ttf", storage, fontname);
+
+		if (access(path, F_OK) != 0) {
+			snprintf(path, sizeof(path), "%sfonts/%s.ttf", storage, fontname);
+			if (access(path, F_OK) != 0) {
+				snprintf(path, sizeof(path), "%sSAMP/fonts/visby-round-cf-extra-bold.ttf", storage);
+			}
+		}
 		
 		textRasterizer->SetupFont(path, fontSize);
 		if (textRasterizer->IsFontReady()) {

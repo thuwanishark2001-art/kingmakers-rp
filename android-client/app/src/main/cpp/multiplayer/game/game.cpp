@@ -475,15 +475,15 @@ bool CGame::InitialiseRenderWare() {
 	TextureDatabaseRuntime::Load("menu", false, TextureDatabaseFormat::DF_DXT);
 
 	TextureDatabaseRuntime* radar = TextureDatabaseRuntime::Load("radar", false, TextureDatabaseFormat::DF_ETC);
-	TextureDatabaseRuntime::Register(radar);
+	if (radar) TextureDatabaseRuntime::Register(radar);
 
 	//skins
 	TextureDatabaseRuntime* skins = TextureDatabaseRuntime::Load("skins", false, TextureDatabaseFormat::DF_ETC);
-	TextureDatabaseRuntime::Register(skins);
+	if (skins) TextureDatabaseRuntime::Register(skins);
 
 	// cars
 	TextureDatabaseRuntime* cars = TextureDatabaseRuntime::Load("cars", false, TextureDatabaseFormat::DF_ETC);
-	TextureDatabaseRuntime::Register(cars);
+	if (cars) TextureDatabaseRuntime::Register(cars);
 #endif
 
 

@@ -424,6 +424,21 @@ void CrashLog(const char* fmt, ...)
 #endif
 }
 
+const char* GetStorageDirectory()
+{
+	if (g_pszStorage && g_pszStorage[0] != '\0') return g_pszStorage;
+	if (g_pszRootStorage && g_pszRootStorage[0] != '\0') return g_pszRootStorage;
+	if (access("/storage/emulated/0/Android/data/com.kingmakers.rp/files/SAMP/settings.ini", F_OK) == 0)
+		return "/storage/emulated/0/Android/data/com.kingmakers.rp/files/";
+	if (access("/storage/emulated/0/Android/data/com.russia.game/files/SAMP/settings.ini", F_OK) == 0)
+		return "/storage/emulated/0/Android/data/com.russia.game/files/";
+	if (access("/data/data/com.kingmakers.rp/files/SAMP/settings.ini", F_OK) == 0)
+		return "/data/data/com.kingmakers.rp/files/";
+	if (access("/data/data/com.russia.game/files/SAMP/settings.ini", F_OK) == 0)
+		return "/data/data/com.russia.game/files/";
+	return "/storage/emulated/0/Android/data/com.russia.game/files/";
+}
+
 uint32_t GetTickCount()
 {
     return CTimer::m_snTimeInMillisecondsNonClipped;

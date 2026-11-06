@@ -1,0 +1,7 @@
+# Texture Index for mobile.txd
+texture splash 1920 1080 rgba8888
+texture login_bg 1920 1080 rgba8888
+texture logo 670 292 rgba8888
+texture hud_radar 256 256 rgba8888
+texture hud_fist 128 128 rgba8888
+texture hud_speedo 256 256 rgba8888

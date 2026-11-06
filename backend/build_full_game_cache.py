@@ -38,6 +38,8 @@ dirs = [
     "data/paths",
     "data/script",
     "SAMP",
+    "SAMP/fonts",
+    "fonts",
     "texdb",
     "texdb/gta3",
     "texdb/mobile",
@@ -165,9 +167,18 @@ if os.path.exists(f"{CACHE_ROOT}/data/handling.cfg"):
 with open(f"{CACHE_ROOT}/SAMP/settings.ini", "w") as f:
     f.write("""[client]
 name = KingmakersPlayer
-server = 139.180.185.57
+host = 139.180.185.57
+ip = 139.180.185.57
 port = 7777
 fps = 60
+debug = 0
+
+[gui]
+Font = visby-round-cf-extra-bold.ttf
+fps = 60
+FontSize = 30.0
+ChatFontSize = -1
+FontOutline = 2
 """)
 
 # 3. TEXTURE DATABASE (TEXDB)
@@ -313,6 +324,33 @@ voice_quality = 7
 shutil.copy(f"{ASSETS_DIR}/kingmakers_logo_transparent.png", f"{CACHE_ROOT}/gui/logo_main.png")
 shutil.copy(f"{ASSETS_DIR}/splash_loading_1080p.png", f"{CACHE_ROOT}/gui/splash.png")
 shutil.copy(f"{ASSETS_DIR}/login_background_clean_1080p.png", f"{CACHE_ROOT}/gui/login_bg.png")
+
+# Copy TTF Fonts for ImGui and MaterialText rasterizer
+print("  Bundling UI & Chat TTF Fonts...")
+FONTS_SRC = os.path.join(REPO_ROOT, "android-client/app/src/main/res/font")
+font_target_dirs = [f"{CACHE_ROOT}/SAMP/fonts", f"{CACHE_ROOT}/fonts", f"{CACHE_ROOT}/gui/fonts"]
+for fd in font_target_dirs:
+    os.makedirs(fd, exist_ok=True)
+
+if os.path.exists(FONTS_SRC):
+    for font_file in os.listdir(FONTS_SRC):
+        if font_file.endswith(".ttf"):
+            src_font = os.path.join(FONTS_SRC, font_file)
+            for fd in font_target_dirs:
+                shutil.copy2(src_font, os.path.join(fd, font_file))
+
+    # Aliases expected by libmultiplayer.so
+    for fd in font_target_dirs:
+        visby_src = os.path.join(fd, "visby_round_cf_extra_bold.ttf")
+        if os.path.exists(visby_src):
+            shutil.copy2(visby_src, os.path.join(fd, "visby-round-cf-extra-bold.ttf"))
+
+        roboto_b_src = os.path.join(fd, "roboto_bold.ttf")
+        if os.path.exists(roboto_b_src):
+            shutil.copy2(roboto_b_src, os.path.join(fd, "Roboto-Bold.ttf"))
+            shutil.copy2(roboto_b_src, os.path.join(fd, "arial.ttf"))
+            shutil.copy2(roboto_b_src, os.path.join(fd, "Arial.ttf"))
+
 
 # 7. ZIP FULL GAME DATA PACKAGE
 print("[6/6] Packaging into production zip...")
