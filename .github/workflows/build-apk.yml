@@ -5,17 +5,22 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up JDK 21
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Setup Gradle
@@ -42,7 +47,7 @@ jobs:
         run: |
           chmod +x gradlew
           set -o pipefail
-          ./gradlew assembleVer_releaseDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
             echo "## ❌ Gradle Build Error Details" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             grep -B 5 -A 25 "FAILURE:" /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY || tail -n 80 /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY
@@ -53,7 +58,7 @@ jobs:
       - name: Prepare Standalone APK
         run: |
           mkdir -p build-out
-          cp android-client/app/build/outputs/apk/ver_release/debug/*.apk build-out/Kingmakers_RP_Standalone_v1.0.apk
+          cp android-client/app/build/outputs/apk/debug/*.apk build-out/Kingmakers_RP_Standalone_v1.0.apk
           ls -lh build-out/Kingmakers_RP_Standalone_v1.0.apk
 
       - name: Upload Standalone APK Artifact
@@ -63,11 +68,14 @@ jobs:
           path: build-out/Kingmakers_RP_Standalone_v1.0.apk
           if-no-files-found: error
 
-      - name: Upload Build Log
+      - name: Save Build Log to Branch
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-build-log
-          path: /tmp/build_log.txt
-          if-no-files-found: ignore
-
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B build-logs
+          mkdir -p logs
+          tail -n 250 /tmp/build_log.txt > logs/last_build_error.txt
+          git add logs/last_build_error.txt
+          git commit -m "chore: save build log [skip ci]" || true
+          git push -f origin build-logs || true
