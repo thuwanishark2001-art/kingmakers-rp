@@ -16,11 +16,7 @@
 
 // Load line into static buffer (`ms_line`)
 char* CFileLoader::LoadLine(FILE* file) {
-   // if(!fgets(ms_line, sizeof(ms_line), file))
-     //   return nullptr;
-
-  //  return ms_line;
-
+    if (!file) return nullptr;
     if (!CFileMgr::ReadLine(file, ms_line, sizeof(ms_line)))
         return nullptr;
 
@@ -36,6 +32,7 @@ char* CFileLoader::LoadLine(FILE* file) {
 
 bool CFileMgr::ReadLine(FILESTREAM file, char *str, int32 num)
 {
+    if (!file) return false;
     return fgets(str, num, file) != nullptr;
 }
 
@@ -71,7 +68,12 @@ void CFileLoader::LoadVehicleObject() {
     float              wheelSizeFront{ 0.7f }, wheelSizeRear{ 0.7f };
     int32              wheelUpgradeCls{ -1 };
 
-    const auto pFile = CFileMgr::OpenFile("SAMP/vehicles.ide", "rb");
+    auto pFile = CFileMgr::OpenFile("SAMP/vehicles.ide", "rb");
+    if (!pFile) pFile = CFileMgr::OpenFile("data/vehicles.ide", "rb");
+    if (!pFile) {
+        Log("LoadVehicleObject: vehicles.ide not found, skipping");
+        return;
+    }
     while (CFileLoader::LoadLine(pFile)) {
         if (strlen(CFileLoader::ms_line) == 0 || CFileLoader::ms_line[0] == ';' || CFileLoader::ms_line[0] == '#' || CFileLoader::ms_line[0] == '\r') {
             // Пропустить комментарии и пустые строки

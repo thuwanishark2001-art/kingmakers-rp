@@ -36,6 +36,8 @@ dirs = [
     "data",
     "data/maps",
     "data/paths",
+    "data/script",
+    "SAMP",
     "texdb",
     "texdb/gta3",
     "texdb/mobile",
@@ -130,6 +132,42 @@ GRASS           0.75    0.75    0.75    0.0     0.0     0       0       0
 DIRT            0.70    0.70    0.70    0.0     0.0     0       0       0
 SAND            0.60    0.60    0.60    0.0     0.0     0       0       0
 WATER           0.10    0.10    0.10    0.0     0.0     0       0       0
+""")
+
+ENGINE_DIR = os.path.join(ASSETS_DIR, "engine")
+if os.path.exists(ENGINE_DIR):
+    print("  Bundling official engine scripts, IDE definitions, and weapon data...")
+    for eng_file in ["default.ide", "fonts.dat", "peds.ide", "vehicles.ide", "weapon.dat"]:
+        src_p = os.path.join(ENGINE_DIR, eng_file)
+        if os.path.exists(src_p):
+            shutil.copy2(src_p, f"{CACHE_ROOT}/data/{eng_file}")
+            shutil.copy2(src_p, f"{CACHE_ROOT}/SAMP/{eng_file}")
+
+    for scm in ["mainV1.scm", "main.scm"]:
+        src_scm = os.path.join(ENGINE_DIR, "mainV1.scm")
+        if os.path.exists(src_scm):
+            shutil.copy2(src_scm, f"{CACHE_ROOT}/data/{scm}")
+            shutil.copy2(src_scm, f"{CACHE_ROOT}/data/script/{scm}")
+            shutil.copy2(src_scm, f"{CACHE_ROOT}/SAMP/{scm}")
+
+    for simg in ["scriptv1.img", "script.img"]:
+        src_simg = os.path.join(ENGINE_DIR, "scriptv1.img")
+        if os.path.exists(src_simg):
+            shutil.copy2(src_simg, f"{CACHE_ROOT}/data/{simg}")
+            shutil.copy2(src_simg, f"{CACHE_ROOT}/data/script/{simg}")
+            shutil.copy2(src_simg, f"{CACHE_ROOT}/SAMP/{simg}")
+
+if os.path.exists(f"{CACHE_ROOT}/data/gta.dat"):
+    shutil.copy2(f"{CACHE_ROOT}/data/gta.dat", f"{CACHE_ROOT}/SAMP/gta.dat")
+if os.path.exists(f"{CACHE_ROOT}/data/handling.cfg"):
+    shutil.copy2(f"{CACHE_ROOT}/data/handling.cfg", f"{CACHE_ROOT}/SAMP/handling.cfg")
+
+with open(f"{CACHE_ROOT}/SAMP/settings.ini", "w") as f:
+    f.write("""[client]
+name = KingmakersPlayer
+server = 139.180.185.57
+port = 7777
+fps = 60
 """)
 
 # 3. TEXTURE DATABASE (TEXDB)

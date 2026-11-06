@@ -49,7 +49,12 @@ auto GetBaseComboByName(const char* name) {
 void CWeaponInfo::LoadWeaponData() {
     Log("Loading weapon.dat..");
 
-    auto f = CFileMgr::OpenFile("DATA\\WEAPON.DAT", "rb");
+    auto f = CFileMgr::OpenFile("data/weapon.dat", "rb");
+    if (!f) f = CFileMgr::OpenFile("SAMP/weapon.dat", "rb");
+    if (!f) {
+        Log("LoadWeaponData: weapon.dat not found, skipping");
+        return;
+    }
     for (auto line = CFileLoader::LoadLine(f); line; line = CFileLoader::LoadLine(f)) {
         std::string_view sv(line);
         if (sv.find("ENDWEAPONDATA") != std::string_view::npos) {

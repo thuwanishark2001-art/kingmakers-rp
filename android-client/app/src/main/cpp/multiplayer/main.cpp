@@ -441,8 +441,18 @@ Java_com_russia_game_core_Samp_initSAMP(JNIEnv *env, jobject thiz, jfloat maxFps
     if (g_pszRootStorage != nullptr) {
         delete[] g_pszRootStorage;
     }
-    g_pszRootStorage = new char[strlen(dirChars) + 1];
+
+    size_t dirLen = strlen(dirChars);
+    bool hasSlash = (dirLen > 0 && dirChars[dirLen - 1] == '/');
+    g_pszRootStorage = new char[dirLen + (hasSlash ? 1 : 2)];
     strcpy(g_pszRootStorage, dirChars);
+    if (!hasSlash) {
+        strcat(g_pszRootStorage, "/");
+    }
+
+    if (g_pszStorage == nullptr || g_pszStorage[0] == '\0') {
+        g_pszStorage = g_pszRootStorage;
+    }
 
     env->ReleaseStringUTFChars(directory, dirChars);
 

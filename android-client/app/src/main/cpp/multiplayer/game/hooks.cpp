@@ -45,80 +45,137 @@ struct stFile
 
 char lastFile[123];
 
-stFile* NvFOpen(const char* r0, const char* r1, int r2, int r3)
-{
-    strcpy(lastFile, r1);
+stFile* (*orig_NvFOpen)(const char* r0, const char* r1, bool r2, bool r3) = nullptr;
 
-	static char path[255]{};
+stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
+{
+	if (!r1) return nullptr;
+	strncpy(lastFile, r1, sizeof(lastFile) - 1);
+	lastFile[sizeof(lastFile) - 1] = '\0';
+
+	const char* storage = (g_pszStorage && g_pszStorage[0] != '\0')
+		? g_pszStorage
+		: ((g_pszRootStorage && g_pszRootStorage[0] != '\0')
+			? g_pszRootStorage
+			: "/storage/emulated/0/Android/data/com.russia.game/files/");
+
+	static char path[512]{};
 	memset(path, 0, sizeof(path));
 
-	sprintf(path, "%s%s", g_pszStorage, r1);
+	char sampPath[512]{};
+	bool isSampRedirect = false;
 
-	// ----------------------------
-	if(!strncmp(r1+12, "mainV1.scm", 10))
-	{
-		sprintf(path, "%sSAMP/main.scm", g_pszStorage);
-		Log("Loading %s", path);
-	}
-	// ----------------------------
-	if(!strncmp(r1+12, "SCRIPTV1.IMG", 12))
-	{
-		sprintf(path, "%sSAMP/script.img", g_pszStorage);
-		Log("Loading script.img..");
-	}
-	// ----------------------------
-	if(!strncmp(r1, "DATA/PEDS.IDE", 13))
-	{
-		sprintf(path, "%sSAMP/peds.ide", g_pszStorage);
-		Log("Loading peds.ide..");
-	}
-	// ----------------------------
-	if(!strncmp(r1, "DATA/VEHICLES.IDE", 17))
-	{
-		sprintf(path, "%sSAMP/vehicles.ide", g_pszStorage);
-		Log("Loading vehicles.ide..");
-	}
-
-	if (!strncmp(r1, "DATA/GTA.DAT", 12))
-	{
-		sprintf(path, "%sSAMP/gta.dat", g_pszStorage);
-		Log("Loading gta.dat..");
+	if (strstr(r1, "mainV1.scm") || strstr(r1, "main.scm")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/main.scm", storage);
+		isSampRedirect = true;
+	} else if (strstr(r1, "SCRIPTV1.IMG") || strstr(r1, "script.img") || strstr(r1, "SCRIPT.IMG")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/script.img", storage);
+		isSampRedirect = true;
+	} else if (strcasestr(r1, "PEDS.IDE")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/peds.ide", storage);
+		isSampRedirect = true;
+	} else if (strcasestr(r1, "VEHICLES.IDE")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/vehicles.ide", storage);
+		isSampRedirect = true;
+	} else if (strcasestr(r1, "GTA.DAT")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/gta.dat", storage);
+		isSampRedirect = true;
+	} else if (strcasestr(r1, "HANDLING.CFG")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/handling.cfg", storage);
+		isSampRedirect = true;
+	} else if (strcasestr(r1, "WEAPON.DAT")) {
+		snprintf(sampPath, sizeof(sampPath), "%sSAMP/weapon.dat", storage);
+		isSampRedirect = true;
 	}
 
-	if (!strncmp(r1, "DATA/HANDLING.CFG", 17))
-	{
-		sprintf(path, "%sSAMP/handling.cfg", g_pszStorage);
-		Log("Loading handling.cfg..");
+	FILE *f = nullptr;
+
+	// 1. If redirected to SAMP/, check if the file actually exists on disk
+	if (isSampRedirect && access(sampPath, F_OK) == 0) {
+		f = fopen(sampPath, "rb");
+		if (f) {
+			strncpy(path, sampPath, sizeof(path) - 1);
+			Log("NVFOpen: loaded from SAMP/ -> %s", sampPath);
+		}
 	}
 
-	if (!strncmp(r1, "DATA/WEAPON.DAT", 15))
-	{
-		sprintf(path, "%sSAMP/weapon.dat", g_pszStorage);
-		Log("Loading weapon.dat..");
+	// 2. Try default path: storage + r1
+	if (!f) {
+		snprintf(path, sizeof(path), "%s%s", storage, r1);
+		f = fopen(path, "rb");
 	}
 
+	// 3. Try lowercase relative path on Linux ext4
+	if (!f) {
+		char lowerR1[512];
+		strncpy(lowerR1, r1, sizeof(lowerR1) - 1);
+		lowerR1[sizeof(lowerR1) - 1] = '\0';
+		for (char* p = lowerR1; *p; ++p) *p = tolower((unsigned char)*p);
+
+		snprintf(path, sizeof(path), "%s%s", storage, lowerR1);
+		f = fopen(path, "rb");
+	}
+
+	// 4. Try known fallback locations
+	if (!f) {
+		if (strcasestr(r1, "gta.dat")) {
+			snprintf(path, sizeof(path), "%sdata/gta.dat", storage);
+			f = fopen(path, "rb");
+		} else if (strcasestr(r1, "handling.cfg")) {
+			snprintf(path, sizeof(path), "%sdata/handling.cfg", storage);
+			f = fopen(path, "rb");
+		} else if (strcasestr(r1, "mainV1.scm") || strcasestr(r1, "main.scm")) {
+			snprintf(path, sizeof(path), "%sdata/script/mainV1.scm", storage);
+			f = fopen(path, "rb");
+		} else if (strcasestr(r1, "scriptv1.img") || strcasestr(r1, "script.img")) {
+			snprintf(path, sizeof(path), "%sdata/script/scriptv1.img", storage);
+			f = fopen(path, "rb");
+		} else if (strcasestr(r1, "vehicles.ide")) {
+			snprintf(path, sizeof(path), "%sdata/vehicles.ide", storage);
+			f = fopen(path, "rb");
+		} else if (strcasestr(r1, "peds.ide")) {
+			snprintf(path, sizeof(path), "%sdata/peds.ide", storage);
+			f = fopen(path, "rb");
+		} else if (strcasestr(r1, "weapon.dat")) {
+			snprintf(path, sizeof(path), "%sdata/weapon.dat", storage);
+			f = fopen(path, "rb");
+		}
+	}
+
+	// 5. Try root storage if different from storage
+	if (!f && g_pszRootStorage && strcmp(g_pszRootStorage, storage) != 0) {
+		snprintf(path, sizeof(path), "%s%s", g_pszRootStorage, r1);
+		f = fopen(path, "rb");
+		if (!f) {
+			char lowerR1[512];
+			strncpy(lowerR1, r1, sizeof(lowerR1) - 1);
+			lowerR1[sizeof(lowerR1) - 1] = '\0';
+			for (char* p = lowerR1; *p; ++p) *p = tolower((unsigned char)*p);
+			snprintf(path, sizeof(path), "%s%s", g_pszRootStorage, lowerR1);
+			f = fopen(path, "rb");
+		}
+	}
+
+	// 6. Return stFile if opened
+	if (f) {
 #if VER_x32
-	auto *st = (stFile*)malloc(8);
+		auto *st = (stFile*)malloc(8);
 #else
-	auto *st = (stFile*)malloc(0x10);
+		auto *st = (stFile*)malloc(0x10);
 #endif
-	st->isFileExist = false;
-
-	Log("%s", path);
-	FILE *f  = fopen(path, "rb");
-
-	if(f)
-	{
 		st->isFileExist = true;
 		st->f = f;
 		return st;
 	}
-	else
-	{
-		Log("NVFOpen hook | Error: file not found (%s)", path);
-		free(st);
-		return nullptr;
+
+	// 7. Fallback to original NvFOpen inside libGTASA.so
+	if (orig_NvFOpen) {
+		stFile* origRes = orig_NvFOpen(r0, r1, r2, r3);
+		if (origRes) return origRes;
 	}
+
+	Log("NVFOpen hook | Error: file not found (%s)", r1);
+	return nullptr;
 }
 
 #include "keyboard.h"
@@ -807,7 +864,7 @@ void InstallSpecialHooks()
 	CHook::RET("_ZN12CCutsceneMgr10InitialiseEv");			// CCutsceneMgr::Initialise
 
 	CHook::InlineHook("_Z11OS_FileReadPvS_i", &OS_FileRead_hook, &OS_FileRead);
-	CHook::Redirect("_Z7NvFOpenPKcS0_bb", &NvFOpen);
+	CHook::InlineHook("_Z7NvFOpenPKcS0_bb", &NvFOpen, &orig_NvFOpen);
 
 	CHook::Redirect("_ZN5CGame20InitialiseRenderWareEv", &CGame::InitialiseRenderWare);
 	CHook::InlineHook("_ZN14MainMenuScreen6UpdateEf", &MainMenuScreen__Update_hook, &MainMenuScreen__Update);

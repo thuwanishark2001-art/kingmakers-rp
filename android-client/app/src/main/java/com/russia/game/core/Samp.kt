@@ -53,12 +53,29 @@ class Samp : GTASA() {
             val internalDir = File(filesDir, "AudioConfig")
             clearDir(internalDir)
             copyFromAssets(internalDir)
+
+            getExternalFilesDir(null)?.let { extFiles ->
+                val extAudioDir = File(extFiles, "AudioConfig")
+                copyFromAssets(extAudioDir)
+            }
         } catch (e: Exception) {
             Log.e("Samp", "AudioConfig init note: ${e.message}")
         }
 
+        val gameDir = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
+        val storagePath = if (gameDir.endsWith("/")) gameDir else "$gameDir/"
+
         try {
-            initSAMP(maxFps, filesDir.toString())
+            val nick = intent?.getStringExtra("player_name") ?: intent?.getStringExtra("name") ?: "Marcus_King"
+            val ip = intent?.getStringExtra("server_ip") ?: intent?.getStringExtra("ip") ?: "139.180.185.57"
+            val port = intent?.getIntExtra("server_port", 7777) ?: 7777
+            com.kingmakers.rp.DownloaderActivity.ensureGameFiles(this, nick, ip, port)
+        } catch (e: Exception) {
+            Log.e("Samp", "ensureGameFiles note: ${e.message}")
+        }
+
+        try {
+            initSAMP(maxFps, storagePath)
         } catch (t: Throwable) {
             Log.e("Samp", "initSAMP error: ${t.message}")
         }

@@ -239,40 +239,127 @@ public class DownloaderActivity extends AppCompatActivity {
         }
     }
 
-    private void writeSampSettings(String nick, String ip, int port) {
-        try {
-            File baseDir = getGameStorageDir(this);
-            if (baseDir == null) return;
-            File sampDir = new File(baseDir, "SAMP");
-            if (!sampDir.exists()) sampDir.mkdirs();
-            File iniFile = new File(sampDir, "settings.ini");
-            String iniContent = "[client]\n" +
-                    "name=" + nick + "\n" +
-                    "host=" + ip + "\n" +
-                    "port=" + port + "\n" +
-                    "debug=0\n";
-            try (java.io.FileWriter fw = new java.io.FileWriter(iniFile, false)) {
-                fw.write(iniContent);
-            }
+    public static void ensureGameFiles(Context ctx, String nick, String ip, int port) {
+        File[] targetDirs = new File[] {
+                getGameStorageDir(ctx),
+                ctx.getFilesDir()
+        };
 
-            File kmDir = new File(baseDir, "kingmakers");
-            if (!kmDir.exists()) kmDir.mkdirs();
-            File kmIni = new File(kmDir, "server.ini");
-            String kmContent = "[Connection]\n" +
-                    "host = " + ip + "\n" +
-                    "port = " + port + "\n" +
-                    "server_name = Kingmakers RP | Mobile Roleplay | v1.0.0\n" +
-                    "version = 1.0.0\n" +
-                    "[Client]\n" +
-                    "name = " + nick + "\n" +
-                    "fast_load = true\n" +
-                    "debug_logs = false\n";
-            try (java.io.FileWriter fw = new java.io.FileWriter(kmIni, false)) {
-                fw.write(kmContent);
+        for (File baseDir : targetDirs) {
+            if (baseDir == null) continue;
+            try {
+                if (!baseDir.exists()) baseDir.mkdirs();
+
+                File sampDir = new File(baseDir, "SAMP");
+                if (!sampDir.exists()) sampDir.mkdirs();
+
+                File dataDir = new File(baseDir, "data");
+                if (!dataDir.exists()) dataDir.mkdirs();
+
+                File scriptDir = new File(dataDir, "script");
+                if (!scriptDir.exists()) scriptDir.mkdirs();
+
+                File kmDir = new File(baseDir, "kingmakers");
+                if (!kmDir.exists()) kmDir.mkdirs();
+
+                // 1. Write SAMP settings.ini
+                File iniFile = new File(sampDir, "settings.ini");
+                String iniContent = "[client]\n" +
+                        "name=" + nick + "\n" +
+                        "host=" + ip + "\n" +
+                        "port=" + port + "\n" +
+                        "debug=0\n";
+                try (java.io.FileWriter fw = new java.io.FileWriter(iniFile, false)) {
+                    fw.write(iniContent);
+                }
+
+                // 2. Write kingmakers server.ini
+                File kmIni = new File(kmDir, "server.ini");
+                String kmContent = "[Connection]\n" +
+                        "host = " + ip + "\n" +
+                        "port = " + port + "\n" +
+                        "server_name = Kingmakers RP | Mobile Roleplay | v1.0.0\n" +
+                        "version = 1.0.0\n" +
+                        "[Client]\n" +
+                        "name = " + nick + "\n" +
+                        "fast_load = true\n" +
+                        "debug_logs = false\n";
+                try (java.io.FileWriter fw = new java.io.FileWriter(kmIni, false)) {
+                    fw.write(kmContent);
+                }
+
+                // 3. Fallback copies between data/ and SAMP/
+                File dataGtaDat = new File(dataDir, "gta.dat");
+                File sampGtaDat = new File(sampDir, "gta.dat");
+                if (dataGtaDat.exists() && !sampGtaDat.exists()) {
+                    copyFile(dataGtaDat, sampGtaDat);
+                } else if (sampGtaDat.exists() && !dataGtaDat.exists()) {
+                    copyFile(sampGtaDat, dataGtaDat);
+                }
+
+                File dataHandling = new File(dataDir, "handling.cfg");
+                File sampHandling = new File(sampDir, "handling.cfg");
+                if (dataHandling.exists() && !sampHandling.exists()) {
+                    copyFile(dataHandling, sampHandling);
+                } else if (sampHandling.exists() && !dataHandling.exists()) {
+                    copyFile(sampHandling, dataHandling);
+                }
+
+                // 4. Extract bundled engine assets from assets/game/ if missing
+                extractAssetFolder(ctx, "game", baseDir);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    }
+
+    private static void copyFile(File src, File dst) {
+        try {
+            if (dst.getParentFile() != null && !dst.getParentFile().exists()) {
+                dst.getParentFile().mkdirs();
+            }
+            try (InputStream in = new FileInputStream(src);
+                 OutputStream out = new FileOutputStream(dst)) {
+                byte[] buf = new byte[32768];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private static void extractAssetFolder(Context ctx, String assetPath, File targetDir) {
+        try {
+            String[] list = ctx.getAssets().list(assetPath);
+            if (list == null || list.length == 0) return;
+            for (String file : list) {
+                String subAsset = assetPath + "/" + file;
+                String[] subList = ctx.getAssets().list(subAsset);
+                if (subList != null && subList.length > 0) {
+                    File subTarget = new File(targetDir, file);
+                    if (!subTarget.exists()) subTarget.mkdirs();
+                    extractAssetFolder(ctx, subAsset, subTarget);
+                } else {
+                    File outFile = new File(targetDir, file);
+                    if (!outFile.exists() || outFile.length() == 0) {
+                        try (InputStream in = ctx.getAssets().open(subAsset);
+                             OutputStream out = new FileOutputStream(outFile)) {
+                            byte[] buf = new byte[32768];
+                            int len;
+                            while ((len = in.read(buf)) > 0) {
+                                out.write(buf, 0, len);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private void writeSampSettings(String nick, String ip, int port) {
+        ensureGameFiles(this, nick, ip, port);
     }
 
     private void launchGame() {

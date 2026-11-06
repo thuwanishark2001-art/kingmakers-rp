@@ -25,8 +25,21 @@ void cHandlingDataMgr::LoadHandlingData(defHandlingDataMgr *thiz)
     isHandlingLoaded = false;
 
     char filePath[256];
-    snprintf(filePath, sizeof(filePath), "%sSAMP/handling.cfg", g_pszStorage);
+    const char* storage = (g_pszStorage && g_pszStorage[0] != '\0')
+        ? g_pszStorage
+        : ((g_pszRootStorage && g_pszRootStorage[0] != '\0') ? g_pszRootStorage : "/storage/emulated/0/Android/data/com.russia.game/files/");
+
+    snprintf(filePath, sizeof(filePath), "%sSAMP/handling.cfg", storage);
     FILE* file = fopen(filePath, "rb");
+    if (!file) {
+        snprintf(filePath, sizeof(filePath), "%sdata/handling.cfg", storage);
+        file = fopen(filePath, "rb");
+    }
+
+    if (!file) {
+        Log("cHandlingDataMgr: handling.cfg not found, skipping");
+        return;
+    }
 
     char line[300];
     while (fgets(line, sizeof(line), file))
