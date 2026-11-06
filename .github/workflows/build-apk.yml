@@ -28,6 +28,7 @@ jobs:
         working-directory: android-client
         run: |
           chmod +x gradlew
+          set -o pipefail
           ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
             echo "## ❌ Gradle Build Error Details" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
@@ -38,7 +39,7 @@ jobs:
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: Kingmakers_RP_v1.0_Debug
           path: android-client/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
