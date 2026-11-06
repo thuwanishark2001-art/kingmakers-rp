@@ -14,9 +14,20 @@ import zipfile
 import shutil
 import hashlib
 
-BUILD_DIR = "/home/antigravity/kingmakers-rp/large-game-cache"
-ZIP_OUT = "/home/antigravity/kingmakers-rp/backend/public/downloads/kingmakers_full_game_cache_1.5gb.zip"
-SRC_CACHE = "/home/antigravity/kingmakers-rp/full-game-cache"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+
+BUILD_DIR = os.environ.get("KM_BUILD_DIR", os.path.join(REPO_ROOT, "large-game-cache"))
+ZIP_OUT = os.environ.get("KM_LARGE_ZIP_OUT", os.path.join(REPO_ROOT, "backend/public/downloads/kingmakers_full_game_cache_1.5gb.zip"))
+SRC_CACHE = os.environ.get("KM_CACHE_ROOT", os.path.join(REPO_ROOT, "full-game-cache"))
+
+os.makedirs(os.path.dirname(ZIP_OUT), exist_ok=True)
+
+# If full game cache hasn't been built yet, build it automatically
+if not os.path.exists(SRC_CACHE) or not os.listdir(SRC_CACHE):
+    print("Full game cache base not found. Generating base cache first...")
+    import subprocess
+    subprocess.run(["python3", os.path.join(SCRIPT_DIR, "build_full_game_cache.py")], check=True)
 
 print("==========================================================")
 print("  BUILDING 1.5GB FULL GAME DATA PACKAGE")

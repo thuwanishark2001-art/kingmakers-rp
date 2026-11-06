@@ -1,3 +1,8 @@
 node_modules/
 *.log
 kingmakers.db
+large-game-cache/
+full-game-cache/
+game-cache/
+backend/public/downloads/kingmakers_*.zip
+backend/public/downloads/kingmakers_*.sha256

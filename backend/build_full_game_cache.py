@@ -15,9 +15,14 @@ import zipfile
 import shutil
 import hashlib
 
-CACHE_ROOT = "/home/antigravity/kingmakers-rp/full-game-cache"
-ZIP_OUT = "/home/antigravity/kingmakers-rp/backend/public/downloads/kingmakers_full_game_cache_v1.0.zip"
-ASSETS_DIR = "/home/antigravity/kingmakers-rp/assets/production"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+
+CACHE_ROOT = os.environ.get("KM_CACHE_ROOT", os.path.join(REPO_ROOT, "full-game-cache"))
+ZIP_OUT = os.environ.get("KM_ZIP_OUT", os.path.join(REPO_ROOT, "backend/public/downloads/kingmakers_full_game_cache_v1.0.zip"))
+ASSETS_DIR = os.environ.get("KM_ASSETS_DIR", os.path.join(REPO_ROOT, "assets/production"))
+
+os.makedirs(os.path.dirname(ZIP_OUT), exist_ok=True)
 
 print("==========================================================")
 print("  KINGMAKERS RP - FULL MOBILE GAME CACHE BUILDER")

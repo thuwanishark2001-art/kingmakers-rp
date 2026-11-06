@@ -124,13 +124,27 @@ app.get('/api/status', async (req, res) => {
 });
 
 app.get('/api/launcher/config', (req, res) => {
+    let cacheSha256 = 'b3830bb96d3ed779889c19132f4507fa0213eec7e19f3933eb1104fdcb839909';
+    let cacheSizeMb = 1459.0;
+    const shaPath = path.join(__dirname, 'public/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip.sha256');
+    const zipPath = path.join(__dirname, 'public/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip');
+    if (fs.existsSync(shaPath)) {
+        try {
+            cacheSha256 = fs.readFileSync(shaPath, 'utf8').trim();
+        } catch (e) {}
+    }
+    if (fs.existsSync(zipPath)) {
+        try {
+            cacheSizeMb = parseFloat((fs.statSync(zipPath).size / (1024 * 1024)).toFixed(1));
+        } catch (e) {}
+    }
     res.json({
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
         clientApkUrl: 'http://139.180.185.57:8080/downloads/Kingmakers_RP_Full_Project_v1.0.zip',
         cacheZipUrl: 'http://139.180.185.57:8080/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip',
-        cacheSizeMb: 1459.0,
-        cacheSha256: 'b3830bb96d3ed779889c19132f4507fa0213eec7e19f3933eb1104fdcb839909',
+        cacheSizeMb,
+        cacheSha256,
         defaultServer: {
             name: 'Kingmakers RP #1 [Los Santos]',
             ip: SAMP_HOST,

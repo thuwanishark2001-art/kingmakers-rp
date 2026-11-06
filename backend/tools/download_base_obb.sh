@@ -8,9 +8,13 @@
 
 set -e
 
-DEST_DIR="/home/kingmakers/kingmakers-rp/backend/public/downloads"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+DEST_DIR="${KM_DEST_DIR:-$REPO_ROOT/backend/public/downloads}"
 BUILD_DIR="/tmp/km_full_cache_build"
 TARGET_ZIP="${DEST_DIR}/kingmakers_full_game_cache_2gb.zip"
+CACHE_SRC="${KM_CACHE_SRC:-$REPO_ROOT/full-game-cache}"
 
 echo "=========================================================="
 echo "  KINGMAKERS RP - 1.5GB+ FULL CACHE PACKAGER"
@@ -46,7 +50,9 @@ fi
 
 # 3. Inject Kingmakers RP Brand Assets, Models, Audio & Configs
 echo "[3/5] Ingesting Kingmakers RP custom textures & configs..."
-cp -r /home/kingmakers/kingmakers-rp/full-game-cache/* extracted/
+if [ -d "$CACHE_SRC" ]; then
+    cp -r "$CACHE_SRC"/* extracted/
+fi
 
 # 4. Generate Full-Scale Models & Textures Database
 echo "[4/5] Building full 1.5GB+ game archive..."

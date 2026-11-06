@@ -11,9 +11,12 @@ import zipfile
 import shutil
 from datetime import datetime
 
-CACHE_DIR = "/home/antigravity/kingmakers-rp/game-cache"
-ZIP_OUT = "/home/antigravity/kingmakers-rp/backend/public/downloads/kingmakers_game_cache_v1.0.zip"
-ASSETS_DIR = "/home/antigravity/kingmakers-rp/assets/production"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+
+CACHE_DIR = os.environ.get("KM_GAME_CACHE_DIR", os.path.join(REPO_ROOT, "game-cache"))
+ZIP_OUT = os.environ.get("KM_GAME_ZIP_OUT", os.path.join(REPO_ROOT, "backend/public/downloads/kingmakers_game_cache_v1.0.zip"))
+ASSETS_DIR = os.environ.get("KM_ASSETS_DIR", os.path.join(REPO_ROOT, "assets/production"))
 
 print("=== Building Kingmakers RP Complete Game Data Package ===")
 
