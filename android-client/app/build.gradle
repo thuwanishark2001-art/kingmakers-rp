@@ -40,7 +40,6 @@ android {
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
-            arguments "-j2"
         }
     }
 
