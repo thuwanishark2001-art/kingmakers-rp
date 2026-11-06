@@ -3,20 +3,19 @@
 #include "../game/common.h"
 #include "../game/Core/Vector2D.h"
 
-template<typename T, float CompressValue>
+template<typename T, int CompressNum, int CompressDen = 1>
 struct FixedVector {
     constexpr FixedVector() = default;
     constexpr FixedVector(CVector v3d) : x(v3d.x), y(v3d.y), z(v3d.z) {}
-    //constexpr FixedVector(float X, float Y, float Z) : x(X), y(Y), z(Z) {} // doesn't work because of `SunFlareDef` shit
     constexpr FixedVector(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
 
     constexpr operator CVector() const { return CVector{ x, y, z }; }
 
-public: // Public, because in some cases it might be useful to only access 1
-    FixedFloat<T, CompressValue> x{}, y{}, z{};
+public:
+    FixedFloat<T, CompressNum, CompressDen> x{}, y{}, z{};
 };
 
-template<typename T, float CompressValue>
+template<typename T, int CompressNum, int CompressDen = 1>
 struct FixedVector2D {
     constexpr FixedVector2D() = default;
     constexpr FixedVector2D(float X, float Y) : x(X), y(Y) {}
@@ -25,6 +24,6 @@ struct FixedVector2D {
 
     constexpr operator CVector2D() const { return { x, y }; }
 
-public: // Public, because in some cases it might be useful to only access 1
-    FixedFloat<T, CompressValue> x{}, y{};
+public:
+    FixedFloat<T, CompressNum, CompressDen> x{}, y{};
 };

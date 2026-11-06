@@ -1,9 +1,14 @@
 #pragma once
+#include <concepts>
+#include <type_traits>
+#include <cstdint>
 
 //! Fixed point number (With implicit conversion to float)
-template<std::integral T, float CompressValue, bool UseRoundingWhenConverting = false>
+template<std::integral T, int CompressNum, int CompressDen = 1, bool UseRoundingWhenConverting = false>
 class FixedFloat {
 public:
+    static constexpr float CompressValue = static_cast<float>(CompressNum) / static_cast<float>(CompressDen);
+
     //! Construct as 0
     constexpr FixedFloat() = default;
 
@@ -11,19 +16,17 @@ public:
     constexpr FixedFloat(float v) { Set(v, UseRoundingWhenConverting); }
 
     //! Construct from a pre-compressed value
-    //! Be (very) careful when using this constructor, as mixing up this and the float version will cause bugs...
-    // TODO: Maybe use tag-based constructors, because this is kinda bug-prone....
     template<std::integral Y>
     explicit constexpr FixedFloat(Y x) : value(x) {}
 
     //! Construct from another `FixedFloat` with the same CompressValue
     template<std::integral Y>
-    constexpr FixedFloat(FixedFloat<Y, CompressValue> x) : value(x.value) {}
+    constexpr FixedFloat(FixedFloat<Y, CompressNum, CompressDen> x) : value(x.value) {}
 
     //! Construct from another `FixedFloat` with a different CompressValue
-    template<std::integral Y, float CV>
-    requires (CV != CompressValue)
-    constexpr FixedFloat(FixedFloat<Y, CV> x) : FixedFloat{(float)x} {}
+    template<std::integral Y, int CN, int CD>
+    requires (CN != CompressNum || CD != CompressDen)
+    constexpr FixedFloat(FixedFloat<Y, CN, CD> x) : FixedFloat{(float)x} {}
 
     constexpr operator float() const { return static_cast<float>(value) / CompressValue; }
 
@@ -32,12 +35,10 @@ public:
         value = round ? static_cast<T>(v * CompressValue + 0.5f) : static_cast<T>(v * CompressValue);
     }
 
-    // Implementations of (basic) arithmetic ops. Necessary to avoid unnecessary int <=> float conversions
-    // (That would otherwise occur when doing arithmetic between 2 FixedFloat instances)
 #define IMPLEMENT_FIXED_OPERATOR(_op) \
     template<typename T2, typename CommonT = std::common_type_t<T, T2>> \
-    constexpr auto operator _op(FixedFloat<T2, CompressValue> o) { \
-        return FixedFloat<CommonT, CompressValue>{static_cast<CommonT>(this->value) _op static_cast<CommonT>(o.value)}; \
+    constexpr auto operator _op(FixedFloat<T2, CompressNum, CompressDen> o) { \
+        return FixedFloat<CommonT, CompressNum, CompressDen>{static_cast<CommonT>(this->value) _op static_cast<CommonT>(o.value)}; \
     }
 
     IMPLEMENT_FIXED_OPERATOR(+);
@@ -45,6 +46,6 @@ public:
     IMPLEMENT_FIXED_OPERATOR(/);
     IMPLEMENT_FIXED_OPERATOR(*);
 
-private:
+public:
     T value{};
 };

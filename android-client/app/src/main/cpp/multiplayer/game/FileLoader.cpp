@@ -3,6 +3,7 @@
 //
 
 #include "FileLoader.h"
+#include <sstream>
 #include "../main.h"
 #include "CFileMgr.h"
 #include "game/Models/ModelInfo.h"

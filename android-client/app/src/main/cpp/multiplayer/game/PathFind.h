@@ -86,10 +86,10 @@ VALIDATE_SIZE(CPathIntersectionInfo, 0x1);
 
 class CCarPathLink { // "Navi Nodes"
 public:
-    FixedVector2D<int16, 8.f>  m_posn;
+    FixedVector2D<int16, 8>    m_posn;
     CNodeAddress               m_attachedTo;                 ///< Identifies the target node a navi node is attached to.
-    FixedVector2D<int8, 100.f> m_dir;                          ///< This is a normalized vector pointing towards the [above mentioned] target node, thus defining the general direction of the path segment.
-    FixedFloat<int8, 16.f>     m_nPathNodeWidth;             ///< Usually a copy of the linked node's path width (byte)
+    FixedVector2D<int8, 100>   m_dir;                          ///< This is a normalized vector pointing towards the [above mentioned] target node, thus defining the general direction of the path segment.
+    FixedFloat<int8, 16>       m_nPathNodeWidth;             ///< Usually a copy of the linked node's path width (byte)
     uint8                      m_numOppositeDirLanes : 3;    ///< Number of (left) lanes that are opposite to this lane's direction, eg.: `other->dir.Dot(this->dir)` is `< 0`
     uint8                      m_numSameDirLanes : 3;        ///< Number of (right) lanes that are the going the same direction as this node's direction, eg.: `other->dir.Dot(this->dir)` is `> 0`
     uint8                      m_bTrafficLightDirection : 1; ///< `1` if the navi node has the same direction as the traffic light and `0` if the navi node points somewhere else
