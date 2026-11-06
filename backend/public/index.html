@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kingmakers RP — Mobile Roleplay</title>
+    <meta name="description" content="Live web dashboard, mobile launcher updater, and API portal for Kingmakers RP mobile roleplay server.">
+    <meta property="og:title" content="Kingmakers RP — Mobile Roleplay">
+    <meta property="og:description" content="Live web dashboard, mobile launcher updater, and API portal for Kingmakers RP mobile roleplay server.">
     <style>
         :root {
             --km-gold: #FFC83D;
@@ -366,7 +369,7 @@
                     <h3>Connection Details</h3>
                     <table class="table">
                         <tr><td>Server Name</td><td><strong style="color:var(--km-gold);">Kingmakers RP | Mobile Roleplay | v1.0.0</strong></td></tr>
-                        <tr><td>Server IP / Host</td><td><code id="serverHostDisplay">139.180.185.57:7777</code> <button onclick="navigator.clipboard.writeText('139.180.185.57:7777'); alert('Copied IP to clipboard!');" style="margin-left:8px; padding:2px 8px; font-size:11px; background:var(--km-card); border:1px solid var(--km-border); color:var(--km-gold); border-radius:4px; cursor:pointer;">Copy</button></td></tr>
+                        <tr><td>Server IP / Host</td><td><code id="serverHostDisplay">139.180.185.57:7777</code> <button onclick="navigator.clipboard.writeText('139.180.185.57:7777'); const self=this; self.innerText='Copied!'; setTimeout(()=>self.innerText='Copy', 2000);" style="margin-left:8px; padding:2px 8px; font-size:11px; background:var(--km-card); border:1px solid var(--km-border); color:var(--km-gold); border-radius:4px; cursor:pointer;">Copy</button></td></tr>
                         <tr><td>Mode</td><td>Kingmakers RP v1.0.0 (open.mp / CRMP)</td></tr>
                         <tr><td>Map</td><td>Los Santos</td></tr>
                         <tr><td>Game Port</td><td><code>7777 UDP</code> (standard open.mp / SA-MP)</td></tr>

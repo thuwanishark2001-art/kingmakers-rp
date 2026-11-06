@@ -1,0 +1,8 @@
+{
+  "name": "Kingmakers RP — Mobile Roleplay Portal",
+  "description": "Live web dashboard, mobile launcher updater, and API portal for Kingmakers RP mobile roleplay server.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

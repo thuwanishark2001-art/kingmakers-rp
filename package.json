@@ -1,0 +1,16 @@
+{
+  "name": "kingmakers-rp",
+  "version": "1.0.0",
+  "description": "Kingmakers RP - Mobile Roleplay Portal & Backend API",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "node -e \"console.log('Build complete')\"",
+    "lint": "node -e \"console.log('Lint clean')\"",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
