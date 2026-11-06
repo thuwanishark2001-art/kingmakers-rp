@@ -30,6 +30,7 @@ cp -r "$REPO_DIR/backend"/* "$SERVICE_DIR/backend/"
 if [ -d "$REPO_DIR/server" ]; then
     cp -r "$REPO_DIR/server"/* "$SERVICE_DIR/server/"
 fi
+cp "$REPO_DIR"/*.sh "$SERVICE_DIR/" 2>/dev/null || true
 
 # 4. Fix permissions and executable flags
 echo "[4/5] Updating user permissions and executable flags..."
