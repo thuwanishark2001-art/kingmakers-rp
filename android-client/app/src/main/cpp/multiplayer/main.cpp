@@ -360,8 +360,6 @@ void LogLong(const char* message)
     }
 }
 
-void Log(const char *fmt, ...)
-{
 const char* GetStorageDirectory()
 {
 	if (g_pszStorage && g_pszStorage[0] != '\0') return g_pszStorage;
