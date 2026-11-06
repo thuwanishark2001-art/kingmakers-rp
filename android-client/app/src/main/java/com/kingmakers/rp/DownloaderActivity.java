@@ -49,23 +49,20 @@ public class DownloaderActivity extends AppCompatActivity {
     private boolean isFinished = false;
 
     public static File getGameStorageDir(Context ctx) {
-        // Preferred target: standard GTA SA / CRMP Mobile data path
-        File ext = Environment.getExternalStorageDirectory();
-        File gtaDir = new File(ext, "Android/data/com.rockstargames.gtasa/files");
-        if (gtaDir.exists() || gtaDir.mkdirs()) {
-            return gtaDir;
+        File dir = ctx.getExternalFilesDir(null);
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
         }
-        // Fallback target: app internal / external sandbox
-        File appDir = new File(ctx.getExternalFilesDir(null), "game-files");
-        if (!appDir.exists()) appDir.mkdirs();
-        return appDir;
+        return dir;
     }
 
     public static boolean isCacheInstalled(Context ctx) {
         File targetDir = getGameStorageDir(ctx);
-        File splash = new File(targetDir, "texdb/splash.png");
+        if (targetDir == null) return false;
         File gtaDat = new File(targetDir, "data/gta.dat");
-        return splash.exists() || gtaDat.exists();
+        File gtaImg = new File(targetDir, "texdb/gta3.img");
+        File sampDir = new File(targetDir, "SAMP");
+        return gtaDat.exists() || gtaImg.exists() || sampDir.exists();
     }
 
     @Override
@@ -242,35 +239,19 @@ public class DownloaderActivity extends AppCompatActivity {
     }
 
     private void launchGame() {
-        String[] candidatePackages = new String[] {
-            "com.rockstargames.gtasa",
-            "com.kingmakers.game",
-            "com.samp.mobile",
-            "com.samp.x1y2z",
-            "ru.unisamp_mobile.game",
-            "com.liverussia.cr",
-            "com.arizona.game",
-            "com.blackrussia.online",
-            "com.mordor.game"
-        };
-        Intent launchIntent = null;
-        for (String pkg : candidatePackages) {
-            Intent it = getPackageManager().getLaunchIntentForPackage(pkg);
-            if (it != null) {
-                launchIntent = it;
-                break;
-            }
-        }
-        if (launchIntent != null) {
-            launchIntent.putExtra("player_name", playerNick);
-            launchIntent.putExtra("name", playerNick);
-            launchIntent.putExtra("nickname", playerNick);
-            launchIntent.putExtra("server_ip", serverIp);
-            launchIntent.putExtra("ip", serverIp);
-            launchIntent.putExtra("host", serverIp);
-            launchIntent.putExtra("server_port", serverPort);
-            launchIntent.putExtra("port", serverPort);
-            startActivity(launchIntent);
+        try {
+            Intent gameIntent = new Intent(this, com.russia.game.core.Samp.class);
+            gameIntent.putExtra("player_name", playerNick);
+            gameIntent.putExtra("name", playerNick);
+            gameIntent.putExtra("nickname", playerNick);
+            gameIntent.putExtra("server_ip", serverIp);
+            gameIntent.putExtra("ip", serverIp);
+            gameIntent.putExtra("host", serverIp);
+            gameIntent.putExtra("server_port", serverPort);
+            gameIntent.putExtra("port", serverPort);
+            startActivity(gameIntent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to launch game engine: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         finish();
     }

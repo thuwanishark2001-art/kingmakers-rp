@@ -8,3 +8,5 @@ full-game-cache/
 game-cache/
 backend/public/downloads/kingmakers_*.zip
 backend/public/downloads/kingmakers_*.sha256
+backend/public/downloads/client_native_libs.zip
+android-client/app/src/main/jniLibs/

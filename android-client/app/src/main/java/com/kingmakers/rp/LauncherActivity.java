@@ -149,73 +149,21 @@ public class LauncherActivity extends AppCompatActivity {
     private void launchGameClient(String nick, String ip, int port) {
         writeSampSettings(nick, ip, port);
 
-        String[] candidatePackages = new String[] {
-            "com.rockstargames.gtasa",
-            "com.kingmakers.game",
-            "com.samp.mobile",
-            "com.samp.x1y2z",
-            "ru.unisamp_mobile.game",
-            "com.liverussia.cr",
-            "com.arizona.game",
-            "com.blackrussia.online",
-            "com.mordor.game"
-        };
-
-        Intent launchIntent = null;
-        for (String pkg : candidatePackages) {
-            Intent it = getPackageManager().getLaunchIntentForPackage(pkg);
-            if (it != null) {
-                launchIntent = it;
-                break;
-            }
+        try {
+            Intent gameIntent = new Intent(this, com.russia.game.core.Samp.class);
+            gameIntent.putExtra("player_name", nick);
+            gameIntent.putExtra("name", nick);
+            gameIntent.putExtra("nickname", nick);
+            gameIntent.putExtra("server_ip", ip);
+            gameIntent.putExtra("ip", ip);
+            gameIntent.putExtra("host", ip);
+            gameIntent.putExtra("server_port", port);
+            gameIntent.putExtra("port", port);
+            startActivity(gameIntent);
+            finish();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to launch game engine: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
-        if (launchIntent != null) {
-            launchIntent.putExtra("player_name", nick);
-            launchIntent.putExtra("name", nick);
-            launchIntent.putExtra("nickname", nick);
-            launchIntent.putExtra("server_ip", ip);
-            launchIntent.putExtra("ip", ip);
-            launchIntent.putExtra("host", ip);
-            launchIntent.putExtra("server_port", port);
-            launchIntent.putExtra("port", port);
-            startActivity(launchIntent);
-        } else {
-            showGameCoreMissingDialog(nick, ip, port);
-        }
-    }
-
-    private void showGameCoreMissingDialog(String nick, String ip, int port) {
-        String msg = "The Kingmakers RP Launcher has prepared your game files and configured your player nickname (" + nick + ").\n\n" +
-                "To start the 3D roleplay game, your device needs the GTA:SA / SA-MP Mobile Game Client installed.\n\n" +
-                "Server Connection Details:\n" +
-                "IP: " + ip + "\n" +
-                "Port: " + port;
-
-        new AlertDialog.Builder(this)
-                .setTitle("GTA:SA / SA-MP Client Required")
-                .setMessage(msg)
-                .setPositiveButton("Get SA-MP Client", (dialog, which) -> {
-                    try {
-                        Intent playIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/details?id=com.samp.x1y2z"));
-                        startActivity(playIntent);
-                    } catch (Exception e) {
-                        Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://sa-mp-launcher.en.uptodown.com/android"));
-                        startActivity(webIntent);
-                    }
-                })
-                .setNeutralButton("Copy IP:Port", (dialog, which) -> {
-                    ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    if (cm != null) {
-                        ClipData clip = ClipData.newPlainText("Kingmakers RP Server", ip + ":" + port);
-                        cm.setPrimaryClip(clip);
-                        Toast.makeText(this, "Copied " + ip + ":" + port + " to clipboard!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("Close", null)
-                .show();
     }
 
     private void fetchServerStatus() {
