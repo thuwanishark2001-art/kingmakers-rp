@@ -126,7 +126,7 @@ stFile* NvFOpen(const char* r0, const char* r1, int r2, int r3)
 #include "voice/include/util/Render.h"
 #include "game/Widgets/TouchInterface.h"
 #include "Clouds.h"
-#include "gps.h"
+#include "GPS.h"
 
 
 void MainMenu_OnStartSAMP()

@@ -5,7 +5,7 @@
     Do not delete this comment block. Respect others' work!
 */
 
-#include "RGBA.h"
+#include "rgba.h"
 #include "Timer.h"
 #include "common.h"
 

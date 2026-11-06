@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Vector.h"
-#include "RGBA.h"
+#include "rgba.h"
 #include "common.h"
 
 enum e2dEffectType : uint8 {
