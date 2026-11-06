@@ -1,6 +1,8 @@
 node_modules/
 *.log
 kingmakers.db
+.gradle/
+*/build/
 large-game-cache/
 full-game-cache/
 game-cache/

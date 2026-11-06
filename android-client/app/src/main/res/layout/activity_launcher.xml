@@ -106,8 +106,8 @@
             android:layout_marginTop="8dp"
             android:background="#2C2D3E"
             android:hint="Marcus_King"
-            android:inputType="textPersonName"
-            android:paddingHorizontal="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:textColor="@color/km_white"
             android:textColorHint="@color/km_grey" />
 

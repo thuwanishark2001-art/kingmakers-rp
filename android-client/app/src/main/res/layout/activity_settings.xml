@@ -37,7 +37,8 @@
             android:background="#2C2D3E"
             android:hint="e.g. 45.76.12.34"
             android:inputType="text"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="@color/km_white" />
 
         <TextView
@@ -55,7 +56,8 @@
             android:background="#2C2D3E"
             android:hint="7777"
             android:inputType="number"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="@color/km_white" />
 
         <TextView
@@ -73,7 +75,8 @@
             android:background="#2C2D3E"
             android:hint="https://cdn.kingmakers-rp.com/cache.zip"
             android:inputType="textUri"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="@color/km_white" />
 
         <Button
