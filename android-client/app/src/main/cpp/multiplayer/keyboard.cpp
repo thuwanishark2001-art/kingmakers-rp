@@ -2203,7 +2203,7 @@ bool ProcessLocalCommands(const char str[])
 		fileOut = fopen(ff, "a");
 		if(!fileOut) {
 			CChatWindow::AddMessage("Cant open savedposition.txt");
-			return;
+			return true;
 		}
 
 		if(pPlayer->m_pPed->IsInVehicle())
