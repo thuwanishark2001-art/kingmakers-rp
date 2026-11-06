@@ -33,8 +33,8 @@ chown -R kingmakers:kingmakers "$SERVICE_DIR"
 chmod +x "$SERVICE_DIR/backend"/*.py 2>/dev/null || true
 
 # 4. Restart services
-echo "[4/4] Restarting km-backend service..."
-systemctl restart km-backend
+echo "[4/4] Restarting km-server and km-backend services..."
+systemctl restart km-server km-backend
 
 echo ""
 echo "=========================================================="
