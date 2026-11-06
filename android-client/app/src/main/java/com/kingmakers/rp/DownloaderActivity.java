@@ -242,20 +242,37 @@ public class DownloaderActivity extends AppCompatActivity {
     }
 
     private void launchGame() {
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.rockstargames.gtasa");
-        if (launchIntent == null) {
-            launchIntent = getPackageManager().getLaunchIntentForPackage("com.kingmakers.game");
+        String[] candidatePackages = new String[] {
+            "com.rockstargames.gtasa",
+            "com.kingmakers.game",
+            "com.samp.mobile",
+            "com.samp.x1y2z",
+            "ru.unisamp_mobile.game",
+            "com.liverussia.cr",
+            "com.arizona.game",
+            "com.blackrussia.online",
+            "com.mordor.game"
+        };
+        Intent launchIntent = null;
+        for (String pkg : candidatePackages) {
+            Intent it = getPackageManager().getLaunchIntentForPackage(pkg);
+            if (it != null) {
+                launchIntent = it;
+                break;
+            }
         }
         if (launchIntent != null) {
             launchIntent.putExtra("player_name", playerNick);
+            launchIntent.putExtra("name", playerNick);
+            launchIntent.putExtra("nickname", playerNick);
             launchIntent.putExtra("server_ip", serverIp);
+            launchIntent.putExtra("ip", serverIp);
+            launchIntent.putExtra("host", serverIp);
             launchIntent.putExtra("server_port", serverPort);
+            launchIntent.putExtra("port", serverPort);
             startActivity(launchIntent);
-            finish();
-        } else {
-            Toast.makeText(this, "Game client core started! Connecting to " + serverIp + ":" + serverPort, Toast.LENGTH_LONG).show();
-            finish();
         }
+        finish();
     }
 
     @Override
