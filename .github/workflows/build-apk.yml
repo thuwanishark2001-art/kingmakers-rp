@@ -40,14 +40,14 @@ jobs:
           cp -r /tmp/upstream_libs/app/src/main/jniLibs/* android-client/app/src/main/jniLibs/
           ls -la android-client/app/src/main/jniLibs/arm64-v8a/
 
-      - name: Build Standalone APK
+      - name: Build Standalone APK & App Bundle
         working-directory: android-client
         env:
           ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/26.1.10909125
         run: |
           chmod +x gradlew
           set -o pipefail
-          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
+          ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
             echo "## ❌ Gradle Build Error Details" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             grep -B 5 -A 25 "FAILURE:" /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY || tail -n 80 /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY
@@ -55,17 +55,48 @@ jobs:
             exit 1
           }
 
-      - name: Prepare Standalone APK
+      - name: Generate Split APK Bundle (Grand Mobile Architecture)
         run: |
-          mkdir -p build-out
+          mkdir -p build-out/split_apks /tmp/extracted_splits
+          
+          # 1. Monolithic APK
           cp android-client/app/build/outputs/apk/release/*.apk build-out/Kingmakers_RP_Standalone_v1.0.apk
-          ls -lh build-out/Kingmakers_RP_Standalone_v1.0.apk
+          
+          # 2. Android App Bundle (.aab)
+          cp android-client/app/build/outputs/bundle/release/*.aab build-out/Kingmakers_RP_AppBundle_v1.0.aab
+          
+          # 3. Download Google Bundletool
+          curl -sSL https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o /tmp/bundletool.jar
+          
+          # 4. Generate debug keystore if absent
+          KEYSTORE="$HOME/.android/debug.keystore"
+          if [ ! -f "$KEYSTORE" ]; then
+            mkdir -p "$HOME/.android"
+            keytool -genkey -v -keystore "$KEYSTORE" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          
+          # 5. Build .apks (Split APKs archive)
+          java -jar /tmp/bundletool.jar build-apks \
+            --bundle=build-out/Kingmakers_RP_AppBundle_v1.0.aab \
+            --output=build-out/Kingmakers_RP_Split_Bundle_v1.0.apks \
+            --mode=default \
+            --ks="$KEYSTORE" \
+            --ks-pass=pass:android \
+            --ks-key-alias=androiddebugkey \
+            --key-pass=pass:android
+            
+          # 6. Unpack splits and structure into Grand Mobile RP schema (apks.zip)
+          unzip -q build-out/Kingmakers_RP_Split_Bundle_v1.0.apks -d /tmp/extracted_splits
+          python3 backend/tools/package_grand_splits.py /tmp/extracted_splits build-out/split_apks build-out/Kingmakers_RP_Split_APKs_v1.0.zip
+          cp build-out/Kingmakers_RP_Split_APKs_v1.0.zip build-out/apks.zip
+          
+          ls -lh build-out/
 
-      - name: Upload Standalone APK Artifact
+      - name: Upload Distribution Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Kingmakers_RP_Standalone_v1.0
-          path: build-out/Kingmakers_RP_Standalone_v1.0.apk
+          name: Kingmakers_RP_Mobile_Distribution_v1.0
+          path: build-out/*
           if-no-files-found: error
 
       - name: Publish GitHub Release
@@ -75,20 +106,29 @@ jobs:
           gh release delete v1.0.0-standalone -y 2>/dev/null || true
           git tag -d v1.0.0-standalone 2>/dev/null || true
           git push origin :refs/tags/v1.0.0-standalone 2>/dev/null || true
-          gh release create v1.0.0-standalone build-out/Kingmakers_RP_Standalone_v1.0.apk \
-            --title "Kingmakers RP Standalone APK v1.0.0" \
-            --notes "Standalone Mobile Client with integrated RenderWare 3D Engine (libGTASA.so + libmultiplayer.so). Direct VPS connection to 139.180.185.57:7777."
+          gh release create v1.0.0-standalone \
+            build-out/Kingmakers_RP_Standalone_v1.0.apk \
+            build-out/Kingmakers_RP_Split_Bundle_v1.0.apks \
+            build-out/Kingmakers_RP_Split_APKs_v1.0.zip \
+            build-out/apks.zip \
+            build-out/Kingmakers_RP_AppBundle_v1.0.aab \
+            --title "Kingmakers RP Standalone & Grand Mobile Split APK Bundle v1.0.0" \
+            --notes "Kingmakers RP distribution packages: Standalone APK, Google App Bundle (.aab), Bundletool Split APKs (.apks), and Grand Mobile RP compatible Split APKs archive (apks.zip). Direct VPS connection to 139.180.185.57:7777."
 
-      - name: Deploy Standalone APK to Repository Downloads
+      - name: Deploy Distribution Files to Repository Downloads
         run: |
           git checkout main
           mkdir -p backend/public/downloads
           cp build-out/Kingmakers_RP_Standalone_v1.0.apk backend/public/downloads/Kingmakers_RP_Standalone_v1.0.apk
           cp build-out/Kingmakers_RP_Standalone_v1.0.apk backend/public/downloads/Kingmakers_RP_Launcher_v1.0.apk
+          cp build-out/Kingmakers_RP_Split_Bundle_v1.0.apks backend/public/downloads/Kingmakers_RP_Split_Bundle_v1.0.apks
+          cp build-out/Kingmakers_RP_Split_APKs_v1.0.zip backend/public/downloads/Kingmakers_RP_Split_APKs_v1.0.zip
+          cp build-out/apks.zip backend/public/downloads/apks.zip
+          cp build-out/Kingmakers_RP_AppBundle_v1.0.aab backend/public/downloads/Kingmakers_RP_AppBundle_v1.0.aab
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add backend/public/downloads/
-          git commit -m "feat(release): publish compiled Standalone APK v1.0.0 [skip ci]" || true
+          git commit -m "feat(release): publish Standalone and Grand Mobile Split APK bundles v1.0.0 [skip ci]" || true
           git push origin main || true
 
       - name: Save Build Log to Branch
