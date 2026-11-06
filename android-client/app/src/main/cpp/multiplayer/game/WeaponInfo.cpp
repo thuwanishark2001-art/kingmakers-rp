@@ -3,6 +3,7 @@
 //
 
 #include "WeaponInfo.h"
+#include <sstream>
 #include "util/patch.h"
 #include "Models/ModelInfo.h"
 #include "game/Entity/Ped/Ped.h"

@@ -11,6 +11,7 @@
 #include "CHandlingDefault.h"
 #include <vector>
 #include <fstream>
+#include <sstream>
 
 bool isHandlingLoaded = false;
 

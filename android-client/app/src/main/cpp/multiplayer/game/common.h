@@ -39,6 +39,9 @@ VALIDATE_SIZE(float, 4);
 VALIDATE_SIZE(long long, 8);
 
 #include <string>
+#include <sstream>
+#include <memory>
+#include <algorithm>
 #include <span>
 #include <array>
 #include <cassert>
