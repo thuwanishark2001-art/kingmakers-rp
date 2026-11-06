@@ -28,10 +28,17 @@ jobs:
         working-directory: android-client
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
+            echo "## ❌ Gradle Build Error Details" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -B 5 -A 25 "FAILURE:" /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY || tail -n 80 /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          }
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: Kingmakers_RP_v1.0_Debug
           path: android-client/app/build/outputs/apk/debug/*.apk
