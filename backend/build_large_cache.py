@@ -85,10 +85,13 @@ models_gta3 = [
     "infernus.dff", "infernus.txd", "bullet.dff", "bullet.txd", "cheetah.dff", "cheetah.txd",
     "sultan.dff", "sultan.txd", "elegy.dff", "elegy.txd", "taxi.dff", "taxi.txd",
     "copcarla.dff", "copcarla.txd", "ambulan.dff", "ambulan.txd", "faggio.dff", "faggio.txd",
-    "nrg500.dff", "nrg500.txd", "los_santos_map.dff", "los_santos_roads.dff", "buildings_lod.dff"
+    "nrg500.dff", "nrg500.txd", "los_santos_map.dff", "los_santos_roads.dff", "buildings_lod.dff",
+    "male01.dff", "male01.txd", "lapd1.dff", "lapd1.txd", "colt45.dff", "colt45.txd",
+    "nitestick.dff", "nitestick.txd", "desert_eagle.dff", "desert_eagle.txd",
+    "cj_ped_head.dff", "cj_ped_torso.dff", "cj_ped_legs.dff", "cj_ped_feet.dff"
 ]
 models_int = ["int_lspd.dff", "int_hospital.dff", "int_house_studio.dff", "int_house_mansion.dff", "int_247.dff", "int_ammu.dff", "int_binco.dff"]
-models_player = ["cj_head.dff", "cj_torso.dff", "cj_legs.dff", "skin_cop.dff", "skin_medic.dff", "skin_grove.dff", "skin_ballas.dff"]
+models_player = ["cj_head.dff", "cj_torso.dff", "cj_legs.dff", "player.dff", "player.txd", "skin_cop.dff", "skin_medic.dff", "skin_grove.dff", "skin_ballas.dff"]
 
 # Target sizes for the full mobile game cache:
 # gta3.img: ~1.1 GB

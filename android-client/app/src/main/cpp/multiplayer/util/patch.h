@@ -110,7 +110,11 @@ public:
     static void RET(const char* sym)
     {
         // fully check
-        auto addr = getSym(sym);
+        auto addr = (uintptr_t)dlsym(lib, sym);
+        if (!addr) {
+            Log("CHook::RET: Symbol %s not found in libGTASA", sym);
+            return;
+        }
 
         RET(addr);
     }
@@ -232,7 +236,11 @@ public:
     template <typename Func>
     static void Redirect(const char* sym, Func func)
     {
-        auto addr = getSym(sym);
+        auto addr = (uintptr_t)dlsym(lib, sym);
+        if (!addr) {
+            Log("CHook::Redirect: Symbol %s not found in libGTASA", sym);
+            return;
+        }
 
         Redirect(addr, func);
     }
