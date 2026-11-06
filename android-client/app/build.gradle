@@ -46,10 +46,14 @@ android {
     packagingOptions {
         jniLibs {
             excludes += ['META-INF/*']
+            pickFirsts += ['**/libbass.so', '**/libbass_ssl.so', '**/libc++_shared.so', '**/libGTASA.so']
         }
         resources {
             excludes += ['META-INF/*']
         }
+        pickFirst '**/libbass.so'
+        pickFirst '**/libbass_ssl.so'
+        pickFirst '**/libc++_shared.so'
     }
 
     ndkVersion '26.1.10909125'
