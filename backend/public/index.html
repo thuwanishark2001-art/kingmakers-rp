@@ -329,15 +329,48 @@
                     </div>
                 </div>
 
+                <!-- Download Client & Game Cache -->
+                <div class="panel" id="download" style="border-color: rgba(255, 200, 61, 0.4);">
+                    <h3 style="color: var(--km-gold);">Download Kingmakers RP Mobile</h3>
+                    <p style="font-size: 13px; color: var(--km-muted); margin-bottom: 18px;">
+                        Get started with the full mobile roleplay client and high-capacity texture database:
+                    </p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+                        <a href="/downloads/Kingmakers_RP_Full_Project_v1.0.zip" class="btn btn-gold" download>
+                            Download Full Project (v1.0.0)
+                        </a>
+                        <a href="/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip" class="btn btn-outline" download>
+                            Full Game Cache (1.42 GB ZIP)
+                        </a>
+                    </div>
+                    <div style="background: #0D0D14; border: 1px solid var(--km-border); border-radius: 8px; padding: 14px; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="color: var(--km-muted);">Package Version:</span>
+                            <strong>1.0.0 (Production Release)</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="color: var(--km-muted);">Cache Size on Disk:</span>
+                            <strong>1.42 GB (1,459 MB)</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--km-muted);">SHA-256 Checksum:</span>
+                            <code style="display: block; margin-top: 4px; word-break: break-all; color: var(--km-gold); font-size: 11px;">
+                                99a51f60d2f207c7315346b55c6a96f4b04599259c1ea3a7186898f356de9b5e
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Server Info -->
                 <div class="panel" id="server">
                     <h3>Connection Details</h3>
                     <table class="table">
                         <tr><td>Server Name</td><td><strong style="color:var(--km-gold);">Kingmakers RP | Mobile Roleplay | v1.0.0</strong></td></tr>
+                        <tr><td>Server IP / Host</td><td><code id="serverHostDisplay">139.180.185.57:7777</code> <button onclick="navigator.clipboard.writeText('139.180.185.57:7777'); alert('Copied IP to clipboard!');" style="margin-left:8px; padding:2px 8px; font-size:11px; background:var(--km-card); border:1px solid var(--km-border); color:var(--km-gold); border-radius:4px; cursor:pointer;">Copy</button></td></tr>
                         <tr><td>Mode</td><td>Kingmakers RP v1.0.0 (open.mp / CRMP)</td></tr>
                         <tr><td>Map</td><td>Los Santos</td></tr>
-                        <tr><td>Default Port</td><td><code>7777 UDP</code> (standard SA-MP / open.mp)</td></tr>
-                        <tr><td>API & Web Dashboard</td><td><code>http://YOUR_SERVER_IP:8080</code></td></tr>
+                        <tr><td>Game Port</td><td><code>7777 UDP</code> (standard open.mp / SA-MP)</td></tr>
+                        <tr><td>API & Web Dashboard</td><td><code>http://139.180.185.57:8080</code></td></tr>
                         <tr><td>Database</td><td>SQLite3 (<code>scriptfiles/kingmakers.db</code>, WAL mode)</td></tr>
                     </table>
                 </div>
@@ -378,7 +411,7 @@
                 <div class="panel" id="vultr">
                     <h3>Vultr VPS 1-Click</h3>
                     <p style="font-size:12px; color:var(--km-muted); margin-bottom:12px;">Deploy Kingmakers RP server + backend onto an Ubuntu/Debian Vultr instance in 2 minutes:</p>
-                    <pre style="background:#0D0D14; padding:10px; border-radius:6px; font-size:11px; color:var(--km-gold); overflow-x:auto;">curl -sSL https://raw.githubusercontent.com/.../vultr_deploy.sh | bash</pre>
+                    <pre style="background:#0D0D14; padding:10px; border-radius:6px; font-size:11px; color:var(--km-gold); overflow-x:auto;">curl -sSL https://raw.githubusercontent.com/thuwanishark2001-art/kingmakers-rp/main/vultr_deploy.sh | bash</pre>
                 </div>
             </div>
         </div>
