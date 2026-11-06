@@ -33,15 +33,15 @@ android {
         jvmTarget = "21"
     }
 
-    compileSdk 36
+    compileSdk 34
     defaultConfig {
         minSdkVersion 26
-        targetSdkVersion 36
+        targetSdkVersion 34
 
         namespace 'com.russia.game'
         applicationId "com.russia.game"
-        versionName "1000 beta"
-        versionCode 1000
+        versionName "1.0.0"
+        versionCode 1
 
         multiDexEnabled = true
 

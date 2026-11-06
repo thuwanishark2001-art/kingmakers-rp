@@ -1,5 +1,6 @@
 package com.kingmakers.rp;
 
+import com.russia.game.R;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

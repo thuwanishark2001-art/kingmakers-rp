@@ -62,3 +62,12 @@ jobs:
           name: Kingmakers_RP_Standalone_v1.0
           path: build-out/Kingmakers_RP_Standalone_v1.0.apk
           if-no-files-found: error
+
+      - name: Upload Build Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-log
+          path: /tmp/build_log.txt
+          if-no-files-found: ignore
+
