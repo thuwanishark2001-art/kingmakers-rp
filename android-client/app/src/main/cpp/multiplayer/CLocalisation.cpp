@@ -31,6 +31,7 @@ void CLocalisation::Initialise()
 
 void CLocalisation::Initialise(const char* szFile)
 {
+	char buff[MAX_LOCALISATION_LENGTH];
 	snprintf(&buff[0], sizeof(buff), "%sSAMP/%s", GetStorageDirectory(), szFile);
 
 	FILE* pFile = fopen(&buff[0], "r");
