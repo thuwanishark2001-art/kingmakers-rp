@@ -258,7 +258,7 @@ app.get('/api/launcher/config', (req, res) => {
     res.json({
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
-        clientApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Full_Project_v1.0.zip`,
+        clientApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Launcher_v1.0.apk`,
         cacheZipUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip`,
         cacheSizeMb,
         cacheSha256,
