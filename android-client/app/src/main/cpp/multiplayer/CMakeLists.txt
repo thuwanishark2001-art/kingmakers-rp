@@ -26,8 +26,6 @@ file(GLOB_RECURSE SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/vendor/ini/*.cpp
         ${CMAKE_CURRENT_LIST_DIR}/vendor/raknet/*.cpp
         ${CMAKE_CURRENT_LIST_DIR}/vendor/raknet/SAMP/*.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/vendor/RakNet/*.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/vendor/RakNet/SAMP/*.cpp
         ${CMAKE_CURRENT_LIST_DIR}/vendor/imgui/*.cpp
         ${CMAKE_CURRENT_LIST_DIR}/vendor/hash/*.cpp
         )
@@ -38,7 +36,6 @@ include_directories(
         ${CMAKE_CURRENT_LIST_DIR}/vendor/imgui
         ${CMAKE_CURRENT_LIST_DIR}/vendor/
         ${CMAKE_CURRENT_LIST_DIR}/vendor/raknet
-        ${CMAKE_CURRENT_LIST_DIR}/vendor/RakNet
         ${CMAKE_CURRENT_LIST_DIR}/game/RW/
         ${CMAKE_CURRENT_LIST_DIR}/game/
         ${CMAKE_CURRENT_LIST_DIR}/java_systems
