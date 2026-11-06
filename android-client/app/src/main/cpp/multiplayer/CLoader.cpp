@@ -95,6 +95,12 @@ void CLoader::loadSetting()
 
 jclass LinkJavaClass(jclass localObj) {
     auto env = CJavaWrapper::GetEnv();
+    if (!localObj) {
+        if (env && env->ExceptionCheck()) {
+            env->ExceptionClear();
+        }
+        return nullptr;
+    }
     auto globalRef = (jclass)env->NewGlobalRef(localObj);
     env->DeleteLocalRef(localObj);
     return globalRef;
@@ -103,58 +109,69 @@ jclass LinkJavaClass(jclass localObj) {
 
 void CLoader::initJavaClasses(JavaVM* pjvm) {
     JNIEnv* env = nullptr;
-    (void)pjvm->GetEnv((void**)&env, JNI_VERSION_1_6);
+    if (pjvm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK || !env) {
+        return;
+    }
 
-    CJavaGui::clazz = LinkJavaClass(env->FindClass("com/game/russia/NewUiList"));
+    auto safeFind = [env](const char* className) -> jclass {
+        jclass local = env->FindClass(className);
+        if (env->ExceptionCheck()) {
+            env->ExceptionClear();
+            return nullptr;
+        }
+        return local;
+    };
 
-    CBattlePassBuy::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/battle_pass/BattlePassBuy"));
-    CWarPoints::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/WarPoints"));
-    CBusStation::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/BusStation"));
-    CBattlePass::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/battle_pass/BattlePass"));
-    CBuyPlate::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/BuyPlate"));
-    CMiningStore::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/MiningStore"));
-    CMonologue::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Monologue"));
-    SnapShotsWrapper::clazz = LinkJavaClass(env->FindClass("com/game/russia/EntitySnaps"));
-    CRace::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Race"));
-    CMagicStore::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/magicStore/MagicStore"));
-    CTaxi::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Taxi"));
-    CRegistration::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Registration"));
-    CSkinShop::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/SkinAndAcsShop"));
-    CMineGame3::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/MineGame3"));
-    CMineGame2::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/MineGame2"));
-    CMineGame1::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/MineGame1"));
-    CInventory::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/inventory/Inventory"));
-    CMedic::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/PreDeath"));
-    CArmyGame::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/ArmyGame"));
-    CAuthorization::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Authorization"));
-    CRadialMenu::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/RadialMenu"));
-    CFuelStation::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/FuelStation"));
-    COilFactory::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/fillingGames/OilFactory"));
-    CMilk::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/fillingGames/Milk"));
-    CAchivments::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/achivments/Achivments"));
-    CGunStore::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/GunShop"));
-    CSamwill::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Samwill"));
-    CFurnitureFactory::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/FurnitureFactory"));
-    CGiftNotify::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/GiftNotify"));
-    CTreasure::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/treasure/Treasure"));
-    CChip::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/casino/BuySellChip"));
-    CLuckyWheel::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/casino/LuckyWheel"));
-    CChooseSpawn::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/ChooseSpawn"));
-    CAucContainer::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/AucContainer"));
-    CTechInspect::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/TechIspect"));
-    CAutoShop::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/AutoShop"));
-    CDailyReward::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/DailyReward"));
-    CAdminRecon::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/AdminRecon"));
-    CTab::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/tab/Tab"));
-    CSpeedometr::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/Speedometer"));
-    CDonate::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/donate/Donate"));
-    CObjectEditor::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/AttachEdit"));
-    CStyling::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/styling/Styling"));
-    CTireShop::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/tire_shop/TireShop"));
-    CDice::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/casino/Dice"));
-    CTheftAuto::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/theft_auto/TheftAuto"));
-    CBaccarat::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/CasinoBaccarat"));
-    CActionsPed::clazz = LinkJavaClass(env->FindClass("com/game/russia/gui/ActionsPed"));
+    CJavaGui::clazz = LinkJavaClass(safeFind("com/russia/game/NewUiList"));
+
+    CBattlePassBuy::clazz = LinkJavaClass(safeFind("com/russia/game/gui/battle_pass/BattlePassBuy"));
+    CWarPoints::clazz = LinkJavaClass(safeFind("com/russia/game/gui/WarPoints"));
+    CBusStation::clazz = LinkJavaClass(safeFind("com/russia/game/gui/BusStation"));
+    CBattlePass::clazz = LinkJavaClass(safeFind("com/russia/game/gui/battle_pass/BattlePass"));
+    CBuyPlate::clazz = LinkJavaClass(safeFind("com/russia/game/gui/BuyPlate"));
+    CMiningStore::clazz = LinkJavaClass(safeFind("com/russia/game/gui/MiningStore"));
+    CMonologue::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Monologue"));
+    SnapShotsWrapper::clazz = LinkJavaClass(safeFind("com/russia/game/EntitySnaps"));
+    CRace::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Race"));
+    CMagicStore::clazz = LinkJavaClass(safeFind("com/russia/game/gui/magicStore/MagicStore"));
+    CTaxi::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Taxi"));
+    CRegistration::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Registration"));
+    CSkinShop::clazz = LinkJavaClass(safeFind("com/russia/game/gui/SkinAndAcsShop"));
+    CMineGame3::clazz = LinkJavaClass(safeFind("com/russia/game/gui/MineGame3"));
+    CMineGame2::clazz = LinkJavaClass(safeFind("com/russia/game/gui/MineGame2"));
+    CMineGame1::clazz = LinkJavaClass(safeFind("com/russia/game/gui/MineGame1"));
+    CInventory::clazz = LinkJavaClass(safeFind("com/russia/game/gui/inventory/Inventory"));
+    CMedic::clazz = LinkJavaClass(safeFind("com/russia/game/gui/PreDeath"));
+    CArmyGame::clazz = LinkJavaClass(safeFind("com/russia/game/gui/ArmyGame"));
+    CAuthorization::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Authorization"));
+    CRadialMenu::clazz = LinkJavaClass(safeFind("com/russia/game/gui/RadialMenu"));
+    CFuelStation::clazz = LinkJavaClass(safeFind("com/russia/game/gui/FuelStation"));
+    COilFactory::clazz = LinkJavaClass(safeFind("com/russia/game/gui/fillingGames/OilFactory"));
+    CMilk::clazz = LinkJavaClass(safeFind("com/russia/game/gui/fillingGames/Milk"));
+    CAchivments::clazz = LinkJavaClass(safeFind("com/russia/game/gui/achivments/Achivments"));
+    CGunStore::clazz = LinkJavaClass(safeFind("com/russia/game/gui/GunShop"));
+    CSamwill::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Samwill"));
+    CFurnitureFactory::clazz = LinkJavaClass(safeFind("com/russia/game/gui/FurnitureFactory"));
+    CGiftNotify::clazz = LinkJavaClass(safeFind("com/russia/game/gui/GiftNotify"));
+    CTreasure::clazz = LinkJavaClass(safeFind("com/russia/game/gui/treasure/Treasure"));
+    CChip::clazz = LinkJavaClass(safeFind("com/russia/game/gui/casino/BuySellChip"));
+    CLuckyWheel::clazz = LinkJavaClass(safeFind("com/russia/game/gui/casino/LuckyWheel"));
+    CChooseSpawn::clazz = LinkJavaClass(safeFind("com/russia/game/gui/ChooseSpawn"));
+    CAucContainer::clazz = LinkJavaClass(safeFind("com/russia/game/gui/AucContainer"));
+    CTechInspect::clazz = LinkJavaClass(safeFind("com/russia/game/gui/TechIspect"));
+    CAutoShop::clazz = LinkJavaClass(safeFind("com/russia/game/gui/AutoShop"));
+    CDailyReward::clazz = LinkJavaClass(safeFind("com/russia/game/gui/DailyReward"));
+    CAdminRecon::clazz = LinkJavaClass(safeFind("com/russia/game/gui/AdminRecon"));
+    CTab::clazz = LinkJavaClass(safeFind("com/russia/game/gui/tab/Tab"));
+    CSpeedometr::clazz = LinkJavaClass(safeFind("com/russia/game/gui/Speedometer"));
+    CDonate::clazz = LinkJavaClass(safeFind("com/russia/game/gui/donate/Donate"));
+    CObjectEditor::clazz = LinkJavaClass(safeFind("com/russia/game/gui/AttachEdit"));
+    CStyling::clazz = LinkJavaClass(safeFind("com/russia/game/gui/styling/Styling"));
+    CTireShop::clazz = LinkJavaClass(safeFind("com/russia/game/gui/tire_shop/TireShop"));
+    CDice::clazz = LinkJavaClass(safeFind("com/russia/game/gui/casino/Dice"));
+    CTheftAuto::clazz = LinkJavaClass(safeFind("com/russia/game/gui/theft_auto/TheftAuto"));
+    CBaccarat::clazz = LinkJavaClass(safeFind("com/russia/game/gui/CasinoBaccarat"));
+    CActionsPed::clazz = LinkJavaClass(safeFind("com/russia/game/gui/ActionsPed"));
 }
 
 

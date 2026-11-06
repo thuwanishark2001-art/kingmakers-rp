@@ -38,19 +38,38 @@ class Samp : GTASA() {
     private external fun initSAMP(maxFps: Float, directory: String)
 
     override fun onCreate(bundle: Bundle?) {
-
         activity = this
 
-        val display = Companion.windowManager.defaultDisplay
-        maxFps = display.refreshRate
+        try {
+            val wm = getSystemService(WINDOW_SERVICE) as? WindowManager
+            val display = wm?.defaultDisplay
+            maxFps = display?.refreshRate ?: 60f
+        } catch (e: Exception) {
+            maxFps = 60f
+        }
+        if (maxFps <= 0f) maxFps = 60f
 
-        val internalDir = File(filesDir, "AudioConfig")
-        clearDir(internalDir)
-        copyFromAssets(internalDir)
+        try {
+            val internalDir = File(filesDir, "AudioConfig")
+            clearDir(internalDir)
+            copyFromAssets(internalDir)
+        } catch (e: Exception) {
+            Log.e("Samp", "AudioConfig init note: ${e.message}")
+        }
 
-        initSAMP(maxFps, filesDir.toString())
+        try {
+            initSAMP(maxFps, filesDir.toString())
+        } catch (t: Throwable) {
+            Log.e("Samp", "initSAMP error: ${t.message}")
+        }
+
         super.onCreate(bundle)
-        init()
+
+        try {
+            init()
+        } catch (t: Throwable) {
+            Log.e("Samp", "init GUI note: ${t.message}")
+        }
     }
     private fun clearDir(dir: File) {
         try {

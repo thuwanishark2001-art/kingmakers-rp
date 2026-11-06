@@ -270,7 +270,10 @@ const char* CUtil::GetWeaponName(int iWeaponID)
 
 uintptr_t CUtil::FindLib(const char* libname)
 {
-	void* handle = dlopen(libname, RTLD_LAZY);
+	void* handle = dlopen(libname, RTLD_LAZY | RTLD_NOLOAD);
+	if (!handle) {
+		handle = dlopen(libname, RTLD_LAZY);
+	}
 	if (handle) {
 		void* symbol = dlsym(handle, "JNI_OnLoad");
 		if (symbol) {
@@ -280,6 +283,22 @@ uintptr_t CUtil::FindLib(const char* libname)
 			}
 		}
 		dlclose(handle);
+	}
+
+	// Fallback to /proc/self/maps for modern Android linker namespaces
+	FILE* fp = fopen("/proc/self/maps", "rt");
+	if (fp) {
+		char line[512];
+		while (fgets(line, sizeof(line), fp)) {
+			if (strstr(line, libname)) {
+				uintptr_t base = 0;
+				if (sscanf(line, "%lx-%*lx", &base) == 1) {
+					fclose(fp);
+					return base;
+				}
+			}
+		}
+		fclose(fp);
 	}
 
 	return 0;

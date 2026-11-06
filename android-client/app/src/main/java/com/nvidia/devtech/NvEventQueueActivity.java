@@ -708,9 +708,21 @@ public abstract class NvEventQueueActivity extends AppCompatActivity implements 
 
         mSurfaceView.setOnTouchListener(this);
 
-        new DuelsHud();
-        new Notification();
-        new Dialog(this);
+        try {
+            new DuelsHud();
+        } catch (Throwable t) {
+            System.err.println("DuelsHud init note: " + t.getMessage());
+        }
+        try {
+            new Notification();
+        } catch (Throwable t) {
+            System.err.println("Notification init note: " + t.getMessage());
+        }
+        try {
+            new Dialog(this);
+        } catch (Throwable t) {
+            System.err.println("Dialog init note: " + t.getMessage());
+        }
 
         DoResumeEvent();
 

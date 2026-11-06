@@ -15,22 +15,46 @@ public class GTASA extends WarMedia {
     private boolean once = false;
 
     static {
-        ShadowHook.init(new ShadowHook.ConfigBuilder()
-                .setMode(ShadowHook.Mode.UNIQUE)
-                .build());
+        try {
+            ShadowHook.init(new ShadowHook.ConfigBuilder()
+                    .setMode(ShadowHook.Mode.UNIQUE)
+                    .build());
+        } catch (Throwable t) {
+            System.err.println("ShadowHook.init failed: " + t.getMessage());
+        }
 
         vmVersion = null;
         System.out.println("**** Loading SO's");
-//        try {
-//            vmVersion = System.getProperty("java.vm.version");
-//            System.out.println("vmVersion " + vmVersion);
-//            System.loadLibrary("ImmEmulatorJ");
-//        }
-//        catch (ExceptionInInitializerError | UnsatisfiedLinkError ignored) {
-//        }
-        System.loadLibrary("GTASA");
-        System.loadLibrary("bass");
-        System.loadLibrary("multiplayer");
+        try {
+            System.loadLibrary("SCAnd");
+        } catch (Throwable t) {
+            System.out.println("libSCAnd load note: " + t.getMessage());
+        }
+        try {
+            System.loadLibrary("OpenAL64");
+        } catch (Throwable t) {
+            System.out.println("libOpenAL64 load note: " + t.getMessage());
+        }
+        try {
+            System.loadLibrary("bass");
+        } catch (Throwable t) {
+            System.out.println("libbass load note: " + t.getMessage());
+        }
+        try {
+            System.loadLibrary("bass_ssl");
+        } catch (Throwable t) {
+            System.out.println("libbass_ssl load note: " + t.getMessage());
+        }
+        try {
+            System.loadLibrary("GTASA");
+        } catch (Throwable t) {
+            System.err.println("CRITICAL: Failed to load libGTASA: " + t.getMessage());
+        }
+        try {
+            System.loadLibrary("multiplayer");
+        } catch (Throwable t) {
+            System.err.println("CRITICAL: Failed to load libmultiplayer: " + t.getMessage());
+        }
     }
 
     public static void staticEnterSocialClub()
