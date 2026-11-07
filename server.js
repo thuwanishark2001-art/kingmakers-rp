@@ -259,6 +259,7 @@ app.get('/api/launcher/config', (req, res) => {
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
         clientApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Launcher_v1.0.apk`,
+        standaloneApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Standalone_v1.0.apk`,
         splitApksUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_APKs_v1.0.zip`,
         splitApksZipAlias: `http://${PUBLIC_HOST}:${PORT}/downloads/apks.zip`,
         splitBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_Bundle_v1.0.apks`,
