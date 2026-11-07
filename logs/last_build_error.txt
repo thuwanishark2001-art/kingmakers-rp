@@ -1,0 +1,278 @@
+Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+
+Welcome to Gradle 8.13!
+
+Here are the highlights of this release:
+ - Daemon JVM auto-provisioning
+ - Enhancements for Scala plugin and JUnit testing
+ - Improvements for build authors and plugin developers
+
+For more details see https://docs.gradle.org/8.13/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+WARNING: The option setting 'android.defaults.buildfeatures.buildconfig=true' is deprecated.
+The current default is 'false'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+To keep using this feature, add the following to your module-level build.gradle files:
+    android.buildFeatures.buildConfig = true
+or from Android Studio, click: `Refactor` > `Migrate BuildConfig to Gradle Build Files`.
+WARNING: DSL element 'isRenderscriptDebuggable' is obsolete and should be removed.
+It will be removed in version 9.0 of the Android Gradle plugin.
+Checking the license for package NDK (Side by side) 26.1.10909125 in /usr/local/lib/android/sdk/licenses
+License for package NDK (Side by side) 26.1.10909125 accepted.
+Preparing "Install NDK (Side by side) 26.1.10909125 v.26.1.10909125".
+"Install NDK (Side by side) 26.1.10909125 v.26.1.10909125" ready.
+Installing NDK (Side by side) 26.1.10909125 in /usr/local/lib/android/sdk/ndk/26.1.10909125
+"Install NDK (Side by side) 26.1.10909125 v.26.1.10909125" complete.
+"Install NDK (Side by side) 26.1.10909125 v.26.1.10909125" finished.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+
+> Task :app:configureCMakeRelWithDebInfo[arm64-v8a]
+Checking the license for package CMake 3.22.1 in /usr/local/lib/android/sdk/licenses
+License for package CMake 3.22.1 accepted.
+Preparing "Install CMake 3.22.1 v.3.22.1".
+"Install CMake 3.22.1 v.3.22.1" ready.
+Installing CMake 3.22.1 in /usr/local/lib/android/sdk/cmake/3.22.1
+"Install CMake 3.22.1 v.3.22.1" complete.
+"Install CMake 3.22.1 v.3.22.1" finished.
+C/C++: CMake Warning (dev) in CMakeLists.txt:
+C/C++:   No project() command is present.  The top-level CMakeLists.txt file must
+C/C++:   contain a literal, direct call to the project() command.  Add a line of
+C/C++:   code such as
+C/C++:     project(ProjectName)
+C/C++:   near the top of the file, but after cmake_minimum_required().
+C/C++:   CMake is pretending there is a "project(Project)" command on the first
+C/C++:   line.
+C/C++: This warning is for project developers.  Use -Wno-dev to suppress it.
+C/C++: - Build type: RelWithDebInfo - Selected!
+
+> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
+> Task :app:mergeReleaseJniLibFolders
+
+> Task :app:mergeReleaseNativeLibs
+2 files found for path 'lib/arm64-v8a/libshadowhook.so'. This version of the Android Gradle Plugin chooses the file from the app or dynamic-feature module, but this can cause unexpected behavior or errors at runtime. Future versions of the Android Gradle Plugin may throw an error in this case.
+Inputs:
+ - /home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/build/intermediates/cxx/RelWithDebInfo/dg271fz5/obj/arm64-v8a/libshadowhook.so
+ - /home/runner/.gradle/caches/8.13/transforms/cb8cb48f3625890b8cc6b2488d5d06b1/transformed/jetified-shadowhook-1.0.10/jni/arm64-v8a/libshadowhook.so
+
+
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:buildKotlinToolingMetadata
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:dataBindingMergeDependencyArtifactsRelease
+> Task :app:generateReleaseResValues
+> Task :app:generateReleaseResources
+> Task :app:stripReleaseDebugSymbols
+> Task :app:generateReleaseBuildConfig
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:checkReleaseAarMetadata
+> Task :app:mergeReleaseNativeDebugMetadata
+
+> Task :app:processReleaseMainManifest
+/home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/AndroidManifest.xml:40:9-41 Warning:
+	android:extractNativeLibs should not be specified in this source AndroidManifest.xml file. See https://d.android.com/guide/topics/manifest/application-element#extractNativeLibs for more information.
+The AGP Upgrade Assistant can remove the attribute from the AndroidManifest.xml file and update the build file accordingly. See https://d.android.com/studio/build/agp-upgrade-assistant for more information.
+
+> Task :app:processReleaseManifest
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:javaPreCompileRelease
+> Task :app:mergeReleaseResources
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeExtDexRelease
+> Task :app:dataBindingGenBaseClassesRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:validateSigningRelease
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:processApplicationManifestReleaseForBundle
+> Task :app:configureReleaseDependencies
+> Task :app:parseReleaseIntegrityConfig
+warn: removing resource com.russia.game:string/auth_client_needs_enabling_title without required default value.
+warn: removing resource com.russia.game:string/auth_client_needs_installation_title without required default value.
+warn: removing resource com.russia.game:string/auth_client_needs_update_title without required default value.
+warn: removing resource com.russia.game:string/auth_client_play_services_err_notification_msg without required default value.
+warn: removing resource com.russia.game:string/auth_client_requested_by_msg without required default value.
+warn: removing resource com.russia.game:string/auth_client_using_bad_version_title without required default value.
+
+> Task :app:processReleaseResources
+> Task :app:optimizeReleaseResources
+warn: removing resource com.russia.game:string/auth_client_needs_enabling_title without required default value.
+warn: removing resource com.russia.game:string/auth_client_needs_installation_title without required default value.
+warn: removing resource com.russia.game:string/auth_client_needs_update_title without required default value.
+warn: removing resource com.russia.game:string/auth_client_play_services_err_notification_msg without required default value.
+warn: removing resource com.russia.game:string/auth_client_requested_by_msg without required default value.
+warn: removing resource com.russia.game:string/auth_client_using_bad_version_title without required default value.
+
+> Task :app:bundleReleaseResources
+
+> Task :app:compileReleaseKotlin
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/EntitySnaps.kt:49:9 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/NewUiList.kt:32:29 Unchecked cast of 'Any' to 'T (of fun <T : Any> getInstance)'.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/NewUiList.kt:40:34 'fun newInstance(): CapturedType(out Any)!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/NewUiList.kt:40:48 Unchecked cast of 'Any!' to 'T (of fun <T : Any> getInstance)'.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/core/Samp.kt:45:31 'val defaultDisplay: Display!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/core/Samp.kt:187:22 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/core/Samp.kt:214:58 'static field VIBRATOR_SERVICE: String' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/core/Samp.kt:280:36 'static field GET_SIGNATURES: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/core/Samp.kt:282:47 'field signatures: Array<(out) Signature!>!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/ActionsPed.kt:70:47 The corresponding parameter in the supertype 'ActionsPed' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/AdminRecon.kt:69:47 The corresponding parameter in the supertype 'AdminRecon' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/AttachEdit.kt:149:60 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/AucContainer.kt:50:47 The corresponding parameter in the supertype 'AucContainer' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Authorization.kt:80:47 The corresponding parameter in the supertype 'Authorization' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/BusStation.kt:15:47 The corresponding parameter in the supertype 'BusStation' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/BuyPlate.kt:123:44 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/BuyPlate.kt:130:44 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/BuyPlate.kt:136:44 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/BuyPlate.kt:142:44 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/BuyPlate.kt:158:47 The corresponding parameter in the supertype 'BuyPlate' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/CasinoBaccarat.kt:459:47 The corresponding parameter in the supertype 'CasinoBaccarat' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/ChooseSpawn.kt:100:47 The corresponding parameter in the supertype 'ChooseSpawn' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/DailyReward.kt:102:47 The corresponding parameter in the supertype 'DailyReward' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/GiftNotify.kt:54:47 The corresponding parameter in the supertype 'GiftNotify' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Menu.kt:45:17 'constructor(): Handler' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Menu.kt:101:47 The corresponding parameter in the supertype 'Menu' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/MiningStore.kt:48:47 The corresponding parameter in the supertype 'MiningStore' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Monologue.kt:64:47 The corresponding parameter in the supertype 'Monologue' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/NativeGui.kt:21:63 Unchecked cast of 'Any!' to 'T (of class NativeGui<T : ViewBinding>)'.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Notification.kt:285:19 'constructor(p0: GestureDetector.OnGestureListener): GestureDetector' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/PreDeath.kt:104:56 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/PreDeath.kt:106:56 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/PreDeath.kt:129:52 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Race.kt:20:47 The corresponding parameter in the supertype 'Race' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/RadialMenu.kt:72:47 The corresponding parameter in the supertype 'RadialMenu' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Registration.kt:183:47 The corresponding parameter in the supertype 'Registration' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Samwill.kt:42:39 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Samwill.kt:59:39 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Samwill.kt:76:39 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Samwill.kt:93:39 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Samwill.kt:112:39 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Samwill.kt:141:47 The corresponding parameter in the supertype 'Samwill' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Speedometer.kt:78:47 The corresponding parameter in the supertype 'Speedometer' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/Taxi.kt:106:47 The corresponding parameter in the supertype 'Taxi' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/TechIspect.kt:69:47 The corresponding parameter in the supertype 'TechIspect' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/WarPoints.kt:19:47 The corresponding parameter in the supertype 'WarPoints' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/achivments/Achivments.kt:80:47 The corresponding parameter in the supertype 'Achivments' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/battle_pass/BattlePass.kt:277:13 'when' is exhaustive so 'else' is redundant here.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/battle_pass/BattlePass.kt:334:47 The corresponding parameter in the supertype 'BattlePass' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/battle_pass/BattlePassBuy.kt:63:47 The corresponding parameter in the supertype 'BattlePassBuy' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/casino/Dice.kt:131:47 The corresponding parameter in the supertype 'Dice' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/casino/LuckyWheel.kt:32:59 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/casino/LuckyWheel.kt:34:59 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/casino/LuckyWheel.kt:49:47 The corresponding parameter in the supertype 'LuckyWheel' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/donate/Donate.kt:201:47 The corresponding parameter in the supertype 'Donate' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/fillingGames/Milk.kt:40:47 The corresponding parameter in the supertype 'Milk' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/fillingGames/OilFactory.kt:42:47 The corresponding parameter in the supertype 'OilFactory' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/hud/Binder.kt:122:77 The corresponding parameter in the supertype 'BinderAdapter' is named 'positionOfItem'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/hud/Binder.kt:140:79 The corresponding parameter in the supertype 'BinderAdapter' is named 'positionOfItem'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/hud/Binder.kt:165:45 Unchecked cast of 'Any!' to 'ArrayList<BinderItem>'.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/hud/Binder.kt:208:47 The corresponding parameter in the supertype 'Binder' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/hud/HudManager.kt:155:38 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/inventory/Inventory.kt:198:47 The corresponding parameter in the supertype 'Inventory' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/magicStore/MagicStore.kt:124:47 The corresponding parameter in the supertype 'MagicStore' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/styling/ColorPicker.kt:87:47 The corresponding parameter in the supertype 'ColorPicker' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/styling/Styling.kt:203:47 The corresponding parameter in the supertype 'Styling' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/tab/Tab.kt:65:47 The corresponding parameter in the supertype 'Tab' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/theft_auto/TheftAuto.kt:88:31 'fun vibrate(p0: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/theft_auto/TheftAuto.kt:161:47 The corresponding parameter in the supertype 'TheftAuto' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/tire_shop/CustomSeekBar.kt:54:47 The corresponding parameter in the supertype 'CustomSeekBar' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/tire_shop/TireShop.kt:216:47 The corresponding parameter in the supertype 'TireShop' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/treasure/Treasure.kt:136:47 The corresponding parameter in the supertype 'Treasure' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/tuning/TuningSelectMenu.kt:68:47 The corresponding parameter in the supertype 'TuningSelectMenu' is named 'json'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/util/Utils.kt:30:23 'val defaultDisplay: Display!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/util/Utils.kt:30:38 'fun getRealMetrics(p0: DisplayMetrics!): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/util/Utils.kt:104:21 'static fun fromHtml(p0: String!): Spanned!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/download/FileDownloader.kt:50:9 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/download/FileDownloader.kt:113:9 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:62:26 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:62:53 'static field SYSTEM_UI_FLAG_IMMERSIVE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:63:25 'static field SYSTEM_UI_FLAG_LAYOUT_STABLE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:64:25 'static field SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:65:25 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:66:25 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/LoaderActivity.kt:225:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:67:26 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:67:53 'static field SYSTEM_UI_FLAG_IMMERSIVE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:68:25 'static field SYSTEM_UI_FLAG_HIDE_NAVIGATION: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:69:25 'static field SYSTEM_UI_FLAG_LAYOUT_STABLE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:70:25 'static field SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:71:25 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:72:25 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:234:47 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:235:45 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:236:45 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:237:43 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:238:52 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:239:50 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:240:50 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:241:48 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:243:43 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/MainActivity.kt:244:46 'fun getColor(p0: Int): Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:78:23 'val activeNetworkInfo: NetworkInfo?' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:86:26 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:86:53 'static field SYSTEM_UI_FLAG_IMMERSIVE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:87:25 'static field SYSTEM_UI_FLAG_LAYOUT_STABLE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:88:25 'static field SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:89:25 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:90:25 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/SplashActivity.kt:221:30 'field versionCode: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:21:26 'var systemUiVisibility: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:21:53 'static field SYSTEM_UI_FLAG_IMMERSIVE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:22:25 'static field SYSTEM_UI_FLAG_LAYOUT_STABLE: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:23:25 'static field SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:24:25 'static field SYSTEM_UI_FLAG_FULLSCREEN: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:25:25 'static field SYSTEM_UI_FLAG_IMMERSIVE_STICKY: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/activity/StoryActivity.kt:34:9 'constructor(): Handler' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/adapters/ServersAdapter.kt:75:37 'fun setColorFilter(p0: Int, p1: PorterDuff.Mode): Unit' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/launcher/ui/fragment/SettingsFragment.kt:123:9 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+
+> Task :app:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /home/runner/work/kingmakers-rp/kingmakers-rp/android-client/app/src/main/java/com/russia/game/gui/hud/Chat.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :app:dexBuilderRelease
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:processReleaseJavaRes
+> Task :app:mergeReleaseJavaResource
+> Task :app:mergeDexRelease
+> Task :app:buildReleasePreBundle
+> Task :app:compileReleaseArtProfile
+> Task :app:packageReleaseBundle
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+> Task :app:signReleaseBundle
+> Task :app:produceReleaseBundleIdeListingFile
+> Task :app:createReleaseBundleListingFileRedirect
+> Task :app:bundleRelease
+
+[Incubating] Problems report is available at: file:///home/runner/work/kingmakers-rp/kingmakers-rp/android-client/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 5m 19s
+57 actionable tasks: 57 executed
