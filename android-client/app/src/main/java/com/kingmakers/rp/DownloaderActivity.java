@@ -1,16 +1,28 @@
 package com.kingmakers.rp;
 
 import com.russia.game.R;
+
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.json.JSONObject;
 
@@ -18,9 +30,12 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
@@ -32,15 +47,25 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
- * Downloads & unpacks the Kingmakers RP texture cache, custom cars & mobile UI.
- * Connects to the backend updater API, verifies SHA256 integrity, extracts game data,
- * and launches the mobile multiplayer client.
+ * Game setup before the first launch:
+ *  1. removes placeholder files written by older launcher builds,
+ *  2. imports the player's own GTA: San Andreas data (installed OBB, or a file they pick),
+ *  3. validates that data,
+ *  4. downloads the Kingmakers RP content pack (our own SAMP/GUI/font/config files only),
+ *  5. launches the multiplayer client.
  */
 public class DownloaderActivity extends AppCompatActivity {
 
+    private static final int REQ_STORAGE = 4101;
+    private static final String CONTENT_MARKER = "kingmakers/.content_pack";
+
+    private enum Step { CHECKING, NEED_GAME_DATA, IMPORT_FOUND, NEED_CONTENT, READY, BUSY }
+
     private ProgressBar progressBar;
+    private TextView textTitle;
     private TextView textStatus;
     private Button btnAction;
+    private Button btnPick;
 
     private String playerNick = "Marcus_King";
     private String serverIp = "139.180.185.57";
@@ -48,7 +73,15 @@ public class DownloaderActivity extends AppCompatActivity {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final OkHttpClient httpClient = new OkHttpClient();
-    private boolean isFinished = false;
+    private Step step = Step.CHECKING;
+    private List<File> foundObbs = new ArrayList<>();
+    private boolean storagePermissionAsked = false;
+
+    private ActivityResultLauncher<String[]> pickObbLauncher;
+
+    // ------------------------------------------------------------------
+    // Storage location (shared with Samp.kt / LauncherActivity)
+    // ------------------------------------------------------------------
 
     public static File getGameStorageDir(Context ctx) {
         File[] candidates = new File[] {
@@ -61,7 +94,6 @@ public class DownloaderActivity extends AppCompatActivity {
         for (File dir : candidates) {
             if (dir != null && dir.exists()) {
                 if (new File(dir, "data/gta.dat").exists() ||
-                    new File(dir, "SAMP/gta.dat").exists() ||
                     new File(dir, "SAMP").exists() ||
                     new File(dir, "models/gta3.img").exists()) {
                     return dir;
@@ -77,30 +109,15 @@ public class DownloaderActivity extends AppCompatActivity {
         return ctx.getFilesDir();
     }
 
-    public static boolean isCacheInstalled(Context ctx) {
-        File[] candidates = new File[] {
-                new File("/storage/emulated/0/Android/data/com.kingmakers.rp/files"),
-                new File("/storage/emulated/0/Android/data/com.russia.game/files"),
-                ctx.getExternalFilesDir(null),
-                ctx.getFilesDir(),
-                new File("/data/data/com.kingmakers.rp/files"),
-                new File("/data/data/com.russia.game/files")
-        };
-
-        for (File dir : candidates) {
-            if (dir == null || !dir.exists()) continue;
-            if (new File(dir, "data/gta.dat").exists() ||
-                new File(dir, "SAMP/gta.dat").exists() ||
-                new File(dir, "texdb/gta3.img").exists() ||
-                new File(dir, "models/gta3.img").exists() ||
-                new File(dir, "data/script/mainV1.scm").exists() ||
-                new File(dir, "SAMP/main.scm").exists() ||
-                new File(dir, "SAMP").exists()) {
-                return true;
-            }
-        }
-        return false;
+    /** True when real GTA SA data and the Kingmakers content are both in place. */
+    public static boolean isReadyToPlay(Context ctx) {
+        File dir = getGameStorageDir(ctx);
+        return GameDataManager.validate(dir).isValid() && new File(dir, CONTENT_MARKER).exists();
     }
+
+    // ------------------------------------------------------------------
+    // Lifecycle
+    // ------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +125,10 @@ public class DownloaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_downloader);
 
         progressBar = findViewById(R.id.downloadProgress);
+        textTitle = findViewById(R.id.textDownloadTitle);
         textStatus = findViewById(R.id.textDownloadStatus);
         btnAction = findViewById(R.id.btnDownloadAction);
+        btnPick = findViewById(R.id.btnPickGameData);
 
         if (getIntent() != null) {
             if (getIntent().hasExtra("nick")) playerNick = getIntent().getStringExtra("nick");
@@ -117,147 +136,350 @@ public class DownloaderActivity extends AppCompatActivity {
             if (getIntent().hasExtra("port")) serverPort = getIntent().getIntExtra("port", 7777);
         }
 
-        btnAction.setOnClickListener(v -> {
-            if (isFinished) {
-                launchGame();
-            } else {
-                startDownloadPipeline();
+        pickObbLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenMultipleDocuments(),
+                uris -> { if (uris != null && !uris.isEmpty()) importPickedFiles(uris); });
+
+        btnAction.setOnClickListener(v -> onActionClicked());
+        btnPick.setOnClickListener(v -> openObbPicker());
+
+        checkState();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.shutdownNow();
+    }
+
+    private void onActionClicked() {
+        switch (step) {
+            case NEED_GAME_DATA: openObbPicker(); break;
+            case IMPORT_FOUND:   importInstalledObbs(); break;
+            case NEED_CONTENT:   downloadContentPack(); break;
+            case READY:          launchGame(); break;
+            default: break;
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // State check
+    // ------------------------------------------------------------------
+
+    private void checkState() {
+        setBusy("CHECKING GAME FILES", "Checking game files...");
+        executor.execute(() -> {
+            File dir = getGameStorageDir(this);
+            int removed = GameDataManager.removePlaceholderFiles(dir);
+            extractBundledContent(this, dir);
+            GameDataManager.Result result = GameDataManager.validate(dir);
+
+            if (!result.isValid()) {
+                List<File> obbs = GameDataManager.findInstalledObbs();
+                runOnUiThread(() -> {
+                    if (!obbs.isEmpty()) {
+                        foundObbs = obbs;
+                        showFoundInstallation(obbs);
+                    } else if (needsStoragePermission()) {
+                        storagePermissionAsked = true;
+                        ActivityCompat.requestPermissions(this,
+                                new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_STORAGE);
+                    } else {
+                        showNeedGameData(removed);
+                    }
+                });
+                return;
+            }
+
+            boolean contentInstalled = new File(dir, CONTENT_MARKER).exists();
+            runOnUiThread(() -> {
+                if (!contentInstalled) showNeedContent();
+                else showReady();
+            });
+        });
+    }
+
+    private boolean needsStoragePermission() {
+        return !storagePermissionAsked
+                && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_STORAGE) checkState();
+    }
+
+    // ------------------------------------------------------------------
+    // UI states
+    // ------------------------------------------------------------------
+
+    private void setBusy(String title, String status) {
+        step = Step.BUSY;
+        textTitle.setText(title);
+        textStatus.setText(status);
+        btnAction.setEnabled(false);
+        btnPick.setVisibility(View.GONE);
+    }
+
+    private void showFoundInstallation(List<File> obbs) {
+        step = Step.IMPORT_FOUND;
+        long total = 0;
+        for (File f : obbs) total += f.length();
+        textTitle.setText("GTA: SAN ANDREAS FOUND");
+        textStatus.setText(String.format(
+                "Found your GTA: San Andreas installation (%d file(s), %.0f MB).\n" +
+                "Kingmakers RP runs on your copy of the game. Import its data to continue.",
+                obbs.size(), total / (1024.0 * 1024.0)));
+        progressBar.setProgress(0);
+        btnAction.setEnabled(true);
+        btnAction.setText("IMPORT GAME DATA");
+        btnPick.setVisibility(View.VISIBLE);
+    }
+
+    private void showNeedGameData(int removedPlaceholders) {
+        step = Step.NEED_GAME_DATA;
+        textTitle.setText("GTA: SAN ANDREAS REQUIRED");
+        String extra = removedPlaceholders > 0
+                ? "\n\nRemoved " + removedPlaceholders + " placeholder file(s) left by an older version."
+                : "";
+        textStatus.setText(
+                "Kingmakers RP runs on GTA: San Andreas for Android, which you need to own and install " +
+                "from Google Play.\n\n" +
+                "If it is installed but not detected, copy its OBB file from " +
+                "Android/obb/" + GameDataManager.GTASA_PACKAGE + "/ to your Download folder " +
+                "with a file manager, then select it here." + extra);
+        progressBar.setProgress(0);
+        btnAction.setEnabled(true);
+        btnAction.setText("SELECT GTA SA OBB FILE");
+        btnPick.setVisibility(View.GONE);
+    }
+
+    private void showNeedContent() {
+        step = Step.NEED_CONTENT;
+        textTitle.setText("KINGMAKERS RP CONTENT");
+        textStatus.setText("Game data verified. Download the Kingmakers RP content pack to continue.");
+        progressBar.setProgress(0);
+        btnAction.setEnabled(true);
+        btnAction.setText("DOWNLOAD");
+        btnPick.setVisibility(View.GONE);
+    }
+
+    private void showReady() {
+        step = Step.READY;
+        textTitle.setText("READY");
+        textStatus.setText("All game files verified. Ready to enter Los Santos.");
+        progressBar.setProgress(100);
+        btnAction.setEnabled(true);
+        btnAction.setText("PLAY NOW");
+        btnPick.setVisibility(View.GONE);
+    }
+
+    private void showValidationFailure(GameDataManager.Result result) {
+        showNeedGameData(0);
+        new AlertDialog.Builder(this)
+                .setTitle("Game data incomplete")
+                .setMessage("The imported files are not a complete GTA: San Andreas installation:\n\n"
+                        + result.describe()
+                        + "\n\nSelect the main OBB file (and the patch OBB, if your copy has one).")
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    // ------------------------------------------------------------------
+    // Importing the player's own GTA SA data
+    // ------------------------------------------------------------------
+
+    private void openObbPicker() {
+        try {
+            pickObbLauncher.launch(new String[] {"*/*"});
+        } catch (Exception e) {
+            Toast.makeText(this, "No file picker available: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void importInstalledObbs() {
+        final List<File> obbs = new ArrayList<>(foundObbs);
+        setBusy("IMPORTING GAME DATA", "Importing GTA: San Andreas data...");
+        executor.execute(() -> {
+            try {
+                File dir = getGameStorageDir(this);
+                for (int i = 0; i < obbs.size(); i++) {
+                    File obb = obbs.get(i);
+                    String label = obb.getName() + " (" + (i + 1) + "/" + obbs.size() + ")";
+                    try (InputStream in = new FileInputStream(obb)) {
+                        GameDataManager.importArchive(in, obb.length(), dir, progressListener(label));
+                    }
+                }
+                finishImport(dir);
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    showNeedGameData(0);
+                    textStatus.setText("Could not read the installed game files (" + e.getMessage() + ").\n\n"
+                            + "Copy the OBB from Android/obb/" + GameDataManager.GTASA_PACKAGE
+                            + "/ to your Download folder and select it instead.");
+                });
             }
         });
     }
 
-    private void startDownloadPipeline() {
-        btnAction.setEnabled(false);
-        btnAction.setText("CONNECTING...");
-        textStatus.setText("Querying Kingmakers RP updater...");
+    private void importPickedFiles(List<Uri> uris) {
+        final List<Uri> ordered = new ArrayList<>(uris);
+        ordered.sort((a, b) -> Integer.compare(
+                GameDataManager.obbOrder(displayName(a)), GameDataManager.obbOrder(displayName(b))));
+
+        setBusy("IMPORTING GAME DATA", "Importing selected file(s)...");
+        executor.execute(() -> {
+            try {
+                File dir = getGameStorageDir(this);
+                for (int i = 0; i < ordered.size(); i++) {
+                    Uri uri = ordered.get(i);
+                    String label = displayName(uri) + " (" + (i + 1) + "/" + ordered.size() + ")";
+                    try (InputStream in = getContentResolver().openInputStream(uri)) {
+                        if (in == null) throw new Exception("cannot open " + displayName(uri));
+                        GameDataManager.importArchive(in, sizeOf(uri), dir, progressListener(label));
+                    }
+                }
+                finishImport(dir);
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    showNeedGameData(0);
+                    textStatus.setText("Import failed: " + e.getMessage()
+                            + "\n\nSelect the GTA: San Andreas OBB file (it is a zip archive).");
+                });
+            }
+        });
+    }
+
+    private void finishImport(File dir) {
+        GameDataManager.Result result = GameDataManager.validate(dir);
+        runOnUiThread(() -> {
+            if (result.isValid()) checkState();
+            else showValidationFailure(result);
+        });
+    }
+
+    private GameDataManager.ProgressListener progressListener(String label) {
+        return (read, total, entry) -> runOnUiThread(() -> {
+            int pct = total > 0 ? (int) Math.min(100, read * 100 / total) : 0;
+            progressBar.setProgress(pct);
+            textStatus.setText(String.format("Importing %s: %d%%\n%s", label, pct, entry));
+        });
+    }
+
+    private String displayName(Uri uri) {
+        try (Cursor c = getContentResolver().query(uri, new String[] {OpenableColumns.DISPLAY_NAME}, null, null, null)) {
+            if (c != null && c.moveToFirst() && !c.isNull(0)) return c.getString(0);
+        } catch (Exception ignored) {}
+        String last = uri.getLastPathSegment();
+        return last != null ? last : "file";
+    }
+
+    private long sizeOf(Uri uri) {
+        try (Cursor c = getContentResolver().query(uri, new String[] {OpenableColumns.SIZE}, null, null, null)) {
+            if (c != null && c.moveToFirst() && !c.isNull(0)) return c.getLong(0);
+        } catch (Exception ignored) {}
+        return -1;
+    }
+
+    // ------------------------------------------------------------------
+    // Kingmakers RP content pack (our own files only)
+    // ------------------------------------------------------------------
+
+    private void downloadContentPack() {
+        setBusy("KINGMAKERS RP CONTENT", "Querying Kingmakers RP updater...");
         progressBar.setProgress(0);
 
         executor.execute(() -> {
             try {
-                // 1. Fetch launcher configuration
                 String apiUrl = getString(R.string.backend_api_url) + "/api/launcher/config";
-                Request cfgReq = new Request.Builder().url(apiUrl).build();
-                Response cfgRes = httpClient.newCall(cfgReq).execute();
+                Response cfgRes = httpClient.newCall(new Request.Builder().url(apiUrl).build()).execute();
                 if (!cfgRes.isSuccessful() || cfgRes.body() == null) {
                     throw new Exception("Unable to reach updater API (" + cfgRes.code() + ")");
                 }
 
                 JSONObject cfg = new JSONObject(cfgRes.body().string());
-                String cacheUrl = cfg.optString("cacheZipUrl");
-                String expectedSha256 = cfg.optString("cacheSha256", "");
-                double sizeMb = cfg.optDouble("cacheSizeMb", 1459.0);
+                String packUrl = cfg.optString("contentPackUrl", "");
+                String expectedSha256 = cfg.optString("contentPackSha256", "");
+                String version = cfg.optString("latestVersion", "1.0.0");
+                if (packUrl.isEmpty()) throw new Exception("Content pack URL not provided by server");
 
-                if (cacheUrl.isEmpty()) {
-                    throw new Exception("Cache download URL not provided by server");
-                }
+                File packZip = new File(getExternalCacheDir(), "km_content_pack.zip");
+                if (packZip.exists()) packZip.delete();
 
-                // 2. Download archive with progress
-                runOnUiThread(() -> {
-                    btnAction.setText("DOWNLOADING...");
-                    textStatus.setText(String.format("Downloading Kingmakers RP cache (%.1f MB)...", sizeMb));
-                });
-
-                File cacheZip = new File(getExternalCacheDir(), "km_cache_temp.zip");
-                if (cacheZip.exists()) cacheZip.delete();
-
-                Request dlReq = new Request.Builder().url(cacheUrl).build();
-                Response dlRes = httpClient.newCall(dlReq).execute();
+                Response dlRes = httpClient.newCall(new Request.Builder().url(packUrl).build()).execute();
                 if (!dlRes.isSuccessful() || dlRes.body() == null) {
                     throw new Exception("Download failed with HTTP " + dlRes.code());
                 }
 
                 ResponseBody body = dlRes.body();
                 long contentLength = body.contentLength();
-                if (contentLength <= 0) contentLength = (long) (sizeMb * 1024 * 1024);
-
-                InputStream in = body.byteStream();
-                FileOutputStream out = new FileOutputStream(cacheZip);
-                MessageDigest shaDigest = MessageDigest.getInstance("SHA-256");
-
-                byte[] buffer = new byte[65536];
-                long totalRead = 0;
-                int bytesRead;
-                long lastUiUpdate = System.currentTimeMillis();
-                long startTime = System.currentTimeMillis();
-
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, bytesRead);
-                    shaDigest.update(buffer, 0, bytesRead);
-                    totalRead += bytesRead;
-
-                    long now = System.currentTimeMillis();
-                    if (now - lastUiUpdate > 300) {
-                        lastUiUpdate = now;
-                        final long curRead = totalRead;
-                        final long totalLen = contentLength;
-                        final double elapsedSec = Math.max(0.1, (now - startTime) / 1000.0);
-                        final double speedMb = (curRead / (1024.0 * 1024.0)) / elapsedSec;
-
-                        runOnUiThread(() -> {
-                            int pct = (int) Math.min(99, (curRead * 100) / totalLen);
-                            progressBar.setProgress(pct);
-                            textStatus.setText(String.format("Downloading: %.1f MB / %.1f MB (%.1f MB/s - %d%%)",
-                                    curRead / (1024.0 * 1024.0),
-                                    totalLen / (1024.0 * 1024.0),
-                                    speedMb,
-                                    pct));
-                        });
+                MessageDigest sha = MessageDigest.getInstance("SHA-256");
+                try (InputStream in = body.byteStream(); FileOutputStream out = new FileOutputStream(packZip)) {
+                    byte[] buffer = new byte[65536];
+                    long totalRead = 0;
+                    long lastUi = 0;
+                    int n;
+                    while ((n = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, n);
+                        sha.update(buffer, 0, n);
+                        totalRead += n;
+                        long now = System.currentTimeMillis();
+                        if (now - lastUi > 300) {
+                            lastUi = now;
+                            final long cur = totalRead;
+                            runOnUiThread(() -> {
+                                int pct = contentLength > 0 ? (int) Math.min(99, cur * 100 / contentLength) : 0;
+                                progressBar.setProgress(pct);
+                                textStatus.setText(String.format("Downloading: %.1f MB", cur / (1024.0 * 1024.0)));
+                            });
+                        }
                     }
                 }
-                out.flush();
-                out.close();
-                in.close();
 
-                // 3. Verify SHA256 Checksum
-                runOnUiThread(() -> textStatus.setText("Verifying package checksum..."));
-                byte[] hashBytes = shaDigest.digest();
-                StringBuilder sb = new StringBuilder();
-                for (byte b : hashBytes) sb.append(String.format("%02x", b));
-                String computedSha = sb.toString();
-
-                if (!expectedSha256.isEmpty() && !expectedSha256.equalsIgnoreCase(computedSha)) {
-                    // Log warning but proceed with extraction if file sizes match
-                    System.out.println("SHA-256 warning: expected " + expectedSha256 + ", got " + computedSha);
+                StringBuilder hex = new StringBuilder();
+                for (byte b : sha.digest()) hex.append(String.format("%02x", b));
+                if (!expectedSha256.isEmpty() && !expectedSha256.equalsIgnoreCase(hex.toString())) {
+                    packZip.delete();
+                    throw new Exception("Checksum mismatch, please retry");
                 }
 
-                // 4. Extract archive
-                runOnUiThread(() -> {
-                    progressBar.setProgress(99);
-                    textStatus.setText("Extracting Kingmakers RP world data and textures...");
-                });
+                runOnUiThread(() -> textStatus.setText("Installing Kingmakers RP content..."));
+                File dir = getGameStorageDir(this);
+                unzipOwnContent(packZip, dir);
+                packZip.delete();
 
-                File targetDir = getGameStorageDir(DownloaderActivity.this);
-                unzipArchive(cacheZip, targetDir);
+                File marker = new File(dir, CONTENT_MARKER);
+                if (marker.getParentFile() != null) marker.getParentFile().mkdirs();
+                try (FileWriter fw = new FileWriter(marker, false)) { fw.write(version); }
 
-                // Clean up temp zip
-                cacheZip.delete();
-
-                // 5. Complete
-                runOnUiThread(() -> {
-                    isFinished = true;
-                    progressBar.setProgress(100);
-                    textStatus.setText("Installation complete! Ready to enter Los Santos.");
-                    btnAction.setEnabled(true);
-                    btnAction.setText("PLAY NOW");
-                });
-
+                runOnUiThread(this::checkState);
             } catch (Exception e) {
                 runOnUiThread(() -> {
-                    btnAction.setEnabled(true);
+                    showNeedContent();
                     btnAction.setText("RETRY DOWNLOAD");
                     textStatus.setText("Error: " + e.getMessage());
-                    Toast.makeText(DownloaderActivity.this, "Download error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
         });
     }
 
-    private void unzipArchive(File zipFile, File targetDir) throws Exception {
+    /** Extracts only our own content folders, so it can never overwrite the player's game data. */
+    private static void unzipOwnContent(File zipFile, File targetDir) throws Exception {
+        String canonicalTarget = targetDir.getCanonicalPath() + File.separator;
         byte[] buffer = new byte[32768];
         try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                File outFile = new File(targetDir, entry.getName());
+                String name = entry.getName().replace('\\', '/');
+                File outFile = new File(targetDir, name);
+                if (!GameDataManager.isOwnContent(name)
+                        || !outFile.getCanonicalPath().startsWith(canonicalTarget)) {
+                    zis.closeEntry();
+                    continue;
+                }
                 if (entry.isDirectory()) {
                     outFile.mkdirs();
                 } else {
@@ -265,9 +487,7 @@ public class DownloaderActivity extends AppCompatActivity {
                     if (parent != null && !parent.exists()) parent.mkdirs();
                     try (FileOutputStream fos = new FileOutputStream(outFile)) {
                         int len;
-                        while ((len = zis.read(buffer)) > 0) {
-                            fos.write(buffer, 0, len);
-                        }
+                        while ((len = zis.read(buffer)) > 0) fos.write(buffer, 0, len);
                     }
                 }
                 zis.closeEntry();
@@ -275,186 +495,111 @@ public class DownloaderActivity extends AppCompatActivity {
         }
     }
 
+    // ------------------------------------------------------------------
+    // Per-launch setup (called from LauncherActivity and Samp.kt)
+    // ------------------------------------------------------------------
+
     public static void ensureGameFiles(Context ctx, String nick, String ip, int port) {
-        File[] targetDirs = new File[] {
-                getGameStorageDir(ctx),
-                ctx.getExternalFilesDir(null),
-                new File("/storage/emulated/0/Android/data/com.kingmakers.rp/files"),
-                new File("/storage/emulated/0/Android/data/com.russia.game/files"),
-                ctx.getFilesDir()
-        };
+        File baseDir = getGameStorageDir(ctx);
+        try {
+            if (!baseDir.exists()) baseDir.mkdirs();
+            GameDataManager.removePlaceholderFiles(baseDir);
+            extractBundledContent(ctx, baseDir);
 
-        for (File baseDir : targetDirs) {
-            if (baseDir == null) continue;
-            try {
-                if (!baseDir.exists()) baseDir.mkdirs();
+            File sampDir = new File(baseDir, "SAMP");
+            sampDir.mkdirs();
+            File kmDir = new File(baseDir, "kingmakers");
+            kmDir.mkdirs();
 
-                File sampDir = new File(baseDir, "SAMP");
-                if (!sampDir.exists()) sampDir.mkdirs();
-
-                File dataDir = new File(baseDir, "data");
-                if (!dataDir.exists()) dataDir.mkdirs();
-
-                File scriptDir = new File(dataDir, "script");
-                if (!scriptDir.exists()) scriptDir.mkdirs();
-
-                File kmDir = new File(baseDir, "kingmakers");
-                if (!kmDir.exists()) kmDir.mkdirs();
-
-                // 1. Write SAMP settings.ini
-                File iniFile = new File(sampDir, "settings.ini");
-                String iniContent = "[client]\n" +
-                        "name=" + nick + "\n" +
-                        "ip=" + ip + "\n" +
-                        "host=" + ip + "\n" +
-                        "port=" + port + "\n" +
-                        "debug=0\n\n" +
-                        "[gui]\n" +
-                        "Font=visby-round-cf-extra-bold.ttf\n" +
-                        "fps=60\n" +
-                        "FontSize=30.0\n" +
-                        "ChatFontSize=-1\n" +
-                        "FontOutline=2\n";
-                try (java.io.FileWriter fw = new java.io.FileWriter(iniFile, false)) {
-                    fw.write(iniContent);
-                }
-
-                // 2. Write kingmakers server.ini
-                File kmIni = new File(kmDir, "server.ini");
-                String kmContent = "[Connection]\n" +
-                        "host = " + ip + "\n" +
-                        "port = " + port + "\n" +
-                        "server_name = Kingmakers RP | Mobile Roleplay | v1.0.0\n" +
-                        "version = 1.0.0\n" +
-                        "[Client]\n" +
-                        "name = " + nick + "\n" +
-                        "fast_load = true\n" +
-                        "debug_logs = false\n";
-                try (java.io.FileWriter fw = new java.io.FileWriter(kmIni, false)) {
-                    fw.write(kmContent);
-                }
-
-                // 3. Fallback copies between data/ and SAMP/
-                File dataGtaDat = new File(dataDir, "gta.dat");
-                File sampGtaDat = new File(sampDir, "gta.dat");
-                if (dataGtaDat.exists() && !sampGtaDat.exists()) {
-                    copyFile(dataGtaDat, sampGtaDat);
-                } else if (sampGtaDat.exists() && !dataGtaDat.exists()) {
-                    copyFile(sampGtaDat, dataGtaDat);
-                }
-
-                // Patch gta.dat directive from CDIMAGE to IMG
-                for (File gtaFile : new File[] { dataGtaDat, sampGtaDat }) {
-                    if (gtaFile.exists()) {
-                        try {
-                            String content = new String(java.nio.file.Files.readAllBytes(gtaFile.toPath()), java.nio.charset.StandardCharsets.UTF_8);
-                            if (content.contains("CDIMAGE")) {
-                                content = content.replace("CDIMAGE", "IMG");
-                                java.nio.file.Files.write(gtaFile.toPath(), content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                            }
-                        } catch (Exception ignored) {}
-                    }
-                }
-
-                File dataHandling = new File(dataDir, "handling.cfg");
-                File sampHandling = new File(sampDir, "handling.cfg");
-                if (dataHandling.exists() && !sampHandling.exists()) {
-                    copyFile(dataHandling, sampHandling);
-                } else if (sampHandling.exists() && !dataHandling.exists()) {
-                    copyFile(sampHandling, dataHandling);
-                }
-
-                // 4. Ensure default.dat exists (CGame::Initialise requires DATA/DEFAULT.DAT)
-                String defaultDatContent = "# Kingmakers RP - Default Data Definition\nIDE DATA/DEFAULT.IDE\nIDE DATA/VEHICLES.IDE\nIDE DATA/PEDS.IDE\n";
-                File dataDefault = new File(dataDir, "default.dat");
-                if (!dataDefault.exists() || dataDefault.length() == 0) {
-                    try (java.io.FileWriter fw = new java.io.FileWriter(dataDefault, false)) {
-                        fw.write(defaultDatContent);
-                    } catch (Exception ignored) {}
-                }
-                File sampDefault = new File(sampDir, "default.dat");
-                if (!sampDefault.exists() || sampDefault.length() == 0) {
-                    try (java.io.FileWriter fw = new java.io.FileWriter(sampDefault, false)) {
-                        fw.write(defaultDatContent);
-                    } catch (Exception ignored) {}
-                }
-
-                // 5. Ensure anim/ped.ifp exists with ANP3 header
-                File animDir = new File(baseDir, "anim");
-                if (!animDir.exists()) animDir.mkdirs();
-                File pedIfpFile = new File(animDir, "ped.ifp");
-                if (!pedIfpFile.exists() || pedIfpFile.length() == 0) {
-                    try (FileOutputStream fos = new FileOutputStream(pedIfpFile)) {
-                        byte[] ifpHeader = new byte[32];
-                        System.arraycopy("ANP3".getBytes(java.nio.charset.StandardCharsets.US_ASCII), 0, ifpHeader, 0, 4);
-                        System.arraycopy("ped".getBytes(java.nio.charset.StandardCharsets.US_ASCII), 0, ifpHeader, 4, 3);
-                        fos.write(ifpHeader);
-                    } catch (Exception ignored) {}
-                }
-
-                // 6. Extract bundled engine assets from assets/game/
-                extractAssetFolder(ctx, "game", baseDir);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            String iniContent = "[client]\n" +
+                    "name=" + nick + "\n" +
+                    "ip=" + ip + "\n" +
+                    "host=" + ip + "\n" +
+                    "port=" + port + "\n" +
+                    "debug=0\n\n" +
+                    "[gui]\n" +
+                    "Font=visby-round-cf-extra-bold.ttf\n" +
+                    "fps=60\n" +
+                    "FontSize=30.0\n" +
+                    "ChatFontSize=-1\n" +
+                    "FontOutline=2\n";
+            try (FileWriter fw = new FileWriter(new File(sampDir, "settings.ini"), false)) {
+                fw.write(iniContent);
             }
+
+            String kmContent = "[Connection]\n" +
+                    "host = " + ip + "\n" +
+                    "port = " + port + "\n" +
+                    "server_name = Kingmakers RP | Mobile Roleplay | v1.0.0\n" +
+                    "version = 1.0.0\n" +
+                    "[Client]\n" +
+                    "name = " + nick + "\n" +
+                    "fast_load = true\n" +
+                    "debug_logs = false\n";
+            try (FileWriter fw = new FileWriter(new File(kmDir, "server.ini"), false)) {
+                fw.write(kmContent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private static void copyFile(File src, File dst) {
-        try {
-            if (dst.getParentFile() != null && !dst.getParentFile().exists()) {
-                dst.getParentFile().mkdirs();
-            }
-            try (InputStream in = new FileInputStream(src);
-                 OutputStream out = new FileOutputStream(dst)) {
-                byte[] buf = new byte[32768];
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-            }
-        } catch (Exception ignored) {}
+    /** Copies our bundled APK assets (assets/game/<own content dirs>) into the storage dir. */
+    private static void extractBundledContent(Context ctx, File targetDir) {
+        extractAssetFolder(ctx, "game", "", targetDir);
     }
 
-    private static void extractAssetFolder(Context ctx, String assetPath, File targetDir) {
+    private static void extractAssetFolder(Context ctx, String assetPath, String relPath, File targetDir) {
         try {
             String[] list = ctx.getAssets().list(assetPath);
-            if (list == null || list.length == 0) return;
+            if (list == null) return;
             for (String file : list) {
                 String subAsset = assetPath + "/" + file;
+                String subRel = relPath + file;
                 String[] subList = ctx.getAssets().list(subAsset);
-                if (subList != null && subList.length > 0) {
+                boolean isDir = subList != null && subList.length > 0;
+
+                if (isDir) {
+                    // Descend only into directories that are, or lead to, our own content
+                    String dirRel = subRel + "/";
+                    if (!GameDataManager.isOwnContent(dirRel) && !leadsToOwnContent(dirRel)) continue;
                     File subTarget = new File(targetDir, file);
-                    if (!subTarget.exists()) subTarget.mkdirs();
-                    extractAssetFolder(ctx, subAsset, subTarget);
+                    subTarget.mkdirs();
+                    extractAssetFolder(ctx, subAsset, dirRel, subTarget);
                 } else {
+                    if (!GameDataManager.isOwnContent(subRel)) continue;
                     File outFile = new File(targetDir, file);
-                    boolean forceOverwrite = file.equalsIgnoreCase("gta.dat") ||
-                                             file.equalsIgnoreCase("default.dat") ||
-                                             file.equalsIgnoreCase("ped.ifp");
-                    if (!outFile.exists() || outFile.length() == 0 || forceOverwrite) {
-                        try (InputStream in = ctx.getAssets().open(subAsset);
-                             OutputStream out = new FileOutputStream(outFile)) {
-                            byte[] buf = new byte[32768];
-                            int len;
-                            while ((len = in.read(buf)) > 0) {
-                                out.write(buf, 0, len);
-                            }
-                        }
+                    if (outFile.exists() && outFile.length() > 0) continue;
+                    try (InputStream in = ctx.getAssets().open(subAsset);
+                         OutputStream out = new FileOutputStream(outFile)) {
+                        byte[] buf = new byte[32768];
+                        int len;
+                        while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
                     }
                 }
             }
         } catch (Exception ignored) {}
     }
 
-    private void writeSampSettings(String nick, String ip, int port) {
-        ensureGameFiles(this, nick, ip, port);
+    private static boolean leadsToOwnContent(String dirRel) {
+        for (String prefix : GameDataManager.OWN_CONTENT_DIRS) {
+            if (prefix.regionMatches(true, 0, dirRel, 0, dirRel.length())) return true;
+        }
+        return false;
     }
 
+    // ------------------------------------------------------------------
+    // Launch
+    // ------------------------------------------------------------------
+
     private void launchGame() {
+        GameDataManager.Result result = GameDataManager.validate(getGameStorageDir(this));
+        if (!result.isValid()) {
+            showValidationFailure(result);
+            return;
+        }
         try {
-            writeSampSettings(playerNick, serverIp, serverPort);
+            ensureGameFiles(this, playerNick, serverIp, serverPort);
 
             Intent gameIntent = new Intent(this, com.russia.game.core.Samp.class);
             gameIntent.putExtra("player_name", playerNick);
@@ -466,15 +611,9 @@ public class DownloaderActivity extends AppCompatActivity {
             gameIntent.putExtra("server_port", serverPort);
             gameIntent.putExtra("port", serverPort);
             startActivity(gameIntent);
+            finish();
         } catch (Exception e) {
             Toast.makeText(this, "Failed to launch game engine: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        executor.shutdownNow();
     }
 }

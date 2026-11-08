@@ -32,6 +32,14 @@ if [ -d "$REPO_DIR/server" ]; then
 fi
 cp "$REPO_DIR"/*.sh "$SERVICE_DIR/" 2>/dev/null || true
 
+# Build the Kingmakers RP content pack (our own client files only) and remove the
+# old placeholder "full game cache" archives, which contained no real game data.
+echo "      Building Kingmakers RP content pack..."
+KM_CONTENT_ZIP_OUT="$SERVICE_DIR/backend/public/downloads/kingmakers_content_pack_v1.0.zip" \
+    python3 "$REPO_DIR/backend/build_content_pack.py"
+rm -f "$SERVICE_DIR/backend/public/downloads"/kingmakers_full_game_cache_* \
+      "$SERVICE_DIR/backend/public/downloads"/kingmakers_game_cache_*
+
 # 4. Fix permissions and executable flags
 echo "[4/5] Updating user permissions and executable flags..."
 chmod +x "$REPO_DIR"/*.sh "$REPO_DIR/server"/*.sh "$REPO_DIR/server/qawno/pawncc" 2>/dev/null || true
