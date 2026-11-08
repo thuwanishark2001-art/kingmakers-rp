@@ -100,16 +100,6 @@ void ApplyPatches_level0()
 
     // entryexit
     CHook::RET("_ZN17CEntryExitManager22PostEntryExitsCreationEv");
-
-    // Prevent CCustomCarPlateMgr crash when vehicle txd / platecharset is missing
-    CHook::Redirect("_ZN18CCustomCarPlateMgr10InitialiseEv", (void*)+[]() -> bool { return true; });
-    CHook::RET("_ZN18CCustomCarPlateMgr8ShutdownEv");
-
-    // Bypass singleplayer initial models & player skin (prevents blocking & crashes on placeholder IMG archives)
-    CHook::RET("_ZN10CStreaming19LoadInitialVehiclesEv");
-    CHook::RET("_ZN10CStreaming15LoadInitialPedsEv");
-    CHook::RET("_ZN10CStreaming18LoadInitialWeaponsEv");
-    CHook::RET("_ZN11CPlayerInfo14LoadPlayerSkinEv");
 }
 
 void ApplyShadowPatch()

@@ -235,25 +235,29 @@ app.get('/api/status', async (req, res) => {
 });
 
 app.get('/api/launcher/config', (req, res) => {
-    let cacheSha256 = '84d18d876da3951ec11ecc8e2a23344cddabea449c92181ac14e28c9795e298f';
-    let cacheSizeMb = 1497.0;
+    // Kingmakers RP content pack: our own SAMP/GUI/font/config files only.
+    // GTA: San Andreas engine data is imported on the device from the player's own copy.
+    const packName = 'kingmakers_content_pack_v1.0.zip';
+    let contentPackSha256 = '';
+    let contentPackSizeMb = 0;
     const searchDirs = [
         path.join(publicDir, 'downloads'),
         path.join(__dirname, 'public/downloads')
     ];
     for (const d of searchDirs) {
-        const shaPath = path.join(d, 'kingmakers_full_game_cache_1.5gb_uncompressed.zip.sha256');
-        const zipPath = path.join(d, 'kingmakers_full_game_cache_1.5gb_uncompressed.zip');
+        const shaPath = path.join(d, packName + '.sha256');
+        const zipPath = path.join(d, packName);
         if (fs.existsSync(shaPath)) {
             try {
-                cacheSha256 = fs.readFileSync(shaPath, 'utf8').trim();
+                contentPackSha256 = fs.readFileSync(shaPath, 'utf8').trim();
             } catch (e) {}
         }
         if (fs.existsSync(zipPath)) {
             try {
-                cacheSizeMb = parseFloat((fs.statSync(zipPath).size / (1024 * 1024)).toFixed(1));
+                contentPackSizeMb = parseFloat((fs.statSync(zipPath).size / (1024 * 1024)).toFixed(1));
             } catch (e) {}
         }
+        if (contentPackSha256) break;
     }
     res.json({
         latestVersion: '1.0.0',
@@ -264,9 +268,10 @@ app.get('/api/launcher/config', (req, res) => {
         splitApksZipAlias: `http://${PUBLIC_HOST}:${PORT}/downloads/apks.zip`,
         splitBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_Bundle_v1.0.apks`,
         appBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_AppBundle_v1.0.aab`,
-        cacheZipUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/kingmakers_full_game_cache_1.5gb_uncompressed.zip`,
-        cacheSizeMb,
-        cacheSha256,
+        contentPackUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/${packName}`,
+        contentPackSizeMb,
+        contentPackSha256,
+        requiresOwnedGameData: true,
         defaultServer: {
             name: 'Kingmakers RP #1 [Los Santos]',
             ip: PUBLIC_HOST,

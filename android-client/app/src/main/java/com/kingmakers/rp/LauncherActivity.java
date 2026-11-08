@@ -91,8 +91,8 @@ public class LauncherActivity extends AppCompatActivity {
         String ip = prefs.getString(KEY_SERVER_IP, getString(R.string.server_default_ip));
         int port = Integer.parseInt(prefs.getString(KEY_SERVER_PORT, getString(R.string.server_default_port)));
 
-        // Check if game cache is installed; if not, go to downloader
-        if (!DownloaderActivity.isCacheInstalled(this)) {
+        // Real GTA SA data + Kingmakers content must be in place; otherwise run game setup
+        if (!DownloaderActivity.isReadyToPlay(this)) {
             Intent dIntent = new Intent(this, DownloaderActivity.class);
             dIntent.putExtra("nick", nick);
             dIntent.putExtra("ip", ip);

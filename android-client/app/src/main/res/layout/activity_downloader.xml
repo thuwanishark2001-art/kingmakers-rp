@@ -8,9 +8,10 @@
     android:padding="32dp">
 
     <TextView
+        android:id="@+id/textDownloadTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DOWNLOADING GAME CACHE"
+        android:text="GAME SETUP"
         android:textColor="@color/km_gold"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -20,7 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Ready to install Kingmakers RP texture pack."
+        android:gravity="center"
+        android:maxWidth="560dp"
+        android:text="Checking game files..."
         android:textColor="@color/km_grey" />
 
     <ProgressBar
@@ -39,7 +42,17 @@
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/km_gold"
-        android:text="START DOWNLOAD"
+        android:text="CONTINUE"
         android:textColor="#000000"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnPickGameData"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:text="SELECT GTA SA OBB FILE"
+        android:textColor="@color/km_gold"
+        android:visibility="gone" />
 </LinearLayout>

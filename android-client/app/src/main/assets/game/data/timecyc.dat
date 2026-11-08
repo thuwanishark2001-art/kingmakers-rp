@@ -1,8 +1,0 @@
-; Kingmakers RP - Sunset & Night City Atmospheric Lighting
-; [Amb_R Amb_G Amb_B] [Dir_R Dir_G Dir_B] [SkyTop_R SkyTop_G SkyTop_B] [SkyBot_R SkyBot_B SkyBot_G]
-; Midday (Sunny Los Santos)
-80 80 80  255 240 200  100 150 255  200 220 255  1000 0.0 0.5 0.5  0 0 0  15 15 20  100 120 180  0 0 0 0
-; Sunset (Kingmakers Gold Hour - 20:00)
-120 70 40  255 160 50  140 60 120  255 180 80  1200 0.0 0.8 0.8  0 0 0  25 15 10  160 100 60  0 0 0 0
-; Night (Cyber Neon City - 00:00)
-25 25 40  60 60 100  10 10 25  30 20 50  800 0.0 0.3 0.3  0 0 0  8 8 15  40 40 70  0 0 0 0
