@@ -82,6 +82,11 @@ The `android-client/` directory contains the complete Android Studio project tar
 Players must own **GTA: San Andreas for Android** (Google Play). Kingmakers RP does not ship or host Rockstar's game data. On first launch the game setup screen:
 
 1. Finds the installed game's OBB in `Android/obb/com.rockstargames.gtasa/` and imports it, or lets the player pick the OBB file (on Android 11+ it usually has to be copied to `Download/` first).
+   If the phone blocks access to `Android/obb` (Android 11+), run the Termux helper instead. It copies the OBB as the shell user (via Shizuku or wireless ADB to the same phone, no PC or root) into `Android/data/com.russia.game/files/import/`, and the launcher imports it automatically:
+   ```bash
+   curl -fsSLO https://raw.githubusercontent.com/thuwanishark2001-art/kingmakers-rp/main/tools/termux/import_gtasa_obb.sh
+   bash import_gtasa_obb.sh
+   ```
 2. Checks the imported data (`models/*.img`, `anim/ped.ifp`, `data/gta.dat`, `data/default.dat`) and refuses to start the engine if anything is missing or a placeholder.
 3. Downloads the Kingmakers RP content pack, which holds only our own files (`SAMP/`, `gui/`, `fonts/`, `kingmakers/`, `audio/streams/`). Build it with `python3 backend/build_content_pack.py`; `update_vps.sh` does this on every deploy.
 

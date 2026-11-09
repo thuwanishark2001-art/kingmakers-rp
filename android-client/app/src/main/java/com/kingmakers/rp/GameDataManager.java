@@ -61,6 +61,24 @@ public final class GameDataManager {
         return result;
     }
 
+    /** Folder inside our own storage where an OBB can be dropped (e.g. by adb / Termux) for automatic import. */
+    public static File dropInDir(File storageDir) {
+        return new File(storageDir, "import");
+    }
+
+    /** OBB/zip archives placed in {@link #dropInDir}, main.* before patch.*. Always readable by this app. */
+    public static List<File> findDropInObbs(File storageDir) {
+        List<File> result = new ArrayList<>();
+        File[] files = dropInDir(storageDir).listFiles();
+        if (files == null) return result;
+        for (File f : files) {
+            String n = f.getName().toLowerCase();
+            if (f.isFile() && (n.endsWith(".obb") || n.endsWith(".zip")) && f.length() > 0) result.add(f);
+        }
+        result.sort((a, b) -> Integer.compare(obbOrder(a.getName()), obbOrder(b.getName())));
+        return result;
+    }
+
     /** main.* archives first, patch.* archives after, so patches override base files. */
     public static int obbOrder(String name) {
         String n = name == null ? "" : name.toLowerCase();

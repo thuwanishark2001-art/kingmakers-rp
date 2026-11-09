@@ -75,6 +75,7 @@ public class DownloaderActivity extends AppCompatActivity {
     private final OkHttpClient httpClient = new OkHttpClient();
     private Step step = Step.CHECKING;
     private List<File> foundObbs = new ArrayList<>();
+    private boolean foundObbsAreDropIn = false;
     private boolean storagePermissionAsked = false;
 
     private ActivityResultLauncher<String[]> pickObbLauncher;
@@ -147,6 +148,13 @@ public class DownloaderActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // Pick up an OBB dropped into files/import/ while the app was in the background
+        if (step == Step.NEED_GAME_DATA) checkState();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         executor.shutdownNow();
@@ -175,10 +183,18 @@ public class DownloaderActivity extends AppCompatActivity {
             GameDataManager.Result result = GameDataManager.validate(dir);
 
             if (!result.isValid()) {
-                List<File> obbs = GameDataManager.findInstalledObbs();
+                List<File> dropIn = GameDataManager.findDropInObbs(dir);
+                boolean isDropIn = !dropIn.isEmpty();
+                List<File> obbs = isDropIn ? dropIn : GameDataManager.findInstalledObbs();
                 runOnUiThread(() -> {
-                    if (!obbs.isEmpty()) {
+                    if (isDropIn) {
+                        // Placed in our own folder (adb / Termux helper): import straight away
                         foundObbs = obbs;
+                        foundObbsAreDropIn = true;
+                        importInstalledObbs();
+                    } else if (!obbs.isEmpty()) {
+                        foundObbs = obbs;
+                        foundObbsAreDropIn = false;
                         showFoundInstallation(obbs);
                     } else if (needsStoragePermission()) {
                         storagePermissionAsked = true;
@@ -250,7 +266,9 @@ public class DownloaderActivity extends AppCompatActivity {
                 "from Google Play.\n\n" +
                 "If it is installed but not detected, copy its OBB file from " +
                 "Android/obb/" + GameDataManager.GTASA_PACKAGE + "/ to your Download folder " +
-                "with a file manager, then select it here." + extra);
+                "with a file manager, then select it here. Or copy it into " +
+                "Android/data/" + getPackageName() + "/files/import/ (for example with the " +
+                "Termux helper) and reopen this screen." + extra);
         progressBar.setProgress(0);
         btnAction.setEnabled(true);
         btnAction.setText("SELECT GTA SA OBB FILE");
@@ -302,6 +320,7 @@ public class DownloaderActivity extends AppCompatActivity {
 
     private void importInstalledObbs() {
         final List<File> obbs = new ArrayList<>(foundObbs);
+        final boolean deleteAfter = foundObbsAreDropIn;
         setBusy("IMPORTING GAME DATA", "Importing GTA: San Andreas data...");
         executor.execute(() -> {
             try {
@@ -312,6 +331,10 @@ public class DownloaderActivity extends AppCompatActivity {
                     try (InputStream in = new FileInputStream(obb)) {
                         GameDataManager.importArchive(in, obb.length(), dir, progressListener(label));
                     }
+                }
+                if (deleteAfter && GameDataManager.validate(dir).isValid()) {
+                    // The drop-in copy is no longer needed; free the space
+                    for (File obb : obbs) obb.delete();
                 }
                 finishImport(dir);
             } catch (Exception e) {
