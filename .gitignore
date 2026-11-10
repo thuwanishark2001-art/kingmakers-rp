@@ -11,8 +11,19 @@ backend/public/downloads/kingmakers_*.sha256
 backend/public/downloads/client_native_libs.zip
 backend/public/downloads/*.apks
 backend/public/downloads/*.aab
+# Built by CI and published as GitHub release assets
+backend/public/downloads/*.apk
+backend/public/downloads/Kingmakers_RP_Split_APKs_*.zip
+backend/public/downloads/apks.zip
 android-client/app/src/main/jniLibs/
 
 # Data package sources and builds (your own assets; large)
 datapack-src/
 *.stage/
+
+# Live server state (written by the running server)
+server/log.txt
+server/bans.json
+*.db-wal
+*.db-shm
+*.db-journal
