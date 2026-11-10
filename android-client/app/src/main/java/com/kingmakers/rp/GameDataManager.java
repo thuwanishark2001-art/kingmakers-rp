@@ -33,9 +33,15 @@ public final class GameDataManager {
     public static final List<String> OWN_CONTENT_DIRS = Arrays.asList(
             "SAMP/", "gui/", "fonts/", "kingmakers/", "audio/streams/");
 
-    private static final long MIN_GTA3_IMG_BYTES = 50L * 1024 * 1024;
-    private static final long MIN_PED_IFP_BYTES = 100L * 1024;
-    private static final int MIN_GTA3_IMG_ENTRIES = 1000;
+    /** The old stub ped.ifp was a bare 32-byte header; any real block is far larger. */
+    private static final long MIN_PED_IFP_BYTES = 1024;
+
+    /**
+     * The engine streams from TEXDB\\GTA3.IMG and TEXDB\\GTA_INT.IMG (CStreaming::InitImageList);
+     * the client also falls back to models/ for installs laid out the PC way.
+     */
+    private static final String[] IMG_DIRS = {"texdb", "models"};
+    private static final String[] REQUIRED_IMGS = {"gta3.img", "gta_int.img"};
 
     private GameDataManager() {}
 
@@ -197,9 +203,11 @@ public final class GameDataManager {
         File pedIfp = resolve(dir, "anim/ped.ifp");
         if (pedIfp != null && pedIfp.length() <= 64 && pedIfp.delete()) removed++;
 
-        for (String img : new String[] {"models/gta3.img", "models/gta_int.img", "models/player.img"}) {
-            File f = resolve(dir, img);
-            if (f != null && isZeroFilledImg(f) && f.delete()) removed++;
+        for (String imgDir : IMG_DIRS) {
+            for (String img : new String[] {"gta3.img", "gta_int.img", "player.img"}) {
+                File f = resolve(dir, imgDir + "/" + img);
+                if (f != null && isZeroFilledImg(f) && f.delete()) removed++;
+            }
         }
         return removed;
     }
@@ -235,21 +243,17 @@ public final class GameDataManager {
     public static Result validate(File dir) {
         Result r = new Result();
 
-        File gta3 = resolve(dir, "models/gta3.img");
-        if (gta3 == null) {
-            r.problems.add("models/gta3.img is missing");
-        } else {
-            String err = checkImg(gta3, MIN_GTA3_IMG_BYTES, MIN_GTA3_IMG_ENTRIES);
-            if (err != null) r.problems.add("models/gta3.img " + err);
-        }
-
-        for (String img : new String[] {"models/gta_int.img", "models/player.img"}) {
-            File f = resolve(dir, img);
+        for (String img : REQUIRED_IMGS) {
+            File f = null;
+            for (String imgDir : IMG_DIRS) {
+                f = resolve(dir, imgDir + "/" + img);
+                if (f != null) break;
+            }
             if (f == null) {
-                r.problems.add(img + " is missing");
+                r.problems.add("texdb/" + img + " is missing");
             } else {
-                String err = checkImg(f, 1, 1);
-                if (err != null) r.problems.add(img + " " + err);
+                String err = checkImg(f);
+                if (err != null) r.problems.add(f.getParentFile().getName() + "/" + img + " " + err);
             }
         }
 
@@ -269,8 +273,7 @@ public final class GameDataManager {
     }
 
     /** Null if the IMG v2 archive looks real, otherwise a short reason. */
-    private static String checkImg(File f, long minBytes, int minEntries) {
-        if (f.length() < minBytes) return "is too small (" + f.length() + " bytes)";
+    private static String checkImg(File f) {
         try (RandomAccessFile raf = new RandomAccessFile(f, "r")) {
             byte[] magic = new byte[4];
             raf.readFully(magic);
@@ -278,7 +281,7 @@ public final class GameDataManager {
                 return "is not a GTA IMG archive";
             }
             int count = readIntLE(raf);
-            if (count < minEntries) return "has only " + count + " entries";
+            if (count < 1) return "is empty";
             if (isZeroFilledImg(f)) return "is a placeholder (model data is all zeros)";
         } catch (IOException e) {
             return "cannot be read (" + e.getMessage() + ")";

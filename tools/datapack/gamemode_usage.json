@@ -1,0 +1,16 @@
+{
+  "_comment": "Model ids the Kingmakers gamemode spawns today. Update when the gamemode changes, then re-run gen_manifest.py.",
+  "_sources": {
+    "skins": "gamemode/km/account.inc MaleSkins + FemaleSkins, gamemode/km/core.inc FactionDutySkins",
+    "vehicles": "gamemode/km/vehicles.inc DealerCars, CreateJobVehicle, CreateFactionVehicle",
+    "weapon_models": "GivePlayerWeapon calls: flower, nitestick, bat, colt45, deagle, shotgun, mp5, camera",
+    "objects": "CreatePickup models and the miner's SetPlayerAttachedObject (2936)",
+    "engine_peds": "0 = local player model, 7 = MODEL_MALE01, the model the engine's animation groups are bound to"
+  },
+  "engine_peds": [0, 7],
+  "skins": [26, 29, 47, 60, 101, 170, 184, 240, 250, 299, 12, 40, 55, 56, 69, 91, 93, 192, 193, 233, 280, 274],
+  "vehicles": [462, 404, 466, 468, 421, 445, 581, 400, 405, 536, 567, 579, 402, 562, 560, 522, 415, 451, 541, 411,
+               420, 414, 525, 596, 523, 416, 492, 566],
+  "weapon_models": [325, 334, 336, 346, 348, 349, 353, 367],
+  "objects": [1210, 1239, 1240, 1247, 1254, 1272, 1273, 1274, 1275, 2936]
+}
