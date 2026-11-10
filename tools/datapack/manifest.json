@@ -1,0 +1,6279 @@
+{
+ "_generated_by": "tools/datapack/gen_manifest.py - do not edit by hand",
+ "tiers": {
+  "engine": "needed before the game can start at all",
+  "gamemode": "spawned by the Kingmakers gamemode today; needed for a playable first release",
+  "defined": "only declared in the definition files; make it, or delete its line from the IDE"
+ },
+ "core_files": [
+  {
+   "path": "data/gta.dat",
+   "kind": "text",
+   "why": "world definition: lists the IDE/IPL files and IMG archives to load"
+  },
+  {
+   "path": "data/default.dat",
+   "kind": "text",
+   "why": "base definition list (default.ide, vehicles.ide, peds.ide)"
+  },
+  {
+   "path": "data/default.ide",
+   "kind": "text",
+   "why": "weapon and generic object definitions"
+  },
+  {
+   "path": "data/vehicles.ide",
+   "kind": "text",
+   "why": "vehicle definitions"
+  },
+  {
+   "path": "data/peds.ide",
+   "kind": "text",
+   "why": "ped (skin) definitions"
+  },
+  {
+   "path": "data/handling.cfg",
+   "kind": "text",
+   "why": "one handling line per handling id used in vehicles.ide"
+  },
+  {
+   "path": "data/carcols.dat",
+   "kind": "text",
+   "why": "vehicle colour palette"
+  },
+  {
+   "path": "data/timecyc.dat",
+   "kind": "text",
+   "why": "lighting and sky per hour and weather"
+  },
+  {
+   "path": "data/surface.dat",
+   "kind": "text",
+   "why": "surface friction table"
+  },
+  {
+   "path": "data/weapon.dat",
+   "kind": "text",
+   "why": "weapon stats and animation groups"
+  },
+  {
+   "path": "data/fonts.dat",
+   "kind": "text",
+   "why": "font glyph widths"
+  },
+  {
+   "path": "anim/ped.ifp",
+   "kind": "ifp",
+   "why": "core animation block, loaded at startup"
+  },
+  {
+   "path": "texdb/gta3.img",
+   "kind": "img",
+   "why": "streamed models, collision and animation blocks (built from models/gta3/)"
+  },
+  {
+   "path": "texdb/gta_int.img",
+   "kind": "img",
+   "why": "interior models (built from models/gta_int/)"
+  }
+ ],
+ "texture_databases": [
+  {
+   "name": "mobile",
+   "path": "texdb/mobile/",
+   "index": "texdb/mobile/mobile.txt"
+  },
+  {
+   "name": "txd",
+   "path": "texdb/txd/",
+   "index": "texdb/txd/txd.txt"
+  },
+  {
+   "name": "gta3",
+   "path": "texdb/gta3/",
+   "index": "texdb/gta3/gta3.txt"
+  },
+  {
+   "name": "gta_int",
+   "path": "texdb/gta_int/",
+   "index": "texdb/gta_int/gta_int.txt"
+  },
+  {
+   "name": "cutscene",
+   "path": "texdb/cutscene/",
+   "index": "texdb/cutscene/cutscene.txt"
+  },
+  {
+   "name": "player",
+   "path": "texdb/player/",
+   "index": "texdb/player/player.txt"
+  },
+  {
+   "name": "menu",
+   "path": "texdb/menu/",
+   "index": "texdb/menu/menu.txt"
+  }
+ ],
+ "animation_blocks": [
+  {
+   "block": "attractors",
+   "file": "models/gta3/attractors.ifp",
+   "tier": "defined",
+   "animations": [
+    "stepsit_in",
+    "stepsit_loop",
+    "stepsit_out"
+   ]
+  },
+  {
+   "block": "baseball",
+   "file": "models/gta3/baseball.ifp",
+   "tier": "defined",
+   "animations": [
+    "bat_1",
+    "bat_2",
+    "bat_3",
+    "bat_4",
+    "bat_block",
+    "bat_hit_1",
+    "bat_hit_2",
+    "bat_hit_3",
+    "bat_idle",
+    "bat_part"
+   ]
+  },
+  {
+   "block": "beach",
+   "file": "models/gta3/beach.ifp",
+   "tier": "defined",
+   "animations": [
+    "bather",
+    "lay_bac_loop",
+    "parksit_m_loop",
+    "parksit_w_loop",
+    "sitnwait_loop_w"
+   ]
+  },
+  {
+   "block": "bf_injection",
+   "file": "models/gta3/bf_injection.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "bike_dbz",
+   "file": "models/gta3/bike_dbz.ifp",
+   "tier": "defined",
+   "animations": [
+    "pass_driveby_bwd",
+    "pass_driveby_fwd",
+    "pass_driveby_lhs",
+    "pass_driveby_rhs"
+   ]
+  },
+  {
+   "block": "biked",
+   "file": "models/gta3/biked.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "biked_back",
+    "biked_drivebyft",
+    "biked_drivebylhs",
+    "biked_drivebyrhs",
+    "biked_fwd",
+    "biked_hit",
+    "biked_left",
+    "biked_passenger",
+    "biked_pushes",
+    "biked_ride",
+    "biked_right",
+    "biked_still"
+   ]
+  },
+  {
+   "block": "bikeh",
+   "file": "models/gta3/bikeh.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "bikeh_back",
+    "bikeh_drivebyft",
+    "bikeh_drivebylhs",
+    "bikeh_drivebyrhs",
+    "bikeh_fwd",
+    "bikeh_hit",
+    "bikeh_left",
+    "bikeh_passenger",
+    "bikeh_pushes",
+    "bikeh_ride",
+    "bikeh_right",
+    "bikeh_still"
+   ]
+  },
+  {
+   "block": "bikes",
+   "file": "models/gta3/bikes.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "bikes_back",
+    "bikes_drivebyft",
+    "bikes_drivebylhs",
+    "bikes_drivebyrhs",
+    "bikes_fwd",
+    "bikes_hit",
+    "bikes_left",
+    "bikes_passenger",
+    "bikes_pushes",
+    "bikes_ride",
+    "bikes_right",
+    "bikes_still"
+   ]
+  },
+  {
+   "block": "bikev",
+   "file": "models/gta3/bikev.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "bikev_back",
+    "bikev_drivebyft",
+    "bikev_drivebylhs",
+    "bikev_drivebyrhs",
+    "bikev_fwd",
+    "bikev_hit",
+    "bikev_left",
+    "bikev_passenger",
+    "bikev_pushes",
+    "bikev_ride",
+    "bikev_right",
+    "bikev_still"
+   ]
+  },
+  {
+   "block": "bmx",
+   "file": "models/gta3/bmx.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    ",  ",
+    "bmx_back",
+    "bmx_bunnyhop",
+    "bmx_driveby_lhs",
+    "bmx_driveby_rhs",
+    "bmx_drivebyft",
+    "bmx_fwd",
+    "bmx_left",
+    "bmx_pedal",
+    "bmx_pushes",
+    "bmx_ride",
+    "bmx_right",
+    "bmx_sprint",
+    "bmx_still"
+   ]
+  },
+  {
+   "block": "buddy",
+   "file": "models/gta3/buddy.ifp",
+   "tier": "defined",
+   "animations": [
+    "buddy_crouchfire",
+    "buddy_crouchreload",
+    "buddy_fire",
+    "buddy_fire_poor",
+    "buddy_reload"
+   ]
+  },
+  {
+   "block": "bus",
+   "file": "models/gta3/bus.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "carry",
+   "file": "models/gta3/carry.ifp",
+   "tier": "defined",
+   "animations": [
+    "crry_prtial",
+    "liftup",
+    "liftup05",
+    "liftup105",
+    "putdwn",
+    "putdwn05",
+    "putdwn105"
+   ]
+  },
+  {
+   "block": "chainsaw",
+   "file": "models/gta3/chainsaw.ifp",
+   "tier": "defined",
+   "animations": [
+    "csaw_1",
+    "csaw_2",
+    "csaw_3",
+    "csaw_g",
+    "csaw_hit_1",
+    "csaw_hit_2",
+    "csaw_hit_3",
+    "csaw_part",
+    "idle_csaw"
+   ]
+  },
+  {
+   "block": "choppa",
+   "file": "models/gta3/choppa.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    ",  ",
+    "choppa_back",
+    "choppa_bunnyhop",
+    "choppa_driveby_lhs",
+    "choppa_driveby_rhs",
+    "choppa_drivebyft",
+    "choppa_fwd",
+    "choppa_left",
+    "choppa_pedal",
+    "choppa_pushes",
+    "choppa_ride",
+    "choppa_right",
+    "choppa_sprint",
+    "choppa_still"
+   ]
+  },
+  {
+   "block": "coach",
+   "file": "models/gta3/coach.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "colt45",
+   "file": "models/gta3/colt45.ifp",
+   "tier": "gamemode",
+   "animations": [
+    "2guns_crouchfire",
+    "colt45_crouchfire",
+    "colt45_crouchreload",
+    "colt45_fire",
+    "colt45_fire_2hands",
+    "colt45_reload",
+    "sawnoff_reload"
+   ]
+  },
+  {
+   "block": "cop_dvbyz",
+   "file": "models/gta3/cop_dvbyz.ifp",
+   "tier": "defined",
+   "animations": [
+    "cop_dvby_b",
+    "cop_dvby_ft",
+    "cop_dvby_l",
+    "cop_dvby_r"
+   ]
+  },
+  {
+   "block": "dildo",
+   "file": "models/gta3/dildo.ifp",
+   "tier": "defined",
+   "animations": [
+    "dildo_1",
+    "dildo_2",
+    "dildo_3",
+    "dildo_block",
+    "dildo_g",
+    "dildo_hit_1",
+    "dildo_hit_2",
+    "dildo_hit_3",
+    "dildo_idle"
+   ]
+  },
+  {
+   "block": "dozer",
+   "file": "models/gta3/dozer.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "dozer_align_lhs",
+    "dozer_align_rhs"
+   ]
+  },
+  {
+   "block": "drivebys",
+   "file": "models/gta3/drivebys.ifp",
+   "tier": "defined",
+   "animations": [
+    "gang_drivebylhs",
+    "gang_drivebylhs_bwd",
+    "gang_drivebylhs_fwd",
+    "gang_drivebyrhs",
+    "gang_drivebyrhs_bwd",
+    "gang_drivebyrhs_fwd",
+    "gang_drivebytop_lhs",
+    "gang_drivebytop_rhs"
+   ]
+  },
+  {
+   "block": "fat",
+   "file": "models/gta3/fat.ifp",
+   "tier": "defined",
+   "animations": [
+    "fatidle",
+    "fatidle_armed",
+    "fatidle_csaw",
+    "fatidle_rocket",
+    "fatrun",
+    "fatrun_armed",
+    "fatrun_csaw",
+    "fatrun_rocket",
+    "fatsprint",
+    "fatwalk",
+    "fatwalk_armed",
+    "fatwalk_csaw",
+    "fatwalk_rocket",
+    "fatwalkst_armed",
+    "fatwalkst_rocket",
+    "fatwalkstart",
+    "fatwalkstart_csaw",
+    "idle_tired"
+   ]
+  },
+  {
+   "block": "fight_b",
+   "file": "models/gta3/fight_b.ifp",
+   "tier": "defined",
+   "animations": [
+    "fightb_1",
+    "fightb_2",
+    "fightb_3",
+    "fightb_block",
+    "fightb_g",
+    "fightb_idle",
+    "fightb_m",
+    "hitb_1",
+    "hitb_2",
+    "hitb_3"
+   ]
+  },
+  {
+   "block": "fight_c",
+   "file": "models/gta3/fight_c.ifp",
+   "tier": "defined",
+   "animations": [
+    "fightc_1",
+    "fightc_2",
+    "fightc_3",
+    "fightc_block",
+    "fightc_g",
+    "fightc_idle",
+    "fightc_m",
+    "hitc_1",
+    "hitc_2",
+    "hitc_3"
+   ]
+  },
+  {
+   "block": "fight_d",
+   "file": "models/gta3/fight_d.ifp",
+   "tier": "defined",
+   "animations": [
+    "fightd_1",
+    "fightd_2",
+    "fightd_3",
+    "fightd_block",
+    "fightd_g",
+    "fightd_idle",
+    "fightd_m",
+    "hitd_1",
+    "hitd_2",
+    "hitd_3"
+   ]
+  },
+  {
+   "block": "fight_e",
+   "file": "models/gta3/fight_e.ifp",
+   "tier": "defined",
+   "animations": [
+    "fightkick",
+    "fightkick_b",
+    "hit_fightkick",
+    "hit_fightkick_b"
+   ]
+  },
+  {
+   "block": "flame",
+   "file": "models/gta3/flame.ifp",
+   "tier": "defined",
+   "animations": [
+    "flame_fire"
+   ]
+  },
+  {
+   "block": "flowers",
+   "file": "models/gta3/flowers.ifp",
+   "tier": "defined",
+   "animations": [
+    "flower_attack",
+    "flower_hit"
+   ]
+  },
+  {
+   "block": "gangs",
+   "file": "models/gta3/gangs.ifp",
+   "tier": "defined",
+   "animations": [
+    "dealer_deal",
+    "drnkbr_prtl",
+    "drnkbr_prtl_f",
+    "drugs_buy",
+    "hndshkaa",
+    "hndshkba",
+    "hndshkca",
+    "hndshkcb",
+    "hndshkda",
+    "hndshkea",
+    "hndshkfa",
+    "invite_no",
+    "invite_yes",
+    "leanidle",
+    "leanin",
+    "leanout",
+    "prtial_gngtlka",
+    "prtial_gngtlkb",
+    "prtial_gngtlkc",
+    "prtial_gngtlkd",
+    "prtial_gngtlke",
+    "prtial_gngtlkf",
+    "prtial_gngtlkg",
+    "prtial_gngtlkh",
+    "shake_cara",
+    "shake_cark",
+    "shake_carsh",
+    "smkcig_prtl",
+    "smkcig_prtl_f"
+   ]
+  },
+  {
+   "block": "ghands",
+   "file": "models/gta3/ghands.ifp",
+   "tier": "defined",
+   "animations": [
+    "gsign1",
+    "gsign1lh",
+    "gsign2",
+    "gsign2lh",
+    "gsign3",
+    "gsign3lh",
+    "gsign4",
+    "gsign4lh",
+    "gsign5",
+    "gsign5lh",
+    "lhgsign1",
+    "lhgsign2",
+    "lhgsign3",
+    "lhgsign4",
+    "lhgsign5",
+    "rhgsign1",
+    "rhgsign2",
+    "rhgsign3",
+    "rhgsign4",
+    "rhgsign5"
+   ]
+  },
+  {
+   "block": "goggles",
+   "file": "models/gta3/goggles.ifp",
+   "tier": "defined",
+   "animations": [
+    "goggles_put_on"
+   ]
+  },
+  {
+   "block": "grenade",
+   "file": "models/gta3/grenade.ifp",
+   "tier": "defined",
+   "animations": [
+    "weapon_start_throw",
+    "weapon_throw",
+    "weapon_throwu"
+   ]
+  },
+  {
+   "block": "int_house",
+   "file": "models/gta3/int_house.ifp",
+   "tier": "defined",
+   "animations": [
+    "bed_in_l",
+    "bed_in_r",
+    "bed_loop_l",
+    "bed_loop_r",
+    "bed_out_l",
+    "bed_out_r",
+    "lou_in",
+    "lou_loop",
+    "lou_out",
+    "wash_up"
+   ]
+  },
+  {
+   "block": "int_office",
+   "file": "models/gta3/int_office.ifp",
+   "tier": "defined",
+   "animations": [
+    "off_sit_2idle_180",
+    "off_sit_bored_loop",
+    "off_sit_crash",
+    "off_sit_drink",
+    "off_sit_idle_loop",
+    "off_sit_in",
+    "off_sit_read",
+    "off_sit_type_loop",
+    "off_sit_watch"
+   ]
+  },
+  {
+   "block": "int_shop",
+   "file": "models/gta3/int_shop.ifp",
+   "tier": "defined",
+   "animations": [
+    "shop_cashier",
+    "shop_pay",
+    "shop_shelf"
+   ]
+  },
+  {
+   "block": "kart",
+   "file": "models/gta3/kart.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "knife",
+   "file": "models/gta3/knife.ifp",
+   "tier": "defined",
+   "animations": [
+    "kill_knife_ped_damage",
+    "kill_knife_ped_die",
+    "kill_knife_player",
+    "kill_partial",
+    "knife_1",
+    "knife_2",
+    "knife_3",
+    "knife_block",
+    "knife_g",
+    "knife_hit_1",
+    "knife_hit_2",
+    "knife_hit_3",
+    "knife_part",
+    "weapon_knifeidle"
+   ]
+  },
+  {
+   "block": "medic",
+   "file": "models/gta3/medic.ifp",
+   "tier": "defined",
+   "animations": [
+    "cpr"
+   ]
+  },
+  {
+   "block": "mtb",
+   "file": "models/gta3/mtb.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    ",  ",
+    "mtb_back",
+    "mtb_bunnyhop",
+    "mtb_driveby_lhs",
+    "mtb_driveby_rhs",
+    "mtb_drivebyft",
+    "mtb_fwd",
+    "mtb_left",
+    "mtb_pedal",
+    "mtb_pushes",
+    "mtb_ride",
+    "mtb_right",
+    "mtb_sprint",
+    "mtb_still"
+   ]
+  },
+  {
+   "block": "muscular",
+   "file": "models/gta3/muscular.ifp",
+   "tier": "defined",
+   "animations": [
+    "mscle_rckt_run",
+    "mscle_rckt_walkst",
+    "mscle_run_csaw",
+    "msclewalkst_armed",
+    "msclewalkst_csaw",
+    "muscleidle",
+    "muscleidle_armed",
+    "muscleidle_csaw",
+    "muscleidle_rocket",
+    "musclerun",
+    "musclerun_armed",
+    "musclesprint",
+    "musclewalk",
+    "musclewalk_armed",
+    "musclewalk_csaw",
+    "musclewalk_rocket",
+    "musclewalkstart"
+   ]
+  },
+  {
+   "block": "nevada",
+   "file": "models/gta3/nevada.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "ped",
+   "file": "anim/ped.ifp",
+   "tier": "engine",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "abseil",
+    "arrestgun",
+    "atm",
+    "bike_elbowl",
+    "bike_elbowr",
+    "bike_fall_off",
+    "bike_fallr",
+    "bike_pickupl",
+    "bike_pickupr",
+    "bike_pullupl",
+    "bike_pullupr",
+    "bomber",
+    "car_align_lhs",
+    "car_align_rhs",
+    "car_alignhi_lhs",
+    "car_alignhi_rhs",
+    "car_crawloutrhs",
+    "car_dead_lhs",
+    "car_dead_rhs",
+    "car_getin_lhs",
+    "car_getin_rhs",
+    "car_getinl_lhs",
+    "car_getinl_rhs",
+    "car_hookertalk",
+    "car_jumpin_lhs",
+    "car_lb",
+    "car_lb_pro",
+    "car_lb_weak",
+    "car_lsit",
+    "car_open_lhs",
+    "car_open_rhs",
+    "car_rollout_lhs",
+    "car_rollout_rhs",
+    "car_sit",
+    "car_sit_pro",
+    "car_sit_weak",
+    "car_sitp",
+    "car_sitplo",
+    "car_tune_radio",
+    "climb_idle",
+    "climb_jump",
+    "climb_jump2fall",
+    "climb_jump_b",
+    "climb_pull",
+    "climb_stand",
+    "climb_stand_finish",
+    "crouch_roll_l",
+    "crouch_roll_r",
+    "dam_arml_frmbk",
+    "dam_arml_frmft",
+    "dam_arml_frmlt",
+    "dam_armr_frmbk",
+    "dam_armr_frmft",
+    "dam_armr_frmrt",
+    "dam_legl_frmbk",
+    "dam_legl_frmft",
+    "dam_legl_frmlt",
+    "dam_legr_frmbk",
+    "dam_legr_frmft",
+    "dam_legr_frmrt",
+    "dam_stomach_frmbk",
+    "dam_stomach_frmft",
+    "dam_stomach_frmlt",
+    "dam_stomach_frmrt",
+    "door_lhinge_o",
+    "door_rhinge_o",
+    "drive_boat",
+    "drive_boat_back",
+    "drive_boat_l",
+    "drive_boat_r",
+    "drive_l",
+    "drive_l_pro",
+    "drive_l_pro_slow",
+    "drive_l_slow",
+    "drive_l_weak",
+    "drive_l_weak_slow",
+    "drive_lo_l",
+    "drive_lo_r",
+    "drive_r",
+    "drive_r_pro",
+    "drive_r_pro_slow",
+    "drive_r_slow",
+    "drive_r_weak",
+    "drive_r_weak_slow",
+    "drive_truck",
+    "drive_truck_back",
+    "drive_truck_l",
+    "drive_truck_r",
+    "driveby_l",
+    "driveby_r",
+    "drivebyl_l",
+    "drivebyl_r",
+    "drown",
+    "duck_cower",
+    "endchat_01",
+    "endchat_02",
+    "endchat_03",
+    "ev_dive",
+    "ev_step",
+    "facanger",
+    "facgum",
+    "facsurp",
+    "facsurpm",
+    "factalk",
+    "facurios",
+    "fall_back",
+    "fall_collapse",
+    "fall_fall",
+    "fall_front",
+    "fall_glide",
+    "fall_land",
+    "fight2idle",
+    "fighta_1",
+    "fighta_2",
+    "fighta_3",
+    "fighta_block",
+    "fighta_g",
+    "fighta_m",
+    "fightidle",
+    "fightsh_bwd",
+    "fightsh_fwd",
+    "fightsh_left",
+    "fightsh_right",
+    "fightshb",
+    "fightshf",
+    "flee_lkaround_01",
+    "floor_hit",
+    "floor_hit_f",
+    "fucku",
+    "gang_gunstand",
+    "gas_cwr",
+    "getup",
+    "getup_front",
+    "gun_2_idle",
+    "gun_butt",
+    "gun_butt_crouch",
+    "gun_stand",
+    "guncrouchbwd",
+    "guncrouchfwd",
+    "gunmove_bwd",
+    "gunmove_fwd",
+    "gunmove_l",
+    "gunmove_r",
+    "handscower",
+    "handsup",
+    "hit_back",
+    "hit_behind",
+    "hit_front",
+    "hit_gun_butt",
+    "hit_l",
+    "hit_r",
+    "hit_walk",
+    "hit_wall",
+    "hita_1",
+    "hita_2",
+    "hita_3",
+    "idle_armed",
+    "idle_chat",
+    "idle_csaw",
+    "idle_hbhb",
+    "idle_rocket",
+    "idle_stance",
+    "idle_taxi",
+    "idle_tired",
+    "jetpack_idle",
+    "jump_glide",
+    "jump_land",
+    "jump_launch",
+    "jump_launch_r",
+    "kart_drive",
+    "kart_l",
+    "kart_lb",
+    "kart_r",
+    "kd_left",
+    "kd_right",
+    "ko_shot_face",
+    "ko_shot_front",
+    "ko_shot_stom",
+    "ko_skid_back",
+    "ko_skid_front",
+    "ko_spin_l",
+    "ko_spin_r",
+    "pass_smoke_in_car",
+    "phone_in",
+    "phone_out",
+    "phone_talk",
+    "player_sneak",
+    "player_sneak_walkstart",
+    "roadcross",
+    "run_armed",
+    "run_civi",
+    "run_csaw",
+    "run_player",
+    "run_rocket",
+    "run_stop",
+    "run_stopr",
+    "seat_down",
+    "seat_idle",
+    "seat_up",
+    "shot_leftp",
+    "shot_partial",
+    "shot_partial_b",
+    "shot_rightp",
+    "shove_partial",
+    "smoke_in_car",
+    "sprint_civi",
+    "sprint_panic",
+    "swim_tread",
+    "tap_hand",
+    "tap_handp",
+    "turn_180",
+    "turn_l",
+    "turn_r",
+    "walk_armed",
+    "walk_civi",
+    "walk_csaw",
+    "walk_doorpartial",
+    "walk_player",
+    "walk_rocket",
+    "walk_start",
+    "walk_start_armed",
+    "walk_start_csaw",
+    "walk_start_rocket",
+    "weapon_crouch",
+    "xpressscratch"
+   ]
+  },
+  {
+   "block": "playidles",
+   "file": "models/gta3/playidles.ifp",
+   "tier": "defined",
+   "animations": [
+    "shldr",
+    "stretch",
+    "strleg",
+    "time"
+   ]
+  },
+  {
+   "block": "python",
+   "file": "models/gta3/python.ifp",
+   "tier": "gamemode",
+   "animations": [
+    "python_crouchfire",
+    "python_crouchreload",
+    "python_fire",
+    "python_fire_poor",
+    "python_reload"
+   ]
+  },
+  {
+   "block": "quad",
+   "file": "models/gta3/quad.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "quad_back",
+    "quad_driveby_ft",
+    "quad_driveby_lhs",
+    "quad_driveby_rhs",
+    "quad_fwd",
+    "quad_left",
+    "quad_passenger",
+    "quad_reverse",
+    "quad_ride",
+    "quad_right"
+   ]
+  },
+  {
+   "block": "quad_dbz",
+   "file": "models/gta3/quad_dbz.ifp",
+   "tier": "defined",
+   "animations": [
+    "pass_driveby_bwd",
+    "pass_driveby_fwd",
+    "pass_driveby_lhs",
+    "pass_driveby_rhs"
+   ]
+  },
+  {
+   "block": "rifle",
+   "file": "models/gta3/rifle.ifp",
+   "tier": "gamemode",
+   "animations": [
+    "rifle_crouchfire",
+    "rifle_crouchload",
+    "rifle_fire",
+    "rifle_fire_poor",
+    "rifle_load"
+   ]
+  },
+  {
+   "block": "riot",
+   "file": "models/gta3/riot.ifp",
+   "tier": "defined",
+   "animations": [
+    "riot_angry",
+    "riot_angry_b",
+    "riot_challenge",
+    "riot_chant",
+    "riot_fuku",
+    "riot_punches",
+    "riot_shout"
+   ]
+  },
+  {
+   "block": "rocket",
+   "file": "models/gta3/rocket.ifp",
+   "tier": "defined",
+   "animations": [
+    "rocketfire"
+   ]
+  },
+  {
+   "block": "rustler",
+   "file": "models/gta3/rustler.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "plane_align_lhs"
+   ]
+  },
+  {
+   "block": "shamal",
+   "file": "models/gta3/shamal.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "shamal_align"
+   ]
+  },
+  {
+   "block": "shotgun",
+   "file": "models/gta3/shotgun.ifp",
+   "tier": "gamemode",
+   "animations": [
+    "shotgun_crouchfire",
+    "shotgun_fire",
+    "shotgun_fire_poor"
+   ]
+  },
+  {
+   "block": "silenced",
+   "file": "models/gta3/silenced.ifp",
+   "tier": "defined",
+   "animations": [
+    "crouchreload",
+    "silence_fire",
+    "silence_reload",
+    "silencecrouchfire"
+   ]
+  },
+  {
+   "block": "spraycan",
+   "file": "models/gta3/spraycan.ifp",
+   "tier": "defined",
+   "animations": [
+    "spraycan_fire"
+   ]
+  },
+  {
+   "block": "strip",
+   "file": "models/gta3/strip.ifp",
+   "tier": "defined",
+   "animations": [
+    "strip_a",
+    "strip_b",
+    "strip_c",
+    "strip_d",
+    "strip_e",
+    "strip_f",
+    "strip_g"
+   ]
+  },
+  {
+   "block": "sunbathe",
+   "file": "models/gta3/sunbathe.ifp",
+   "tier": "defined",
+   "animations": [
+    "batherdown",
+    "batherup",
+    "lay_bac_in",
+    "lay_bac_out",
+    "parksit_m_idlea",
+    "parksit_m_idleb",
+    "parksit_m_idlec",
+    "parksit_m_in",
+    "parksit_m_out",
+    "parksit_w_idlea",
+    "parksit_w_idleb",
+    "parksit_w_idlec",
+    "parksit_w_in",
+    "parksit_w_out",
+    "sitnwait_in_w",
+    "sitnwait_out_w"
+   ]
+  },
+  {
+   "block": "swim",
+   "file": "models/gta3/swim.ifp",
+   "tier": "defined",
+   "animations": [
+    "swim_breast",
+    "swim_crawl",
+    "swim_dive_under",
+    "swim_glide",
+    "swim_jumpout",
+    "swim_under"
+   ]
+  },
+  {
+   "block": "sword",
+   "file": "models/gta3/sword.ifp",
+   "tier": "defined",
+   "animations": [
+    "sword_1",
+    "sword_2",
+    "sword_3",
+    "sword_4",
+    "sword_block",
+    "sword_hit_1",
+    "sword_hit_2",
+    "sword_hit_3",
+    "sword_idle",
+    "sword_part"
+   ]
+  },
+  {
+   "block": "tank",
+   "file": "models/gta3/tank.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "tank_align_lhs"
+   ]
+  },
+  {
+   "block": "truck",
+   "file": "models/gta3/truck.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "truck_align_lhs",
+    "truck_align_rhs",
+    "truck_getin_lhs",
+    "truck_getin_rhs",
+    "truck_open_lhs",
+    "truck_open_rhs"
+   ]
+  },
+  {
+   "block": "uzi",
+   "file": "models/gta3/uzi.ifp",
+   "tier": "gamemode",
+   "animations": [
+    "uzi_crouchfire",
+    "uzi_crouchreload",
+    "uzi_fire",
+    "uzi_fire_poor",
+    "uzi_reload"
+   ]
+  },
+  {
+   "block": "van",
+   "file": "models/gta3/van.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "vortex",
+   "file": "models/gta3/vortex.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", "
+   ]
+  },
+  {
+   "block": "wayfarer",
+   "file": "models/gta3/wayfarer.ifp",
+   "tier": "defined",
+   "animations": [
+    ",\n        ",
+    ", ",
+    "wf_back",
+    "wf_drivebyft",
+    "wf_drivebylhs",
+    "wf_drivebyrhs",
+    "wf_fwd",
+    "wf_hit",
+    "wf_left",
+    "wf_passenger",
+    "wf_pushes",
+    "wf_ride",
+    "wf_right",
+    "wf_still"
+   ]
+  }
+ ],
+ "animation_groups": [
+  {
+   "group": "default",
+   "block": "ped",
+   "count": 191
+  },
+  {
+   "group": "door",
+   "block": "ped",
+   "count": 2
+  },
+  {
+   "group": "bikes",
+   "block": "bikes",
+   "count": 12
+  },
+  {
+   "group": "bikev",
+   "block": "bikev",
+   "count": 12
+  },
+  {
+   "group": "bikeh",
+   "block": "bikeh",
+   "count": 12
+  },
+  {
+   "group": "biked",
+   "block": "biked",
+   "count": 12
+  },
+  {
+   "group": "wayfarer",
+   "block": "wayfarer",
+   "count": 12
+  },
+  {
+   "group": "bmx",
+   "block": "bmx",
+   "count": 15
+  },
+  {
+   "group": "mtb",
+   "block": "mtb",
+   "count": 15
+  },
+  {
+   "group": "choppa",
+   "block": "choppa",
+   "count": 15
+  },
+  {
+   "group": "quad",
+   "block": "quad",
+   "count": 12
+  },
+  {
+   "group": "python",
+   "block": "python",
+   "count": 4
+  },
+  {
+   "group": "pythonbad",
+   "block": "python",
+   "count": 4
+  },
+  {
+   "group": "colt45",
+   "block": "colt45",
+   "count": 4
+  },
+  {
+   "group": "colt_cop",
+   "block": "colt45",
+   "count": 4
+  },
+  {
+   "group": "colt45pro",
+   "block": "colt45",
+   "count": 4
+  },
+  {
+   "group": "sawnoff",
+   "block": "colt45",
+   "count": 4
+  },
+  {
+   "group": "sawnoffpro",
+   "block": "colt45",
+   "count": 4
+  },
+  {
+   "group": "silenced",
+   "block": "silenced",
+   "count": 4
+  },
+  {
+   "group": "shotgun",
+   "block": "shotgun",
+   "count": 2
+  },
+  {
+   "group": "shotgunbad",
+   "block": "shotgun",
+   "count": 2
+  },
+  {
+   "group": "buddy",
+   "block": "buddy",
+   "count": 4
+  },
+  {
+   "group": "buddybad",
+   "block": "buddy",
+   "count": 4
+  },
+  {
+   "group": "uzi",
+   "block": "uzi",
+   "count": 4
+  },
+  {
+   "group": "uzibad",
+   "block": "uzi",
+   "count": 4
+  },
+  {
+   "group": "rifle",
+   "block": "rifle",
+   "count": 4
+  },
+  {
+   "group": "riflebad",
+   "block": "rifle",
+   "count": 4
+  },
+  {
+   "group": "sniper",
+   "block": "rifle",
+   "count": 4
+  },
+  {
+   "group": "grenade",
+   "block": "grenade",
+   "count": 3
+  },
+  {
+   "group": "flame",
+   "block": "flame",
+   "count": 1
+  },
+  {
+   "group": "rocket",
+   "block": "rocket",
+   "count": 1
+  },
+  {
+   "group": "spraycan",
+   "block": "spraycan",
+   "count": 1
+  },
+  {
+   "group": "goggles",
+   "block": "goggles",
+   "count": 1
+  },
+  {
+   "group": "melee_1",
+   "block": "ped",
+   "count": 10
+  },
+  {
+   "group": "melee_2",
+   "block": "fight_b",
+   "count": 10
+  },
+  {
+   "group": "melee_3",
+   "block": "fight_c",
+   "count": 10
+  },
+  {
+   "group": "melee_4",
+   "block": "fight_d",
+   "count": 10
+  },
+  {
+   "group": "bbbat_1",
+   "block": "baseball",
+   "count": 10
+  },
+  {
+   "group": "gclub_1",
+   "block": "baseball",
+   "count": 10
+  },
+  {
+   "group": "knife_1",
+   "block": "knife",
+   "count": 10
+  },
+  {
+   "group": "sword_1",
+   "block": "sword",
+   "count": 10
+  },
+  {
+   "group": "dildo_1",
+   "block": "dildo",
+   "count": 10
+  },
+  {
+   "group": "flowers_1",
+   "block": "flowers",
+   "count": 8
+  },
+  {
+   "group": "csaw_1",
+   "block": "chainsaw",
+   "count": 10
+  },
+  {
+   "group": "kick_std",
+   "block": "fight_e",
+   "count": 7
+  },
+  {
+   "group": "pistlwhp",
+   "block": "ped",
+   "count": 7
+  },
+  {
+   "group": "medic",
+   "block": "medic",
+   "count": 1
+  },
+  {
+   "group": "beach",
+   "block": "beach",
+   "count": 5
+  },
+  {
+   "group": "sunbathe",
+   "block": "sunbathe",
+   "count": 16
+  },
+  {
+   "group": "playidles",
+   "block": "playidles",
+   "count": 4
+  },
+  {
+   "group": "riot",
+   "block": "riot",
+   "count": 7
+  },
+  {
+   "group": "strip",
+   "block": "strip",
+   "count": 7
+  },
+  {
+   "group": "gangs",
+   "block": "gangs",
+   "count": 29
+  },
+  {
+   "group": "attractors",
+   "block": "attractors",
+   "count": 3
+  },
+  {
+   "group": "player",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "fat",
+   "block": "fat",
+   "count": 6
+  },
+  {
+   "group": "muscular",
+   "block": "muscular",
+   "count": 6
+  },
+  {
+   "group": "playerrocket",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "playerrocketf",
+   "block": "fat",
+   "count": 6
+  },
+  {
+   "group": "playerrocketm",
+   "block": "muscular",
+   "count": 6
+  },
+  {
+   "group": "player2armed",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "player2armedf",
+   "block": "fat",
+   "count": 6
+  },
+  {
+   "group": "player2armedm",
+   "block": "muscular",
+   "count": 6
+  },
+  {
+   "group": "playerBBBat",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "playerBBBatf",
+   "block": "fat",
+   "count": 6
+  },
+  {
+   "group": "playerBBBatm",
+   "block": "muscular",
+   "count": 6
+  },
+  {
+   "group": "playercsaw",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "playercsawf",
+   "block": "fat",
+   "count": 6
+  },
+  {
+   "group": "playercsawm",
+   "block": "muscular",
+   "count": 6
+  },
+  {
+   "group": "playersneak",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "playerjetpack",
+   "block": "ped",
+   "count": 6
+  },
+  {
+   "group": "swim",
+   "block": "swim",
+   "count": 6
+  },
+  {
+   "group": "drivebys",
+   "block": "drivebys",
+   "count": 8
+  },
+  {
+   "group": "bike_dbz",
+   "block": "bike_dbz",
+   "count": 4
+  },
+  {
+   "group": "cop_dbz",
+   "block": "cop_dvbyz",
+   "count": 4
+  },
+  {
+   "group": "quad_dbz",
+   "block": "quad_dbz",
+   "count": 4
+  },
+  {
+   "group": "fat_tired",
+   "block": "fat",
+   "count": 1
+  },
+  {
+   "group": "handsignal",
+   "block": "ghands",
+   "count": 5
+  },
+  {
+   "group": "handsignalL",
+   "block": "ghands",
+   "count": 5
+  },
+  {
+   "group": "lhand",
+   "block": "ghands",
+   "count": 5
+  },
+  {
+   "group": "rhand",
+   "block": "ghands",
+   "count": 5
+  },
+  {
+   "group": "carry",
+   "block": "carry",
+   "count": 3
+  },
+  {
+   "group": "carry05",
+   "block": "carry",
+   "count": 3
+  },
+  {
+   "group": "carry105",
+   "block": "carry",
+   "count": 3
+  },
+  {
+   "group": "int_house",
+   "block": "int_house",
+   "count": 10
+  },
+  {
+   "group": "int_office",
+   "block": "int_office",
+   "count": 9
+  },
+  {
+   "group": "int_shop",
+   "block": "int_shop",
+   "count": 3
+  },
+  {
+   "group": "stealth_kn",
+   "block": "knife",
+   "count": 4
+  },
+  {
+   "group": "stdcaramims",
+   "block": "ped",
+   "count": 39
+  },
+  {
+   "group": "lowcaramims",
+   "block": "ped",
+   "count": 39
+  },
+  {
+   "group": "trkcaranims",
+   "block": "truck",
+   "count": 39
+  },
+  {
+   "group": "stdbikeanims",
+   "block": "ped",
+   "count": 39
+  },
+  {
+   "group": "sportbikeanims",
+   "block": "bikes",
+   "count": 39
+  },
+  {
+   "group": "vespabikeanims",
+   "block": "bikev",
+   "count": 39
+  },
+  {
+   "group": "harleybikeanims",
+   "block": "bikeh",
+   "count": 39
+  },
+  {
+   "group": "dirtbikeanims",
+   "block": "biked",
+   "count": 39
+  },
+  {
+   "group": "wayfbikeanims",
+   "block": "wayfarer",
+   "count": 39
+  },
+  {
+   "group": "bmxbikeanims",
+   "block": "bmx",
+   "count": 39
+  },
+  {
+   "group": "mtbbikeanims",
+   "block": "mtb",
+   "count": 39
+  },
+  {
+   "group": "choppabikeanims",
+   "block": "choppa",
+   "count": 39
+  },
+  {
+   "group": "quadbikeanims",
+   "block": "quad",
+   "count": 39
+  },
+  {
+   "group": "vancaranims",
+   "block": "van",
+   "count": 39
+  },
+  {
+   "group": "rustplaneanims",
+   "block": "rustler",
+   "count": 39
+  },
+  {
+   "group": "coachcaranims",
+   "block": "coach",
+   "count": 39
+  },
+  {
+   "group": "buscaranims",
+   "block": "bus",
+   "count": 39
+  },
+  {
+   "group": "dozercaranims",
+   "block": "dozer",
+   "count": 39
+  },
+  {
+   "group": "kartcaranims",
+   "block": "kart",
+   "count": 39
+  },
+  {
+   "group": "convcaranims",
+   "block": "ped",
+   "count": 39
+  },
+  {
+   "group": "mtrkcaranims",
+   "block": "truck",
+   "count": 39
+  },
+  {
+   "group": "traincarranims",
+   "block": "coach",
+   "count": 39
+  },
+  {
+   "group": "stdtallcaramims",
+   "block": "ped",
+   "count": 39
+  },
+  {
+   "group": "hovercaranims",
+   "block": "vortex",
+   "count": 39
+  },
+  {
+   "group": "tankcaranims",
+   "block": "tank",
+   "count": 39
+  },
+  {
+   "group": "bfinjcaramims",
+   "block": "bf_injection",
+   "count": 39
+  },
+  {
+   "group": "learplaneanims",
+   "block": "shamal",
+   "count": 39
+  },
+  {
+   "group": "harrplaneanims",
+   "block": "rustler",
+   "count": 39
+  },
+  {
+   "group": "stdcarupright",
+   "block": "ped",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  },
+  {
+   "group": "nvadaplaneanims",
+   "block": "nevada",
+   "count": 39
+  }
+ ],
+ "models": {
+  "peds": [
+   {
+    "id": 0,
+    "model": "null",
+    "txd": "generic",
+    "anim_group": "player",
+    "tier": "engine"
+   },
+   {
+    "id": 7,
+    "model": "male01",
+    "txd": "male01",
+    "anim_group": "man",
+    "tier": "engine"
+   },
+   {
+    "id": 9,
+    "model": "bfori",
+    "txd": "bfori",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 10,
+    "model": "bfost",
+    "txd": "bfost",
+    "anim_group": "oldfatwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 11,
+    "model": "vbfycrp",
+    "txd": "vbfycrp",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 12,
+    "model": "bfyri",
+    "txd": "bfyri",
+    "anim_group": "sexywoman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 13,
+    "model": "bfyst",
+    "txd": "bfyst",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 14,
+    "model": "bmori",
+    "txd": "bmori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 15,
+    "model": "bmost",
+    "txd": "bmost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 16,
+    "model": "bmyap",
+    "txd": "bmyap",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 17,
+    "model": "bmybu",
+    "txd": "bmybu",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 18,
+    "model": "bmybe",
+    "txd": "bmybe",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 19,
+    "model": "bmydj",
+    "txd": "bmydj",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 20,
+    "model": "bmyri",
+    "txd": "bmyri",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 21,
+    "model": "bmycr",
+    "txd": "bmycr",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 22,
+    "model": "bmyst",
+    "txd": "bmyst",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 23,
+    "model": "wmybmx",
+    "txd": "wmybmx",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 24,
+    "model": "wbdyg1",
+    "txd": "wbdyg1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 25,
+    "model": "wbdyg2",
+    "txd": "wbdyg2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 26,
+    "model": "wmybp",
+    "txd": "wmybp",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 27,
+    "model": "wmycon",
+    "txd": "wmycon",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 28,
+    "model": "bmydrug",
+    "txd": "bmydrug",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 29,
+    "model": "wmydrug",
+    "txd": "wmydrug",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 30,
+    "model": "hmydrug",
+    "txd": "hmydrug",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 31,
+    "model": "dwfolc",
+    "txd": "dwfolc",
+    "anim_group": "oldfatwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 32,
+    "model": "dwmolc1",
+    "txd": "dwmolc1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 33,
+    "model": "dwmolc2",
+    "txd": "dwmolc2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 34,
+    "model": "dwmylc1",
+    "txd": "dwmylc1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 35,
+    "model": "hmogar",
+    "txd": "hmogar",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 36,
+    "model": "wmygol1",
+    "txd": "wmygol1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 37,
+    "model": "wmygol2",
+    "txd": "wmygol2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 38,
+    "model": "hfori",
+    "txd": "hfori",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 39,
+    "model": "hfost",
+    "txd": "hfost",
+    "anim_group": "oldfatwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 40,
+    "model": "hfyri",
+    "txd": "hfyri",
+    "anim_group": "sexywoman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 41,
+    "model": "hfyst",
+    "txd": "hfyst",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 43,
+    "model": "hmori",
+    "txd": "hmori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 44,
+    "model": "hmost",
+    "txd": "hmost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 45,
+    "model": "hmybe",
+    "txd": "hmybe",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 46,
+    "model": "hmyri",
+    "txd": "hmyri",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 47,
+    "model": "hmycr",
+    "txd": "hmycr",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 48,
+    "model": "hmyst",
+    "txd": "hmyst",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 49,
+    "model": "omokung",
+    "txd": "omokung",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 50,
+    "model": "wmymech",
+    "txd": "wmymech",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 51,
+    "model": "bmymoun",
+    "txd": "bmymoun",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 52,
+    "model": "wmymoun",
+    "txd": "wmymoun",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 53,
+    "model": "ofori",
+    "txd": "ofori",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 54,
+    "model": "ofost",
+    "txd": "ofost",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 55,
+    "model": "ofyri",
+    "txd": "ofyri",
+    "anim_group": "woman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 56,
+    "model": "ofyst",
+    "txd": "ofyst",
+    "anim_group": "woman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 57,
+    "model": "omori",
+    "txd": "omori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 58,
+    "model": "omost",
+    "txd": "omost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 59,
+    "model": "omyri",
+    "txd": "omyri",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 60,
+    "model": "omyst",
+    "txd": "omyst",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 61,
+    "model": "wmyplt",
+    "txd": "wmyplt",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 62,
+    "model": "wmopj",
+    "txd": "wmopj",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 63,
+    "model": "bfypro",
+    "txd": "bfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 64,
+    "model": "hfypro",
+    "txd": "hfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 66,
+    "model": "bmypol1",
+    "txd": "bmypol1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 67,
+    "model": "bmypol2",
+    "txd": "bmypol2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 68,
+    "model": "wmoprea",
+    "txd": "wmoprea",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 69,
+    "model": "sbfyst",
+    "txd": "sbfyst",
+    "anim_group": "woman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 70,
+    "model": "wmosci",
+    "txd": "wmosci",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 71,
+    "model": "wmysgrd",
+    "txd": "wmysgrd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 72,
+    "model": "swmyhp1",
+    "txd": "swmyhp1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 73,
+    "model": "swmyhp2",
+    "txd": "swmyhp2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 75,
+    "model": "swfopro",
+    "txd": "swfopro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 76,
+    "model": "wfystew",
+    "txd": "wfystew",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 77,
+    "model": "swmotr1",
+    "txd": "swmotr1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 78,
+    "model": "wmotr1",
+    "txd": "wmotr1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 79,
+    "model": "bmotr1",
+    "txd": "bmotr1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 80,
+    "model": "vbmybox",
+    "txd": "vbmybox",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 81,
+    "model": "vwmybox",
+    "txd": "vwmybox",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 82,
+    "model": "vhmyelv",
+    "txd": "vhmyelv",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 83,
+    "model": "vbmyelv",
+    "txd": "vbmyelv",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 84,
+    "model": "vimyelv",
+    "txd": "vimyelv",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 85,
+    "model": "vwfypro",
+    "txd": "vwfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 87,
+    "model": "vwfyst1",
+    "txd": "vwfyst1",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 88,
+    "model": "wfori",
+    "txd": "wfori",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 89,
+    "model": "wfost",
+    "txd": "wfost",
+    "anim_group": "oldfatwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 90,
+    "model": "wfyjg",
+    "txd": "wfyjg",
+    "anim_group": "jogwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 91,
+    "model": "wfyri",
+    "txd": "wfyri",
+    "anim_group": "sexywoman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 92,
+    "model": "wfyro",
+    "txd": "wfyro",
+    "anim_group": "skate",
+    "tier": "defined"
+   },
+   {
+    "id": 93,
+    "model": "wfyst",
+    "txd": "wfyst",
+    "anim_group": "sexywoman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 94,
+    "model": "wmori",
+    "txd": "wmori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 95,
+    "model": "wmost",
+    "txd": "wmost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 96,
+    "model": "wmyjg",
+    "txd": "wmyjg",
+    "anim_group": "jogger",
+    "tier": "defined"
+   },
+   {
+    "id": 97,
+    "model": "wmylg",
+    "txd": "wmylg",
+    "anim_group": "jogger",
+    "tier": "defined"
+   },
+   {
+    "id": 98,
+    "model": "wmyri",
+    "txd": "wmyri",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 99,
+    "model": "wmyro",
+    "txd": "wmyro",
+    "anim_group": "skate",
+    "tier": "defined"
+   },
+   {
+    "id": 100,
+    "model": "wmycr",
+    "txd": "wmycr",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 101,
+    "model": "wmyst",
+    "txd": "wmyst",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 102,
+    "model": "ballas1",
+    "txd": "ballas1",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 103,
+    "model": "ballas2",
+    "txd": "ballas2",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 104,
+    "model": "ballas3",
+    "txd": "ballas3",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 105,
+    "model": "fam1",
+    "txd": "fam1",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 106,
+    "model": "fam2",
+    "txd": "fam2",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 107,
+    "model": "fam3",
+    "txd": "fam3",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 108,
+    "model": "lsv1",
+    "txd": "lsv1",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 109,
+    "model": "lsv2",
+    "txd": "lsv2",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 110,
+    "model": "lsv3",
+    "txd": "lsv3",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 111,
+    "model": "maffa",
+    "txd": "maffa",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 112,
+    "model": "maffb",
+    "txd": "maffb",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 113,
+    "model": "mafboss",
+    "txd": "mafboss",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 114,
+    "model": "vla1",
+    "txd": "vla1",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 115,
+    "model": "vla2",
+    "txd": "vla2",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 116,
+    "model": "vla3",
+    "txd": "vla3",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 117,
+    "model": "triada",
+    "txd": "triada",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 118,
+    "model": "triadb",
+    "txd": "triadb",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 120,
+    "model": "triboss",
+    "txd": "triboss",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 121,
+    "model": "dnb1",
+    "txd": "dnb1",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 122,
+    "model": "dnb2",
+    "txd": "dnb2",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 123,
+    "model": "dnb3",
+    "txd": "dnb3",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 124,
+    "model": "vmaff1",
+    "txd": "vmaff1",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 125,
+    "model": "vmaff2",
+    "txd": "vmaff2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 126,
+    "model": "vmaff3",
+    "txd": "vmaff3",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 127,
+    "model": "vmaff4",
+    "txd": "vmaff4",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 128,
+    "model": "dnmylc",
+    "txd": "dnmylc",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 129,
+    "model": "dnfolc1",
+    "txd": "dnfolc1",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 130,
+    "model": "dnfolc2",
+    "txd": "dnfolc2",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 131,
+    "model": "dnfylc",
+    "txd": "dnfylc",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 132,
+    "model": "dnmolc1",
+    "txd": "dnmolc1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 133,
+    "model": "dnmolc2",
+    "txd": "dnmolc2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 134,
+    "model": "sbmotr2",
+    "txd": "sbmotr2",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 135,
+    "model": "swmotr2",
+    "txd": "swmotr2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 136,
+    "model": "sbmytr3",
+    "txd": "sbmytr3",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 137,
+    "model": "swmotr3",
+    "txd": "swmotr3",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 138,
+    "model": "wfybe",
+    "txd": "wfybe",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 139,
+    "model": "bfybe",
+    "txd": "bfybe",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 140,
+    "model": "hfybe",
+    "txd": "hfybe",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 141,
+    "model": "sofybu",
+    "txd": "sofybu",
+    "anim_group": "busywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 142,
+    "model": "sbmyst",
+    "txd": "sbmyst",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 143,
+    "model": "sbmycr",
+    "txd": "sbmycr",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 144,
+    "model": "bmycg",
+    "txd": "bmycg",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 145,
+    "model": "wfycrk",
+    "txd": "wfycrk",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 146,
+    "model": "hmycm",
+    "txd": "hmycm",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 147,
+    "model": "wmybu",
+    "txd": "wmybu",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 148,
+    "model": "bfybu",
+    "txd": "bfybu",
+    "anim_group": "busywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 150,
+    "model": "wfybu",
+    "txd": "wfybu",
+    "anim_group": "busywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 151,
+    "model": "dwfylc1",
+    "txd": "dwfylc1",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 152,
+    "model": "wfypro",
+    "txd": "wfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 153,
+    "model": "wmyconb",
+    "txd": "wmyconb",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 154,
+    "model": "wmybe",
+    "txd": "wmybe",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 155,
+    "model": "wmypizz",
+    "txd": "wmypizz",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 156,
+    "model": "bmobar",
+    "txd": "bmobar",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 157,
+    "model": "cwfyhb",
+    "txd": "cwfyhb",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 158,
+    "model": "cwmofr",
+    "txd": "cwmofr",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 159,
+    "model": "cwmohb1",
+    "txd": "cwmohb1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 160,
+    "model": "cwmohb2",
+    "txd": "cwmohb2",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 161,
+    "model": "cwmyfr",
+    "txd": "cwmyfr",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 162,
+    "model": "cwmyhb1",
+    "txd": "cwmyhb1",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 163,
+    "model": "bmyboun",
+    "txd": "bmyboun",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 164,
+    "model": "wmyboun",
+    "txd": "wmyboun",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 165,
+    "model": "wmomib",
+    "txd": "wmomib",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 166,
+    "model": "bmymib",
+    "txd": "bmymib",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 167,
+    "model": "wmybell",
+    "txd": "wmybell",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 168,
+    "model": "bmochil",
+    "txd": "bmochil",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 169,
+    "model": "sofyri",
+    "txd": "sofyri",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 170,
+    "model": "somyst",
+    "txd": "somyst",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 171,
+    "model": "vwmybjd",
+    "txd": "vwmybjd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 172,
+    "model": "vwfycrp",
+    "txd": "vwfycrp",
+    "anim_group": "busywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 173,
+    "model": "sfr1",
+    "txd": "sfr1",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 174,
+    "model": "sfr2",
+    "txd": "sfr2",
+    "anim_group": "gang2",
+    "tier": "defined"
+   },
+   {
+    "id": 175,
+    "model": "sfr3",
+    "txd": "sfr3",
+    "anim_group": "gang1",
+    "tier": "defined"
+   },
+   {
+    "id": 176,
+    "model": "bmybar",
+    "txd": "bmybar",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 177,
+    "model": "wmybar",
+    "txd": "wmybar",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 178,
+    "model": "wfysex",
+    "txd": "wfysex",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 179,
+    "model": "wmyammo",
+    "txd": "wmyammo",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 180,
+    "model": "bmytatt",
+    "txd": "bmytatt",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 181,
+    "model": "vwmycr",
+    "txd": "vwmycr",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 182,
+    "model": "vbmocd",
+    "txd": "vbmocd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 183,
+    "model": "vbmycr",
+    "txd": "vbmycr",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 184,
+    "model": "vhmycr",
+    "txd": "vhmycr",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 185,
+    "model": "sbmyri",
+    "txd": "sbmyri",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 186,
+    "model": "somyri",
+    "txd": "somyri",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 187,
+    "model": "somybu",
+    "txd": "somybu",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 188,
+    "model": "swmyst",
+    "txd": "swmyst",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 189,
+    "model": "wmyva",
+    "txd": "wmyva",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 190,
+    "model": "copgrl3",
+    "txd": "copgrl3",
+    "anim_group": "busywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 191,
+    "model": "gungrl3",
+    "txd": "gungrl3",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 192,
+    "model": "mecgrl3",
+    "txd": "mecgrl3",
+    "anim_group": "sexywoman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 193,
+    "model": "nurgrl3",
+    "txd": "nurgrl3",
+    "anim_group": "sexywoman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 194,
+    "model": "crogrl3",
+    "txd": "crogrl3",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 195,
+    "model": "gangrl3",
+    "txd": "gangrl3",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 196,
+    "model": "cwfofr",
+    "txd": "cwfofr",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 197,
+    "model": "cwfohb",
+    "txd": "cwfohb",
+    "anim_group": "oldwoman",
+    "tier": "defined"
+   },
+   {
+    "id": 198,
+    "model": "cwfyfr1",
+    "txd": "cwfyfr1",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 199,
+    "model": "cwfyfr2",
+    "txd": "cwfyfr2",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 200,
+    "model": "cwmyhb2",
+    "txd": "cwmyhb2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 201,
+    "model": "dwfylc2",
+    "txd": "dwfylc2",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 202,
+    "model": "dwmylc2",
+    "txd": "dwmylc2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 203,
+    "model": "omykara",
+    "txd": "omykara",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 204,
+    "model": "wmykara",
+    "txd": "wmykara",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 205,
+    "model": "wfyburg",
+    "txd": "wfyburg",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 206,
+    "model": "vwmycd",
+    "txd": "vwmycd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 207,
+    "model": "vhfypro",
+    "txd": "vhfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 209,
+    "model": "omonood",
+    "txd": "omonood",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 210,
+    "model": "omoboat",
+    "txd": "omoboat",
+    "anim_group": "oldman",
+    "tier": "defined"
+   },
+   {
+    "id": 211,
+    "model": "wfyclot",
+    "txd": "wfyclot",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 212,
+    "model": "vwmotr1",
+    "txd": "vwmotr1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 213,
+    "model": "vwmotr2",
+    "txd": "vwmotr2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 214,
+    "model": "vwfywai",
+    "txd": "vwfywai",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 215,
+    "model": "sbfori",
+    "txd": "sbfori",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 216,
+    "model": "swfyri",
+    "txd": "swfyri",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 217,
+    "model": "wmyclot",
+    "txd": "wmyclot",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 218,
+    "model": "sbfost",
+    "txd": "sbfost",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 219,
+    "model": "sbfyri",
+    "txd": "sbfyri",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 220,
+    "model": "sbmocd",
+    "txd": "sbmocd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 221,
+    "model": "sbmori",
+    "txd": "sbmori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 222,
+    "model": "sbmost",
+    "txd": "sbmost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 223,
+    "model": "shmycr",
+    "txd": "shmycr",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 224,
+    "model": "sofori",
+    "txd": "sofori",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 225,
+    "model": "sofost",
+    "txd": "sofost",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 226,
+    "model": "sofyst",
+    "txd": "sofyst",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 227,
+    "model": "somobu",
+    "txd": "somobu",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 228,
+    "model": "somori",
+    "txd": "somori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 229,
+    "model": "somost",
+    "txd": "somost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 230,
+    "model": "swmotr5",
+    "txd": "swmotr5",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 231,
+    "model": "swfori",
+    "txd": "swfori",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 232,
+    "model": "swfost",
+    "txd": "swfost",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 233,
+    "model": "swfyst",
+    "txd": "swfyst",
+    "anim_group": "woman",
+    "tier": "gamemode"
+   },
+   {
+    "id": 234,
+    "model": "swmocd",
+    "txd": "swmocd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 235,
+    "model": "swmori",
+    "txd": "swmori",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 236,
+    "model": "swmost",
+    "txd": "swmost",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 237,
+    "model": "shfypro",
+    "txd": "shfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 238,
+    "model": "sbfypro",
+    "txd": "sbfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 239,
+    "model": "swmotr4",
+    "txd": "swmotr4",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 240,
+    "model": "swmyri",
+    "txd": "swmyri",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 241,
+    "model": "smyst",
+    "txd": "smyst",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 242,
+    "model": "smyst2",
+    "txd": "smyst2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 243,
+    "model": "sfypro",
+    "txd": "sfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 244,
+    "model": "vbfyst2",
+    "txd": "vbfyst2",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 245,
+    "model": "vbfypro",
+    "txd": "vbfypro",
+    "anim_group": "pro",
+    "tier": "defined"
+   },
+   {
+    "id": 246,
+    "model": "vhfyst3",
+    "txd": "vhfyst3",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 247,
+    "model": "bikera",
+    "txd": "bikera",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 248,
+    "model": "bikerb",
+    "txd": "bikerb",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 249,
+    "model": "bmypimp",
+    "txd": "bmypimp",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 250,
+    "model": "swmycr",
+    "txd": "swmycr",
+    "anim_group": "man",
+    "tier": "gamemode"
+   },
+   {
+    "id": 251,
+    "model": "wfylg",
+    "txd": "wfylg",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 252,
+    "model": "wmyva2",
+    "txd": "wmyva2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 253,
+    "model": "bmosec",
+    "txd": "bmosec",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 254,
+    "model": "bikdrug",
+    "txd": "bikdrug",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 255,
+    "model": "wmych",
+    "txd": "wmych",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 256,
+    "model": "sbfystr",
+    "txd": "sbfystr",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 257,
+    "model": "swfystr",
+    "txd": "swfystr",
+    "anim_group": "sexywoman",
+    "tier": "defined"
+   },
+   {
+    "id": 258,
+    "model": "heck1",
+    "txd": "heck1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 259,
+    "model": "heck2",
+    "txd": "heck2",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 260,
+    "model": "bmycon",
+    "txd": "bmycon",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 261,
+    "model": "wmycd1",
+    "txd": "wmycd1",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 262,
+    "model": "bmocd",
+    "txd": "bmocd",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 263,
+    "model": "vwfywa2",
+    "txd": "vwfywa2",
+    "anim_group": "woman",
+    "tier": "defined"
+   },
+   {
+    "id": 264,
+    "model": "wmoice",
+    "txd": "wmoice",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 274,
+    "model": "laemt1",
+    "txd": "laemt1",
+    "anim_group": "swat",
+    "tier": "gamemode"
+   },
+   {
+    "id": 275,
+    "model": "lvemt1",
+    "txd": "lvemt1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 276,
+    "model": "sfemt1",
+    "txd": "sfemt1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 277,
+    "model": "lafd1",
+    "txd": "lafd1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 278,
+    "model": "lvfd1",
+    "txd": "lvfd1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 279,
+    "model": "sffd1",
+    "txd": "sffd1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 280,
+    "model": "lapd1",
+    "txd": "lapd1",
+    "anim_group": "swat",
+    "tier": "gamemode"
+   },
+   {
+    "id": 281,
+    "model": "sfpd1",
+    "txd": "sfpd1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 282,
+    "model": "lvpd1",
+    "txd": "lvpd1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 283,
+    "model": "csher",
+    "txd": "csher",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 284,
+    "model": "lapdm1",
+    "txd": "lapdm1",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 285,
+    "model": "swat",
+    "txd": "swat",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 286,
+    "model": "fbi",
+    "txd": "fbi",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 287,
+    "model": "army",
+    "txd": "army",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 288,
+    "model": "dsher",
+    "txd": "dsher",
+    "anim_group": "swat",
+    "tier": "defined"
+   },
+   {
+    "id": 290,
+    "model": "special01",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 291,
+    "model": "special02",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 292,
+    "model": "special03",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 293,
+    "model": "special04",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 294,
+    "model": "special05",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 295,
+    "model": "special06",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 296,
+    "model": "special07",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 297,
+    "model": "special08",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 298,
+    "model": "special09",
+    "txd": "generic",
+    "anim_group": "man",
+    "tier": "defined"
+   },
+   {
+    "id": 299,
+    "model": "special10",
+    "txd": "generic",
+    "anim_group": "fatman",
+    "tier": "gamemode"
+   }
+  ],
+  "vehicles": [
+   {
+    "id": 400,
+    "model": "landstal",
+    "txd": "landstal",
+    "type": "car",
+    "handling": "LANDSTAL",
+    "tier": "gamemode"
+   },
+   {
+    "id": 401,
+    "model": "bravura",
+    "txd": "bravura",
+    "type": "car",
+    "handling": "BRAVURA",
+    "tier": "defined"
+   },
+   {
+    "id": 402,
+    "model": "buffalo",
+    "txd": "buffalo",
+    "type": "car",
+    "handling": "BUFFALO",
+    "tier": "gamemode"
+   },
+   {
+    "id": 403,
+    "model": "linerun",
+    "txd": "linerun",
+    "type": "car",
+    "handling": "LINERUN",
+    "tier": "defined"
+   },
+   {
+    "id": 404,
+    "model": "peren",
+    "txd": "peren",
+    "type": "car",
+    "handling": "PEREN",
+    "tier": "gamemode"
+   },
+   {
+    "id": 405,
+    "model": "sentinel",
+    "txd": "sentinel",
+    "type": "car",
+    "handling": "SENTINEL",
+    "tier": "gamemode"
+   },
+   {
+    "id": 406,
+    "model": "dumper",
+    "txd": "dumper",
+    "type": "mtruck",
+    "handling": "DUMPER",
+    "tier": "defined"
+   },
+   {
+    "id": 407,
+    "model": "firetruk",
+    "txd": "firetruk",
+    "type": "car",
+    "handling": "FIRETRUK",
+    "tier": "defined"
+   },
+   {
+    "id": 408,
+    "model": "trash",
+    "txd": "trash",
+    "type": "car",
+    "handling": "TRASH",
+    "tier": "defined"
+   },
+   {
+    "id": 409,
+    "model": "stretch",
+    "txd": "stretch",
+    "type": "car",
+    "handling": "STRETCH",
+    "tier": "defined"
+   },
+   {
+    "id": 410,
+    "model": "manana",
+    "txd": "manana",
+    "type": "car",
+    "handling": "MANANA",
+    "tier": "defined"
+   },
+   {
+    "id": 411,
+    "model": "infernus",
+    "txd": "infernus",
+    "type": "car",
+    "handling": "INFERNUS",
+    "tier": "gamemode"
+   },
+   {
+    "id": 412,
+    "model": "voodoo",
+    "txd": "voodoo",
+    "type": "car",
+    "handling": "VOODOO",
+    "tier": "defined"
+   },
+   {
+    "id": 413,
+    "model": "pony",
+    "txd": "pony",
+    "type": "car",
+    "handling": "PONY",
+    "tier": "defined"
+   },
+   {
+    "id": 414,
+    "model": "mule",
+    "txd": "mule",
+    "type": "car",
+    "handling": "MULE",
+    "tier": "gamemode"
+   },
+   {
+    "id": 415,
+    "model": "cheetah",
+    "txd": "cheetah",
+    "type": "car",
+    "handling": "CHEETAH",
+    "tier": "gamemode"
+   },
+   {
+    "id": 416,
+    "model": "ambulan",
+    "txd": "ambulan",
+    "type": "car",
+    "handling": "AMBULAN",
+    "tier": "gamemode"
+   },
+   {
+    "id": 417,
+    "model": "leviathn",
+    "txd": "leviathn",
+    "type": "heli",
+    "handling": "LEVIATHN",
+    "tier": "defined"
+   },
+   {
+    "id": 418,
+    "model": "moonbeam",
+    "txd": "moonbeam",
+    "type": "car",
+    "handling": "MOONBEAM",
+    "tier": "defined"
+   },
+   {
+    "id": 419,
+    "model": "esperant",
+    "txd": "esperant",
+    "type": "car",
+    "handling": "ESPERANT",
+    "tier": "defined"
+   },
+   {
+    "id": 420,
+    "model": "taxi",
+    "txd": "taxi",
+    "type": "car",
+    "handling": "TAXI",
+    "tier": "gamemode"
+   },
+   {
+    "id": 421,
+    "model": "washing",
+    "txd": "washing",
+    "type": "car",
+    "handling": "WASHING",
+    "tier": "gamemode"
+   },
+   {
+    "id": 422,
+    "model": "bobcat",
+    "txd": "bobcat",
+    "type": "car",
+    "handling": "BOBCAT",
+    "tier": "defined"
+   },
+   {
+    "id": 423,
+    "model": "mrwhoop",
+    "txd": "mrwhoop",
+    "type": "car",
+    "handling": "MRWHOOP",
+    "tier": "defined"
+   },
+   {
+    "id": 424,
+    "model": "bfinject",
+    "txd": "bfinject",
+    "type": "car",
+    "handling": "BFINJECT",
+    "tier": "defined"
+   },
+   {
+    "id": 425,
+    "model": "hunter",
+    "txd": "hunter",
+    "type": "heli",
+    "handling": "HUNTER",
+    "tier": "defined"
+   },
+   {
+    "id": 426,
+    "model": "premier",
+    "txd": "premier",
+    "type": "car",
+    "handling": "PREMIER",
+    "tier": "defined"
+   },
+   {
+    "id": 427,
+    "model": "enforcer",
+    "txd": "enforcer",
+    "type": "car",
+    "handling": "ENFORCER",
+    "tier": "defined"
+   },
+   {
+    "id": 428,
+    "model": "securica",
+    "txd": "securica",
+    "type": "car",
+    "handling": "SECURICA",
+    "tier": "defined"
+   },
+   {
+    "id": 429,
+    "model": "banshee",
+    "txd": "banshee",
+    "type": "car",
+    "handling": "BANSHEE",
+    "tier": "defined"
+   },
+   {
+    "id": 430,
+    "model": "predator",
+    "txd": "predator",
+    "type": "boat",
+    "handling": "PREDATOR",
+    "tier": "defined"
+   },
+   {
+    "id": 431,
+    "model": "bus",
+    "txd": "bus",
+    "type": "car",
+    "handling": "BUS",
+    "tier": "defined"
+   },
+   {
+    "id": 432,
+    "model": "rhino",
+    "txd": "rhino",
+    "type": "car",
+    "handling": "RHINO",
+    "tier": "defined"
+   },
+   {
+    "id": 433,
+    "model": "barracks",
+    "txd": "barracks",
+    "type": "car",
+    "handling": "BARRACKS",
+    "tier": "defined"
+   },
+   {
+    "id": 434,
+    "model": "hotknife",
+    "txd": "hotknife",
+    "type": "car",
+    "handling": "HOTKNIFE",
+    "tier": "defined"
+   },
+   {
+    "id": 435,
+    "model": "artict1",
+    "txd": "artict1",
+    "type": "trailer",
+    "handling": "ARTICT1",
+    "tier": "defined"
+   },
+   {
+    "id": 436,
+    "model": "previon",
+    "txd": "previon",
+    "type": "car",
+    "handling": "PREVION",
+    "tier": "defined"
+   },
+   {
+    "id": 437,
+    "model": "coach",
+    "txd": "coach",
+    "type": "car",
+    "handling": "COACH",
+    "tier": "defined"
+   },
+   {
+    "id": 438,
+    "model": "cabbie",
+    "txd": "cabbie",
+    "type": "car",
+    "handling": "CABBIE",
+    "tier": "defined"
+   },
+   {
+    "id": 439,
+    "model": "stallion",
+    "txd": "stallion",
+    "type": "car",
+    "handling": "STALLION",
+    "tier": "defined"
+   },
+   {
+    "id": 440,
+    "model": "rumpo",
+    "txd": "rumpo",
+    "type": "car",
+    "handling": "RUMPO",
+    "tier": "defined"
+   },
+   {
+    "id": 441,
+    "model": "rcbandit",
+    "txd": "rcbandit",
+    "type": "car",
+    "handling": "RCBANDIT",
+    "tier": "defined"
+   },
+   {
+    "id": 442,
+    "model": "romero",
+    "txd": "romero",
+    "type": "car",
+    "handling": "ROMERO",
+    "tier": "defined"
+   },
+   {
+    "id": 443,
+    "model": "packer",
+    "txd": "packer",
+    "type": "car",
+    "handling": "PACKER",
+    "tier": "defined"
+   },
+   {
+    "id": 444,
+    "model": "monster",
+    "txd": "monster",
+    "type": "mtruck",
+    "handling": "MONSTER",
+    "tier": "defined"
+   },
+   {
+    "id": 445,
+    "model": "admiral",
+    "txd": "admiral",
+    "type": "car",
+    "handling": "ADMIRAL",
+    "tier": "gamemode"
+   },
+   {
+    "id": 446,
+    "model": "squalo",
+    "txd": "squalo",
+    "type": "boat",
+    "handling": "SQUALO",
+    "tier": "defined"
+   },
+   {
+    "id": 447,
+    "model": "seaspar",
+    "txd": "seaspar",
+    "type": "heli",
+    "handling": "SEASPAR",
+    "tier": "defined"
+   },
+   {
+    "id": 448,
+    "model": "pizzaboy",
+    "txd": "pizzaboy",
+    "type": "bike",
+    "handling": "MOPED",
+    "tier": "defined"
+   },
+   {
+    "id": 449,
+    "model": "tram",
+    "txd": "tram",
+    "type": "train",
+    "handling": "TRAM",
+    "tier": "defined"
+   },
+   {
+    "id": 450,
+    "model": "artict2",
+    "txd": "artict2",
+    "type": "trailer",
+    "handling": "ARTICT2",
+    "tier": "defined"
+   },
+   {
+    "id": 451,
+    "model": "turismo",
+    "txd": "turismo",
+    "type": "car",
+    "handling": "TURISMO",
+    "tier": "gamemode"
+   },
+   {
+    "id": 452,
+    "model": "speeder",
+    "txd": "speeder",
+    "type": "boat",
+    "handling": "SPEEDER",
+    "tier": "defined"
+   },
+   {
+    "id": 453,
+    "model": "reefer",
+    "txd": "reefer",
+    "type": "boat",
+    "handling": "REEFER",
+    "tier": "defined"
+   },
+   {
+    "id": 454,
+    "model": "tropic",
+    "txd": "tropic",
+    "type": "boat",
+    "handling": "TROPIC",
+    "tier": "defined"
+   },
+   {
+    "id": 455,
+    "model": "flatbed",
+    "txd": "flatbed",
+    "type": "car",
+    "handling": "FLATBED",
+    "tier": "defined"
+   },
+   {
+    "id": 456,
+    "model": "yankee",
+    "txd": "yankee",
+    "type": "car",
+    "handling": "YANKEE",
+    "tier": "defined"
+   },
+   {
+    "id": 457,
+    "model": "caddy",
+    "txd": "caddy",
+    "type": "car",
+    "handling": "GOLFCART",
+    "tier": "defined"
+   },
+   {
+    "id": 458,
+    "model": "solair",
+    "txd": "solair",
+    "type": "car",
+    "handling": "SOLAIR",
+    "tier": "defined"
+   },
+   {
+    "id": 459,
+    "model": "topfun",
+    "txd": "topfun",
+    "type": "car",
+    "handling": "TOPFUN",
+    "tier": "defined"
+   },
+   {
+    "id": 460,
+    "model": "skimmer",
+    "txd": "skimmer",
+    "type": "plane",
+    "handling": "SEAPLANE",
+    "tier": "defined"
+   },
+   {
+    "id": 461,
+    "model": "pcj600",
+    "txd": "pcj600",
+    "type": "bike",
+    "handling": "BIKE",
+    "tier": "defined"
+   },
+   {
+    "id": 462,
+    "model": "faggio",
+    "txd": "faggio",
+    "type": "bike",
+    "handling": "MOPED",
+    "tier": "gamemode"
+   },
+   {
+    "id": 463,
+    "model": "freeway",
+    "txd": "freeway",
+    "type": "bike",
+    "handling": "FREEWAY",
+    "tier": "defined"
+   },
+   {
+    "id": 464,
+    "model": "rcbaron",
+    "txd": "rcbaron",
+    "type": "plane",
+    "handling": "RCBARON",
+    "tier": "defined"
+   },
+   {
+    "id": 465,
+    "model": "rcraider",
+    "txd": "rcraider",
+    "type": "heli",
+    "handling": "RCRAIDER",
+    "tier": "defined"
+   },
+   {
+    "id": 466,
+    "model": "glendale",
+    "txd": "glendale",
+    "type": "car",
+    "handling": "GLENDALE",
+    "tier": "gamemode"
+   },
+   {
+    "id": 467,
+    "model": "oceanic",
+    "txd": "oceanic",
+    "type": "car",
+    "handling": "OCEANIC",
+    "tier": "defined"
+   },
+   {
+    "id": 468,
+    "model": "sanchez",
+    "txd": "sanchez",
+    "type": "bike",
+    "handling": "DIRTBIKE",
+    "tier": "gamemode"
+   },
+   {
+    "id": 469,
+    "model": "sparrow",
+    "txd": "sparrow",
+    "type": "heli",
+    "handling": "SPARROW",
+    "tier": "defined"
+   },
+   {
+    "id": 470,
+    "model": "patriot",
+    "txd": "patriot",
+    "type": "car",
+    "handling": "PATRIOT",
+    "tier": "defined"
+   },
+   {
+    "id": 471,
+    "model": "quad",
+    "txd": "quad",
+    "type": "quad",
+    "handling": "QUADBIKE",
+    "tier": "defined"
+   },
+   {
+    "id": 472,
+    "model": "coastg",
+    "txd": "coastg",
+    "type": "boat",
+    "handling": "COASTGRD",
+    "tier": "defined"
+   },
+   {
+    "id": 473,
+    "model": "dinghy",
+    "txd": "dinghy",
+    "type": "boat",
+    "handling": "DINGHY",
+    "tier": "defined"
+   },
+   {
+    "id": 474,
+    "model": "hermes",
+    "txd": "hermes",
+    "type": "car",
+    "handling": "HERMES",
+    "tier": "defined"
+   },
+   {
+    "id": 475,
+    "model": "sabre",
+    "txd": "sabre",
+    "type": "car",
+    "handling": "SABRE",
+    "tier": "defined"
+   },
+   {
+    "id": 476,
+    "model": "rustler",
+    "txd": "rustler",
+    "type": "plane",
+    "handling": "RUSTLER",
+    "tier": "defined"
+   },
+   {
+    "id": 477,
+    "model": "zr350",
+    "txd": "zr350",
+    "type": "car",
+    "handling": "ZR350",
+    "tier": "defined"
+   },
+   {
+    "id": 478,
+    "model": "walton",
+    "txd": "walton",
+    "type": "car",
+    "handling": "WALTON",
+    "tier": "defined"
+   },
+   {
+    "id": 479,
+    "model": "regina",
+    "txd": "regina",
+    "type": "car",
+    "handling": "REGINA",
+    "tier": "defined"
+   },
+   {
+    "id": 480,
+    "model": "comet",
+    "txd": "comet",
+    "type": "car",
+    "handling": "COMET",
+    "tier": "defined"
+   },
+   {
+    "id": 481,
+    "model": "bmx",
+    "txd": "bmx",
+    "type": "bmx",
+    "handling": "BMX",
+    "tier": "defined"
+   },
+   {
+    "id": 482,
+    "model": "burrito",
+    "txd": "burrito",
+    "type": "car",
+    "handling": "BURRITO",
+    "tier": "defined"
+   },
+   {
+    "id": 483,
+    "model": "camper",
+    "txd": "camper",
+    "type": "car",
+    "handling": "CAMPER",
+    "tier": "defined"
+   },
+   {
+    "id": 484,
+    "model": "marquis",
+    "txd": "marquis",
+    "type": "boat",
+    "handling": "MARQUIS",
+    "tier": "defined"
+   },
+   {
+    "id": 485,
+    "model": "baggage",
+    "txd": "baggage",
+    "type": "car",
+    "handling": "BAGGAGE",
+    "tier": "defined"
+   },
+   {
+    "id": 486,
+    "model": "dozer",
+    "txd": "dozer",
+    "type": "car",
+    "handling": "DOZER",
+    "tier": "defined"
+   },
+   {
+    "id": 487,
+    "model": "maverick",
+    "txd": "maverick",
+    "type": "heli",
+    "handling": "MAVERICK",
+    "tier": "defined"
+   },
+   {
+    "id": 488,
+    "model": "vcnmav",
+    "txd": "vcnmav",
+    "type": "heli",
+    "handling": "COASTMAV",
+    "tier": "defined"
+   },
+   {
+    "id": 489,
+    "model": "rancher",
+    "txd": "rancher",
+    "type": "car",
+    "handling": "RANCHER",
+    "tier": "defined"
+   },
+   {
+    "id": 490,
+    "model": "fbiranch",
+    "txd": "fbiranch",
+    "type": "car",
+    "handling": "FBIRANCH",
+    "tier": "defined"
+   },
+   {
+    "id": 491,
+    "model": "virgo",
+    "txd": "virgo",
+    "type": "car",
+    "handling": "VIRGO",
+    "tier": "defined"
+   },
+   {
+    "id": 492,
+    "model": "greenwoo",
+    "txd": "greenwoo",
+    "type": "car",
+    "handling": "GREENWOO",
+    "tier": "gamemode"
+   },
+   {
+    "id": 493,
+    "model": "jetmax",
+    "txd": "jetmax",
+    "type": "boat",
+    "handling": "CUPBOAT",
+    "tier": "defined"
+   },
+   {
+    "id": 494,
+    "model": "hotring",
+    "txd": "hotring",
+    "type": "car",
+    "handling": "HOTRING",
+    "tier": "defined"
+   },
+   {
+    "id": 495,
+    "model": "sandking",
+    "txd": "sandking",
+    "type": "car",
+    "handling": "SANDKING",
+    "tier": "defined"
+   },
+   {
+    "id": 496,
+    "model": "blistac",
+    "txd": "blistac",
+    "type": "car",
+    "handling": "BLISTAC",
+    "tier": "defined"
+   },
+   {
+    "id": 497,
+    "model": "polmav",
+    "txd": "polmav",
+    "type": "heli",
+    "handling": "POLMAV",
+    "tier": "defined"
+   },
+   {
+    "id": 498,
+    "model": "boxville",
+    "txd": "boxville",
+    "type": "car",
+    "handling": "BOXVILLE",
+    "tier": "defined"
+   },
+   {
+    "id": 499,
+    "model": "benson",
+    "txd": "benson",
+    "type": "car",
+    "handling": "BENSON",
+    "tier": "defined"
+   },
+   {
+    "id": 500,
+    "model": "mesa",
+    "txd": "mesa",
+    "type": "car",
+    "handling": "MESA",
+    "tier": "defined"
+   },
+   {
+    "id": 501,
+    "model": "rcgoblin",
+    "txd": "rcgoblin",
+    "type": "heli",
+    "handling": "RCGOBLIN",
+    "tier": "defined"
+   },
+   {
+    "id": 502,
+    "model": "hotrina",
+    "txd": "hotrina",
+    "type": "car",
+    "handling": "HOTRING",
+    "tier": "defined"
+   },
+   {
+    "id": 503,
+    "model": "hotrinb",
+    "txd": "hotrinb",
+    "type": "car",
+    "handling": "HOTRING",
+    "tier": "defined"
+   },
+   {
+    "id": 504,
+    "model": "bloodra",
+    "txd": "bloodra",
+    "type": "car",
+    "handling": "BLOODRA",
+    "tier": "defined"
+   },
+   {
+    "id": 505,
+    "model": "rnchlure",
+    "txd": "rnchlure",
+    "type": "car",
+    "handling": "RANCHER",
+    "tier": "defined"
+   },
+   {
+    "id": 506,
+    "model": "supergt",
+    "txd": "supergt",
+    "type": "car",
+    "handling": "SUPERGT",
+    "tier": "defined"
+   },
+   {
+    "id": 507,
+    "model": "elegant",
+    "txd": "elegant",
+    "type": "car",
+    "handling": "ELEGANT",
+    "tier": "defined"
+   },
+   {
+    "id": 508,
+    "model": "journey",
+    "txd": "journey",
+    "type": "car",
+    "handling": "JOURNEY",
+    "tier": "defined"
+   },
+   {
+    "id": 509,
+    "model": "bike",
+    "txd": "bike",
+    "type": "bmx",
+    "handling": "CHOPPERB",
+    "tier": "defined"
+   },
+   {
+    "id": 510,
+    "model": "mtbike",
+    "txd": "mtbike",
+    "type": "bmx",
+    "handling": "MTB",
+    "tier": "defined"
+   },
+   {
+    "id": 511,
+    "model": "beagle",
+    "txd": "beagle",
+    "type": "plane",
+    "handling": "BEAGLE",
+    "tier": "defined"
+   },
+   {
+    "id": 512,
+    "model": "cropdust",
+    "txd": "cropdust",
+    "type": "plane",
+    "handling": "CROPDUST",
+    "tier": "defined"
+   },
+   {
+    "id": 513,
+    "model": "stunt",
+    "txd": "stunt",
+    "type": "plane",
+    "handling": "STUNT",
+    "tier": "defined"
+   },
+   {
+    "id": 514,
+    "model": "petro",
+    "txd": "petro",
+    "type": "car",
+    "handling": "PETROL",
+    "tier": "defined"
+   },
+   {
+    "id": 515,
+    "model": "rdtrain",
+    "txd": "rdtrain",
+    "type": "car",
+    "handling": "RDTRAIN",
+    "tier": "defined"
+   },
+   {
+    "id": 516,
+    "model": "nebula",
+    "txd": "nebula",
+    "type": "car",
+    "handling": "NEBULA",
+    "tier": "defined"
+   },
+   {
+    "id": 517,
+    "model": "majestic",
+    "txd": "majestic",
+    "type": "car",
+    "handling": "MAJESTIC",
+    "tier": "defined"
+   },
+   {
+    "id": 518,
+    "model": "buccanee",
+    "txd": "buccanee",
+    "type": "car",
+    "handling": "BUCCANEE",
+    "tier": "defined"
+   },
+   {
+    "id": 519,
+    "model": "shamal",
+    "txd": "shamal",
+    "type": "plane",
+    "handling": "SHAMAL",
+    "tier": "defined"
+   },
+   {
+    "id": 520,
+    "model": "hydra",
+    "txd": "hydra",
+    "type": "plane",
+    "handling": "HYDRA",
+    "tier": "defined"
+   },
+   {
+    "id": 521,
+    "model": "fcr900",
+    "txd": "fcr900",
+    "type": "bike",
+    "handling": "FCR900",
+    "tier": "defined"
+   },
+   {
+    "id": 522,
+    "model": "nrg500",
+    "txd": "nrg500",
+    "type": "bike",
+    "handling": "NRG500",
+    "tier": "gamemode"
+   },
+   {
+    "id": 523,
+    "model": "copbike",
+    "txd": "copbike",
+    "type": "bike",
+    "handling": "HPV1000",
+    "tier": "gamemode"
+   },
+   {
+    "id": 524,
+    "model": "cement",
+    "txd": "cement",
+    "type": "car",
+    "handling": "CEMENT",
+    "tier": "defined"
+   },
+   {
+    "id": 525,
+    "model": "towtruck",
+    "txd": "towtruck",
+    "type": "car",
+    "handling": "TOWTRUCK",
+    "tier": "gamemode"
+   },
+   {
+    "id": 526,
+    "model": "fortune",
+    "txd": "fortune",
+    "type": "car",
+    "handling": "FORTUNE",
+    "tier": "defined"
+   },
+   {
+    "id": 527,
+    "model": "cadrona",
+    "txd": "cadrona",
+    "type": "car",
+    "handling": "CADRONA",
+    "tier": "defined"
+   },
+   {
+    "id": 528,
+    "model": "fbitruck",
+    "txd": "fbitruck",
+    "type": "car",
+    "handling": "FBITRUCK",
+    "tier": "defined"
+   },
+   {
+    "id": 529,
+    "model": "willard",
+    "txd": "willard",
+    "type": "car",
+    "handling": "WILLARD",
+    "tier": "defined"
+   },
+   {
+    "id": 530,
+    "model": "forklift",
+    "txd": "forklift",
+    "type": "car",
+    "handling": "FORKLIFT",
+    "tier": "defined"
+   },
+   {
+    "id": 531,
+    "model": "tractor",
+    "txd": "tractor",
+    "type": "car",
+    "handling": "TRACTOR",
+    "tier": "defined"
+   },
+   {
+    "id": 532,
+    "model": "combine",
+    "txd": "combine",
+    "type": "car",
+    "handling": "COMBINE",
+    "tier": "defined"
+   },
+   {
+    "id": 533,
+    "model": "feltzer",
+    "txd": "feltzer",
+    "type": "car",
+    "handling": "FELTZER",
+    "tier": "defined"
+   },
+   {
+    "id": 534,
+    "model": "remingtn",
+    "txd": "remingtn",
+    "type": "car",
+    "handling": "REMINGTN",
+    "tier": "defined"
+   },
+   {
+    "id": 535,
+    "model": "slamvan",
+    "txd": "slamvan",
+    "type": "car",
+    "handling": "SLAMVAN",
+    "tier": "defined"
+   },
+   {
+    "id": 536,
+    "model": "blade",
+    "txd": "blade",
+    "type": "car",
+    "handling": "BLADE",
+    "tier": "gamemode"
+   },
+   {
+    "id": 537,
+    "model": "freight",
+    "txd": "freight",
+    "type": "train",
+    "handling": "FREIGHT",
+    "tier": "defined"
+   },
+   {
+    "id": 538,
+    "model": "streak",
+    "txd": "streak",
+    "type": "train",
+    "handling": "STREAK",
+    "tier": "defined"
+   },
+   {
+    "id": 539,
+    "model": "vortex",
+    "txd": "vortex",
+    "type": "plane",
+    "handling": "VORTEX",
+    "tier": "defined"
+   },
+   {
+    "id": 540,
+    "model": "vincent",
+    "txd": "vincent",
+    "type": "car",
+    "handling": "VINCENT",
+    "tier": "defined"
+   },
+   {
+    "id": 541,
+    "model": "bullet",
+    "txd": "bullet",
+    "type": "car",
+    "handling": "BULLET",
+    "tier": "gamemode"
+   },
+   {
+    "id": 542,
+    "model": "clover",
+    "txd": "clover",
+    "type": "car",
+    "handling": "CLOVER",
+    "tier": "defined"
+   },
+   {
+    "id": 543,
+    "model": "sadler",
+    "txd": "sadler",
+    "type": "car",
+    "handling": "SADLER",
+    "tier": "defined"
+   },
+   {
+    "id": 544,
+    "model": "firela",
+    "txd": "firela",
+    "type": "car",
+    "handling": "FIRETRUK",
+    "tier": "defined"
+   },
+   {
+    "id": 545,
+    "model": "hustler",
+    "txd": "hustler",
+    "type": "car",
+    "handling": "HUSTLER",
+    "tier": "defined"
+   },
+   {
+    "id": 546,
+    "model": "intruder",
+    "txd": "intruder",
+    "type": "car",
+    "handling": "INTRUDER",
+    "tier": "defined"
+   },
+   {
+    "id": 547,
+    "model": "primo",
+    "txd": "primo",
+    "type": "car",
+    "handling": "PRIMO",
+    "tier": "defined"
+   },
+   {
+    "id": 548,
+    "model": "cargobob",
+    "txd": "cargobob",
+    "type": "heli",
+    "handling": "CARGOBOB",
+    "tier": "defined"
+   },
+   {
+    "id": 549,
+    "model": "tampa",
+    "txd": "tampa",
+    "type": "car",
+    "handling": "TAMPA",
+    "tier": "defined"
+   },
+   {
+    "id": 550,
+    "model": "sunrise",
+    "txd": "sunrise",
+    "type": "car",
+    "handling": "SUNRISE",
+    "tier": "defined"
+   },
+   {
+    "id": 551,
+    "model": "merit",
+    "txd": "merit",
+    "type": "car",
+    "handling": "MERIT",
+    "tier": "defined"
+   },
+   {
+    "id": 552,
+    "model": "utility",
+    "txd": "utility",
+    "type": "car",
+    "handling": "UTILITY",
+    "tier": "defined"
+   },
+   {
+    "id": 553,
+    "model": "nevada",
+    "txd": "nevada",
+    "type": "plane",
+    "handling": "NEVADA",
+    "tier": "defined"
+   },
+   {
+    "id": 554,
+    "model": "yosemite",
+    "txd": "yosemite",
+    "type": "car",
+    "handling": "YOSEMITE",
+    "tier": "defined"
+   },
+   {
+    "id": 555,
+    "model": "windsor",
+    "txd": "windsor",
+    "type": "car",
+    "handling": "WINDSOR",
+    "tier": "defined"
+   },
+   {
+    "id": 556,
+    "model": "monstera",
+    "txd": "monstera",
+    "type": "mtruck",
+    "handling": "MTRUCK_A",
+    "tier": "defined"
+   },
+   {
+    "id": 557,
+    "model": "monsterb",
+    "txd": "monsterb",
+    "type": "mtruck",
+    "handling": "MTRUCK_B",
+    "tier": "defined"
+   },
+   {
+    "id": 558,
+    "model": "uranus",
+    "txd": "uranus",
+    "type": "car",
+    "handling": "URANUS",
+    "tier": "defined"
+   },
+   {
+    "id": 559,
+    "model": "jester",
+    "txd": "jester",
+    "type": "car",
+    "handling": "JESTER",
+    "tier": "defined"
+   },
+   {
+    "id": 560,
+    "model": "sultan",
+    "txd": "sultan",
+    "type": "car",
+    "handling": "SULTAN",
+    "tier": "gamemode"
+   },
+   {
+    "id": 561,
+    "model": "stratum",
+    "txd": "stratum",
+    "type": "car",
+    "handling": "STRATUM",
+    "tier": "defined"
+   },
+   {
+    "id": 562,
+    "model": "elegy",
+    "txd": "elegy",
+    "type": "car",
+    "handling": "ELEGY",
+    "tier": "gamemode"
+   },
+   {
+    "id": 563,
+    "model": "raindanc",
+    "txd": "raindanc",
+    "type": "heli",
+    "handling": "RAINDANC",
+    "tier": "defined"
+   },
+   {
+    "id": 564,
+    "model": "rctiger",
+    "txd": "rctiger",
+    "type": "car",
+    "handling": "RCTIGER",
+    "tier": "defined"
+   },
+   {
+    "id": 565,
+    "model": "flash",
+    "txd": "flash",
+    "type": "car",
+    "handling": "FLASH",
+    "tier": "defined"
+   },
+   {
+    "id": 566,
+    "model": "tahoma",
+    "txd": "tahoma",
+    "type": "car",
+    "handling": "TAHOMA",
+    "tier": "gamemode"
+   },
+   {
+    "id": 567,
+    "model": "savanna",
+    "txd": "savanna",
+    "type": "car",
+    "handling": "SAVANNA",
+    "tier": "gamemode"
+   },
+   {
+    "id": 568,
+    "model": "bandito",
+    "txd": "bandito",
+    "type": "car",
+    "handling": "BANDITO",
+    "tier": "defined"
+   },
+   {
+    "id": 569,
+    "model": "freiflat",
+    "txd": "freiflat",
+    "type": "train",
+    "handling": "FREIFLAT",
+    "tier": "defined"
+   },
+   {
+    "id": 570,
+    "model": "streakc",
+    "txd": "streakc",
+    "type": "train",
+    "handling": "CSTREAK",
+    "tier": "defined"
+   },
+   {
+    "id": 571,
+    "model": "kart",
+    "txd": "kart",
+    "type": "car",
+    "handling": "KART",
+    "tier": "defined"
+   },
+   {
+    "id": 572,
+    "model": "mower",
+    "txd": "mower",
+    "type": "car",
+    "handling": "MOWER",
+    "tier": "defined"
+   },
+   {
+    "id": 573,
+    "model": "duneride",
+    "txd": "duneride",
+    "type": "mtruck",
+    "handling": "DUNE",
+    "tier": "defined"
+   },
+   {
+    "id": 574,
+    "model": "sweeper",
+    "txd": "sweeper",
+    "type": "car",
+    "handling": "SWEEPER",
+    "tier": "defined"
+   },
+   {
+    "id": 575,
+    "model": "broadway",
+    "txd": "broadway",
+    "type": "car",
+    "handling": "BROADWAY",
+    "tier": "defined"
+   },
+   {
+    "id": 576,
+    "model": "tornado",
+    "txd": "tornado",
+    "type": "car",
+    "handling": "TORNADO",
+    "tier": "defined"
+   },
+   {
+    "id": 577,
+    "model": "at400",
+    "txd": "at400",
+    "type": "plane",
+    "handling": "AT400",
+    "tier": "defined"
+   },
+   {
+    "id": 578,
+    "model": "dft30",
+    "txd": "dft30",
+    "type": "car",
+    "handling": "DFT30",
+    "tier": "defined"
+   },
+   {
+    "id": 579,
+    "model": "huntley",
+    "txd": "huntley",
+    "type": "car",
+    "handling": "HUNTLEY",
+    "tier": "gamemode"
+   },
+   {
+    "id": 580,
+    "model": "stafford",
+    "txd": "stafford",
+    "type": "car",
+    "handling": "STAFFORD",
+    "tier": "defined"
+   },
+   {
+    "id": 581,
+    "model": "bf400",
+    "txd": "bf400",
+    "type": "bike",
+    "handling": "BF400",
+    "tier": "gamemode"
+   },
+   {
+    "id": 582,
+    "model": "newsvan",
+    "txd": "newsvan",
+    "type": "car",
+    "handling": "NEWSVAN",
+    "tier": "defined"
+   },
+   {
+    "id": 583,
+    "model": "tug",
+    "txd": "tug",
+    "type": "car",
+    "handling": "TUG",
+    "tier": "defined"
+   },
+   {
+    "id": 584,
+    "model": "petrotr",
+    "txd": "petrotr",
+    "type": "trailer",
+    "handling": "PETROTR",
+    "tier": "defined"
+   },
+   {
+    "id": 585,
+    "model": "emperor\t\temperor",
+    "txd": "car",
+    "type": "emperor",
+    "handling": "EMPEROR",
+    "tier": "defined"
+   },
+   {
+    "id": 586,
+    "model": "wayfarer\twayfarer",
+    "txd": "bike",
+    "type": "wayfarer",
+    "handling": "WAYFARE",
+    "tier": "defined"
+   },
+   {
+    "id": 587,
+    "model": "euros",
+    "txd": "euros",
+    "type": "car",
+    "handling": "EUROS",
+    "tier": "defined"
+   },
+   {
+    "id": 588,
+    "model": "hotdog",
+    "txd": "hotdog",
+    "type": "car",
+    "handling": "HOTDOG",
+    "tier": "defined"
+   },
+   {
+    "id": 589,
+    "model": "club",
+    "txd": "club",
+    "type": "car",
+    "handling": "CLUB",
+    "tier": "defined"
+   },
+   {
+    "id": 590,
+    "model": "freibox",
+    "txd": "freibox",
+    "type": "train",
+    "handling": "FREIFLAT",
+    "tier": "defined"
+   },
+   {
+    "id": 591,
+    "model": "artict3",
+    "txd": "artict3",
+    "type": "trailer",
+    "handling": "ARTICT3",
+    "tier": "defined"
+   },
+   {
+    "id": 592,
+    "model": "androm",
+    "txd": "androm",
+    "type": "plane",
+    "handling": "ANDROM",
+    "tier": "defined"
+   },
+   {
+    "id": 593,
+    "model": "dodo\t\tdodo",
+    "txd": "plane",
+    "type": "dodo",
+    "handling": "DODO",
+    "tier": "defined"
+   },
+   {
+    "id": 594,
+    "model": "rccam",
+    "txd": "rccam",
+    "type": "car",
+    "handling": "RCCAM",
+    "tier": "defined"
+   },
+   {
+    "id": 595,
+    "model": "launch",
+    "txd": "launch",
+    "type": "boat",
+    "handling": "LAUNCH",
+    "tier": "defined"
+   },
+   {
+    "id": 596,
+    "model": "copcarla",
+    "txd": "copcarla",
+    "type": "car",
+    "handling": "POLICE_LA",
+    "tier": "gamemode"
+   },
+   {
+    "id": 597,
+    "model": "copcarsf",
+    "txd": "copcarsf",
+    "type": "car",
+    "handling": "POLICE_SF",
+    "tier": "defined"
+   },
+   {
+    "id": 598,
+    "model": "copcarvg",
+    "txd": "copcarvg",
+    "type": "car",
+    "handling": "POLICE_VG",
+    "tier": "defined"
+   },
+   {
+    "id": 599,
+    "model": "copcarru",
+    "txd": "copcarru",
+    "type": "car",
+    "handling": "POLRANGER",
+    "tier": "defined"
+   },
+   {
+    "id": 600,
+    "model": "picador",
+    "txd": "picador",
+    "type": "car",
+    "handling": "PICADOR",
+    "tier": "defined"
+   },
+   {
+    "id": 601,
+    "model": "swatvan",
+    "txd": "swatvan",
+    "type": "car",
+    "handling": "SWATVAN",
+    "tier": "defined"
+   },
+   {
+    "id": 602,
+    "model": "alpha",
+    "txd": "alpha",
+    "type": "car",
+    "handling": "ALPHA",
+    "tier": "defined"
+   },
+   {
+    "id": 603,
+    "model": "phoenix",
+    "txd": "phoenix",
+    "type": "car",
+    "handling": "PHOENIX",
+    "tier": "defined"
+   },
+   {
+    "id": 604,
+    "model": "glenshit",
+    "txd": "glenshit",
+    "type": "car",
+    "handling": "GLENDALE",
+    "tier": "defined"
+   },
+   {
+    "id": 605,
+    "model": "sadlshit",
+    "txd": "sadlshit",
+    "type": "car",
+    "handling": "SADLER",
+    "tier": "defined"
+   },
+   {
+    "id": 606,
+    "model": "bagboxa",
+    "txd": "bagboxa",
+    "type": "trailer",
+    "handling": "BAGBOXA",
+    "tier": "defined"
+   },
+   {
+    "id": 607,
+    "model": "bagboxb",
+    "txd": "bagboxb",
+    "type": "trailer",
+    "handling": "BAGBOXB",
+    "tier": "defined"
+   },
+   {
+    "id": 608,
+    "model": "tugstair",
+    "txd": "tugstair",
+    "type": "trailer",
+    "handling": "STAIRS",
+    "tier": "defined"
+   },
+   {
+    "id": 609,
+    "model": "boxburg",
+    "txd": "boxburg",
+    "type": "car",
+    "handling": "BOXBURG",
+    "tier": "defined"
+   },
+   {
+    "id": 610,
+    "model": "farmtr1",
+    "txd": "farmtr1",
+    "type": "trailer",
+    "handling": "FARM_TR1",
+    "tier": "defined"
+   },
+   {
+    "id": 611,
+    "model": "utiltr1",
+    "txd": "utiltr1",
+    "type": "trailer",
+    "handling": "UTIL_TR1",
+    "tier": "defined"
+   }
+  ],
+  "weapons": [
+   {
+    "id": 321,
+    "model": "gun_dildo1",
+    "txd": "gun_dildo1",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 322,
+    "model": "gun_dildo2",
+    "txd": "gun_dildo2",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 323,
+    "model": "gun_vibe1",
+    "txd": "gun_vibe1",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 324,
+    "model": "gun_vibe2",
+    "txd": "gun_vibe2",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 325,
+    "model": "flowera",
+    "txd": "flowera",
+    "anim_block": "",
+    "tier": "gamemode"
+   },
+   {
+    "id": 326,
+    "model": "gun_cane",
+    "txd": "gun_cane",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 327,
+    "model": "gun_boxwee",
+    "txd": "gun_boxwee",
+    "anim_block": "colt45",
+    "tier": "defined"
+   },
+   {
+    "id": 328,
+    "model": "gun_boxbig",
+    "txd": "gun_boxbig",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 330,
+    "model": "cellphone",
+    "txd": "cellphone",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 331,
+    "model": "brassknuckle",
+    "txd": "brassknuckle",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 333,
+    "model": "golfclub",
+    "txd": "golfclub",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 334,
+    "model": "nitestick",
+    "txd": "nitestick",
+    "anim_block": "",
+    "tier": "gamemode"
+   },
+   {
+    "id": 335,
+    "model": "knifecur",
+    "txd": "knifecur",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 336,
+    "model": "bat",
+    "txd": "bat",
+    "anim_block": "",
+    "tier": "gamemode"
+   },
+   {
+    "id": 337,
+    "model": "shovel",
+    "txd": "shovel",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 338,
+    "model": "poolcue",
+    "txd": "poolcue",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 339,
+    "model": "katana",
+    "txd": "katana",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 341,
+    "model": "chnsaw",
+    "txd": "chnsaw",
+    "anim_block": "chainsaw",
+    "tier": "defined"
+   },
+   {
+    "id": 342,
+    "model": "grenade",
+    "txd": "grenade",
+    "anim_block": "grenade",
+    "tier": "defined"
+   },
+   {
+    "id": 343,
+    "model": "teargas",
+    "txd": "teargas",
+    "anim_block": "grenade",
+    "tier": "defined"
+   },
+   {
+    "id": 344,
+    "model": "molotov",
+    "txd": "molotov",
+    "anim_block": "grenade",
+    "tier": "defined"
+   },
+   {
+    "id": 345,
+    "model": "missile",
+    "txd": "missile",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 346,
+    "model": "colt45",
+    "txd": "colt45",
+    "anim_block": "colt45",
+    "tier": "gamemode"
+   },
+   {
+    "id": 347,
+    "model": "silenced",
+    "txd": "silenced",
+    "anim_block": "silenced",
+    "tier": "defined"
+   },
+   {
+    "id": 348,
+    "model": "desert_eagle",
+    "txd": "desert_eagle",
+    "anim_block": "python",
+    "tier": "gamemode"
+   },
+   {
+    "id": 349,
+    "model": "chromegun",
+    "txd": "chromegun",
+    "anim_block": "shotgun",
+    "tier": "gamemode"
+   },
+   {
+    "id": 350,
+    "model": "sawnoff",
+    "txd": "sawnoff",
+    "anim_block": "colt45",
+    "tier": "defined"
+   },
+   {
+    "id": 351,
+    "model": "shotgspa",
+    "txd": "shotgspa",
+    "anim_block": "buddy",
+    "tier": "defined"
+   },
+   {
+    "id": 352,
+    "model": "micro_uzi",
+    "txd": "micro_uzi",
+    "anim_block": "colt45",
+    "tier": "defined"
+   },
+   {
+    "id": 353,
+    "model": "mp5lng",
+    "txd": "mp5lng",
+    "anim_block": "uzi",
+    "tier": "gamemode"
+   },
+   {
+    "id": 354,
+    "model": "flare",
+    "txd": "flare",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 355,
+    "model": "ak47",
+    "txd": "ak47",
+    "anim_block": "rifle",
+    "tier": "defined"
+   },
+   {
+    "id": 356,
+    "model": "m4",
+    "txd": "m4",
+    "anim_block": "rifle",
+    "tier": "defined"
+   },
+   {
+    "id": 357,
+    "model": "cuntgun",
+    "txd": "cuntgun",
+    "anim_block": "rifle",
+    "tier": "defined"
+   },
+   {
+    "id": 358,
+    "model": "sniper",
+    "txd": "sniper",
+    "anim_block": "rifle",
+    "tier": "defined"
+   },
+   {
+    "id": 359,
+    "model": "rocketla",
+    "txd": "rocketla",
+    "anim_block": "rocket",
+    "tier": "defined"
+   },
+   {
+    "id": 360,
+    "model": "heatseek",
+    "txd": "heatseek",
+    "anim_block": "rocket",
+    "tier": "defined"
+   },
+   {
+    "id": 361,
+    "model": "flame",
+    "txd": "flame",
+    "anim_block": "flame",
+    "tier": "defined"
+   },
+   {
+    "id": 362,
+    "model": "minigun",
+    "txd": "minigun",
+    "anim_block": "flame",
+    "tier": "defined"
+   },
+   {
+    "id": 363,
+    "model": "satchel",
+    "txd": "satchel",
+    "anim_block": "grenade",
+    "tier": "defined"
+   },
+   {
+    "id": 364,
+    "model": "bomb",
+    "txd": "bomb",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 365,
+    "model": "spraycan",
+    "txd": "spraycan",
+    "anim_block": "spraycan",
+    "tier": "defined"
+   },
+   {
+    "id": 366,
+    "model": "fire_ex",
+    "txd": "fire_ex",
+    "anim_block": "flame",
+    "tier": "defined"
+   },
+   {
+    "id": 367,
+    "model": "camera",
+    "txd": "camera",
+    "anim_block": "rifle",
+    "tier": "gamemode"
+   },
+   {
+    "id": 368,
+    "model": "nvgoggles",
+    "txd": "nvgoggles",
+    "anim_block": "goggles",
+    "tier": "defined"
+   },
+   {
+    "id": 369,
+    "model": "irgoggles",
+    "txd": "irgoggles",
+    "anim_block": "goggles",
+    "tier": "defined"
+   },
+   {
+    "id": 370,
+    "model": "jetpack",
+    "txd": "jetpack",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 371,
+    "model": "gun_para",
+    "txd": "gun_para",
+    "anim_block": "",
+    "tier": "defined"
+   },
+   {
+    "id": 372,
+    "model": "tec9",
+    "txd": "tec9",
+    "anim_block": "colt45",
+    "tier": "defined"
+   },
+   {
+    "id": 373,
+    "model": "armour",
+    "txd": "armour",
+    "anim_block": "",
+    "tier": "defined"
+   }
+  ],
+  "objects": [
+   {
+    "id": 320,
+    "model": "airtrain_vlo",
+    "txd": "generic",
+    "section": "objs",
+    "tier": "defined"
+   },
+   {
+    "id": 1,
+    "model": "csplay",
+    "txd": "player",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 384,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 385,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 386,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 387,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 388,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 389,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 390,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 391,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 392,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 393,
+    "model": "clothes01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 394,
+    "model": "shandl",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 395,
+    "model": "shandr",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 396,
+    "model": "fhandl",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 397,
+    "model": "fhandr",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 300,
+    "model": "cutobj01",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 301,
+    "model": "cutobj02",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 302,
+    "model": "cutobj03",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 303,
+    "model": "cutobj04",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 304,
+    "model": "cutobj05",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 305,
+    "model": "cutobj06",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 306,
+    "model": "cutobj07",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 307,
+    "model": "cutobj08",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 308,
+    "model": "cutobj09",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 309,
+    "model": "cutobj10",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 310,
+    "model": "cutobj11",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 311,
+    "model": "cutobj12",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 312,
+    "model": "cutobj13",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 313,
+    "model": "cutobj14",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 314,
+    "model": "cutobj15",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 315,
+    "model": "cutobj16",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 316,
+    "model": "cutobj17",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 317,
+    "model": "cutobj18",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 318,
+    "model": "cutobj19",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   },
+   {
+    "id": 319,
+    "model": "cutobj20",
+    "txd": "generic",
+    "section": "hier",
+    "tier": "defined"
+   }
+  ]
+ },
+ "gamemode_objects": [
+  {
+   "id": 1210,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1239,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1240,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1247,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1254,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1272,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1273,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1274,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 1275,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  },
+  {
+   "id": 2936,
+   "note": "used by the gamemode but not declared in default.ide; needs an objs line in one of your map IDE files plus its model"
+  }
+ ]
+}
