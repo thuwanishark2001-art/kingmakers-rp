@@ -39,6 +39,13 @@ KM_CONTENT_ZIP_OUT="$SERVICE_DIR/backend/public/downloads/kingmakers_content_pac
     python3 "$REPO_DIR/backend/build_content_pack.py"
 rm -f "$SERVICE_DIR/backend/public/downloads"/kingmakers_full_game_cache_* \
       "$SERVICE_DIR/backend/public/downloads"/kingmakers_game_cache_*
+# APKs/bundles are now served from the GitHub release; drop old local copies so
+# /downloads/ redirects there instead of serving a stale build.
+rm -f "$SERVICE_DIR/backend/public/downloads"/Kingmakers_RP_Standalone_v1.0.apk \
+      "$SERVICE_DIR/backend/public/downloads"/Kingmakers_RP_Launcher_v1.0.apk \
+      "$SERVICE_DIR/backend/public/downloads"/Kingmakers_RP_Split_APKs_v1.0.zip \
+      "$SERVICE_DIR/backend/public/downloads"/apks.zip \
+      "$SERVICE_DIR/backend/public/downloads"/Kingmakers_RP_AppBundle_v1.0.aab
 
 # 4. Fix permissions and executable flags
 echo "[4/5] Updating user permissions and executable flags..."
