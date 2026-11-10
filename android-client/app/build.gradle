@@ -56,14 +56,22 @@ android {
         pickFirst '**/libc++_shared.so'
     }
 
+    // Release signing comes from the environment (GitHub Actions secrets in CI).
+    // Never commit the keystore or its passwords. Without these variables the
+    // release build is left unsigned and CI signs it afterwards.
+    def releaseKeystore = System.getenv("ANDROID_KEYSTORE_FILE")
+    def hasReleaseSigning = releaseKeystore && file(releaseKeystore).exists()
+
     signingConfigs {
-        release {
-            storeFile file("../keystore/release.keystore")
-            storePassword "kingmakers"
-            keyAlias "kingmakers"
-            keyPassword "kingmakers"
-            v1SigningEnabled true
-            v2SigningEnabled true
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(releaseKeystore)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                v1SigningEnabled true
+                v2SigningEnabled true
+            }
         }
     }
 
@@ -77,7 +85,9 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
         }
         debug {
