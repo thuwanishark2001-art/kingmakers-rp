@@ -70,7 +70,7 @@ class RadialMenu : NativeGui<CircularCarMenuBinding>(CircularCarMenuBinding::cla
     }
 
     override fun receivePacket(actionId: Int, data: String) {
-        TODO("Not yet implemented")
+        // No server packets handled by this screen yet; ignore instead of crashing.
     }
 
     fun update(lock: Boolean, engine: Boolean, light: Boolean, nightLight: Boolean, strob: Boolean, neon: Boolean, bonnet: Boolean, boot: Boolean) {
