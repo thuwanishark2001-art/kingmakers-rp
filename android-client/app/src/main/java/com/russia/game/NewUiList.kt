@@ -64,15 +64,14 @@ object NewUiList {
             if (actionId == ACTION_DESTROY) {
                 deleteIfExists(uiId)
             }
-            if(actionId == ACTION_HIDE){
+            else if(actionId == ACTION_HIDE){
                 val instance = getInstance<NativeGui<*>>(uiId)
                 instance?.toggle(false)
             }
-            if(actionId == ACTION_SHOW){
+            else if(actionId == ACTION_SHOW){
                 val instance = getInstance<NativeGui<*>>(uiId)
                 instance?.toggle(true)
             }
-
             else {
                 val instance = getInstance<NativeGui<*>>(uiId) ?: return@runOnUiThread
 

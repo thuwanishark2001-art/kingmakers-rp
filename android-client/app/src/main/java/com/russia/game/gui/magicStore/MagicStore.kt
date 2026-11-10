@@ -122,7 +122,7 @@ class MagicStore : NativeGui<MagicStoreBinding>(MagicStoreBinding::class), Magic
     }
 
     override fun receivePacket(actionId: Int, data: String) {
-        TODO("Not yet implemented")
+        // No server packets handled by this screen yet; ignore instead of crashing.
     }
 
     override fun onToggleButtons(toggle: Boolean) {
