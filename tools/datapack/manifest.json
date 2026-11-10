@@ -114,6 +114,47 @@
    "index": "texdb/menu/menu.txt"
   }
  ],
+ "optional_texture_databases": [
+  {
+   "name": "samp",
+   "path": "texdb/samp/",
+   "index": "texdb/samp/samp.txt",
+   "note": "client UI textures; loaded only when present"
+  },
+  {
+   "name": "gui",
+   "path": "texdb/gui/",
+   "index": "texdb/gui/gui.txt",
+   "note": "client UI textures; loaded only when present"
+  }
+ ],
+ "client_textures": {
+  "gui": [
+   "icon_towtruck",
+   "keyboard_icon",
+   "mute_icon",
+   "speaker_icon"
+  ],
+  "mobile": [
+   "hud_enterandexit"
+  ],
+  "samp": [
+   "afk_icon",
+   "neonaper3",
+   "plate_bu",
+   "plate_kz",
+   "plate_ru",
+   "plate_ru_police",
+   "plate_ua"
+  ],
+  "txd": [
+   "headlight_l",
+   "hud_bg",
+   "nomer",
+   "siteM16",
+   "sniperCross"
+  ]
+ },
  "animation_blocks": [
   {
    "block": "attractors",

@@ -81,6 +81,11 @@ gamemode to match, then re-run `gen_manifest.py`.
   files inside the IMG. This tool copies databases you have already built and
   checks that each one exists; it does not build them or check that every
   texture a model needs is inside.
+- **Client UI textures.** The client looks up some textures by name
+  (`client_textures` in the manifest): a few in `txd`, `mobile` and `gta3`,
+  and its own icons in the optional `samp` and `gui` databases, which are
+  loaded only when present. A missing one shows a fallback or nothing; it is
+  not checked here.
 - **Animations.** Names are checked in `ANP3` blocks only. The skeleton and
   bone ids your animations use must match your ped models; that is not checked.
 - **Model contents.** A `.dff` is checked for presence, not for being a valid

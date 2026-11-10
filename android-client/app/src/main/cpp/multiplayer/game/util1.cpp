@@ -2036,15 +2036,24 @@ void CUtil::RenderEntity(CEntity* entity)
 
 RwTexture* CUtil::GetTexture(const char* name)
 {
+#if VER_SAMP
+    static const char* const szFallback = "ahoodfence2";
+#else
+    static const char* const szFallback = "RepairLR";
+#endif
+
     auto tex = TextureDatabaseRuntime::GetTexture(name);
     if (!tex)
     {
-#if VER_SAMP
-        tex = LoadTextureFromDB("gta3", "ahoodfence2");
-#else
-        tex = CUtil::LoadTextureFromDB("gta3" , "RepairLR");
-#endif
-        Log("WARNING! No tex = %s", name);
+        Log("WARNING! No tex = %s", name ? name : "(null)");
+
+        // The fallback itself is missing (data package without it): stop here.
+        // Looking it up again would recurse until the stack overflows.
+        if (name && strcasecmp(name, szFallback) == 0)
+            return nullptr;
+
+        // Already reference-counted by the nested lookup; nullptr if gta3 has no fallback
+        return LoadTextureFromDB("gta3", szFallback);
     }
     ++tex->refCount;
 
