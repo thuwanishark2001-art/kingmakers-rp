@@ -13,15 +13,15 @@
 extern CGUI* pGUI;
 
 char CLocalisation::m_szMessages[E_MSG::MSG_COUNT][MAX_LOCALISATION_LENGTH] = {
-	"{bbbbbb}Соединение к LIVE RUSSIA{ffffff}",
-	"{bbbbbb}Соединено. Подготовка к игре...{ffffff}",
-	"{bbbbbb}Сервер прервал соединение{ffffff}",
-	"{ff0000}Некоторые файлы были модифицированы, переустановите клиент{ffffff}",
+	"{bbbbbb}Connecting to Kingmakers RP...{ffffff}",
+	"{bbbbbb}Connected. Preparing the game...{ffffff}",
+	"{bbbbbb}The server closed the connection{ffffff}",
+	"{ff0000}Some game files were modified, reinstall the client{ffffff}",
 	"{bbbbbb}unused{ffffff}",
-	"{ff0000}Вас отсоединило от сервера. Перезайдите в игру{ffffff}",
-	"{bbbbbb}Сервер не отвечает. Повторное соединение...{ffffff}",
-	"{bbbbbb}Проблемы с сетью, переподключение...{ffffff}",
-	"{bbbbbb}Сервер полон{ffffff}"};
+	"{ff0000}You were disconnected from the server. Restart the game{ffffff}",
+	"{bbbbbb}Server is not responding. Reconnecting...{ffffff}",
+	"{bbbbbb}Network problems, reconnecting...{ffffff}",
+	"{bbbbbb}Server is full{ffffff}"};
 
 
 void CLocalisation::Initialise()

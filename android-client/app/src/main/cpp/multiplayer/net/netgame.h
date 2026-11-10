@@ -189,6 +189,7 @@ private:
 
 	void UpdateNetwork();
 	void packetAuthKey(Packet *pkt);
+	void OnConnectFailed(const char *szReason);
 	void Packet_DisconnectionNotification(Packet *p);
 	void Packet_ConnectionLost(Packet *p);
 	void Packet_ConnectionSucceeded(Packet *p);
