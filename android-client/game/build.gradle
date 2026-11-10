@@ -1,0 +1,14 @@
+// Install-time asset pack "game": our own Kingmakers content (GUI, fonts, SAMP
+// scripts, server config). Bundletool emits it as the "game" split, which the
+// release packager ships as split_game.apk. Install-time packs are merged into
+// the app's AssetManager, so the content stays readable at assets/game/...
+plugins {
+    id 'com.android.asset-pack'
+}
+
+assetPack {
+    packName = "game"
+    dynamicDelivery {
+        deliveryType = "install-time"
+    }
+}
