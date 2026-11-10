@@ -44,8 +44,13 @@ unsigned char GetPacketID(Packet *p) {
 CNetGame::CNetGame(const char *szHostOrIp, int iPort, const char *szPlayerName,
                    const char *szPass) {
     strcpy(m_szHostName, "San Andreas Multiplayer");
-    strncpy(m_szHostOrIp, szHostOrIp, sizeof(m_szHostOrIp));
-    m_iPort = iPort;
+    // Never trust settings.ini: a null/empty host or bad port must not reach RakNet
+    if (!szHostOrIp || szHostOrIp[0] == '\0') szHostOrIp = "139.180.185.57";
+    if (!szPlayerName) szPlayerName = "King_Maker";
+    if (!szPass) szPass = "";
+    strncpy(m_szHostOrIp, szHostOrIp, sizeof(m_szHostOrIp) - 1);
+    m_szHostOrIp[sizeof(m_szHostOrIp) - 1] = '\0';
+    m_iPort = (iPort > 0 && iPort <= 65535) ? iPort : 7777;
 
     CVehiclePool::Init();
     CTextDrawPool::Init();
@@ -89,6 +94,47 @@ CNetGame::CNetGame(const char *szHostOrIp, int iPort, const char *szPlayerName,
 }
 
 #include "../voice/Network.h"
+#include "java_systems/Notification.h"
+
+// ---- Connection failure handling -------------------------------------------
+// Consecutive failed attempts since the last successful connect. Retries back
+// off (3s -> 30s) and the player gets an on-screen error instead of a silent
+// loop or a crash when the server is unreachable.
+static uint32_t g_uFailedConnects = 0;
+static constexpr uint32_t CONNECT_RETRY_MIN_MS = 3000;
+static constexpr uint32_t CONNECT_RETRY_MAX_MS = 30000;
+static constexpr uint32_t CONNECT_FAILS_BEFORE_ERROR = 3;
+
+static uint32_t ConnectRetryDelay() {
+    uint32_t shift = g_uFailedConnects < 4 ? g_uFailedConnects : 4;
+    uint32_t delay = CONNECT_RETRY_MIN_MS << shift;
+    return delay > CONNECT_RETRY_MAX_MS ? CONNECT_RETRY_MAX_MS : delay;
+}
+
+static void ShowConnectError(const char *szHost, int iPort, const char *szReason) {
+    char szMsg[200];
+    snprintf(szMsg, sizeof(szMsg), "{ff4b4b}%s (%s:%d). Retrying in %u s...{ffffff}",
+             szReason, szHost, iPort, ConnectRetryDelay() / 1000);
+    CChatWindow::AddMessage((char *) "%s", szMsg);
+
+    // Full on-screen error once it is clearly not a blip
+    if (g_uFailedConnects == CONNECT_FAILS_BEFORE_ERROR && CNotification::thiz) {
+        snprintf(szMsg, sizeof(szMsg),
+                 "Cannot reach the Kingmakers RP server (%s:%d). Check your internet connection. Still retrying...",
+                 szHost, iPort);
+        CNotification::show(0, szMsg, 10, -1, "", "");
+    }
+}
+
+void CNetGame::OnConnectFailed(const char *szReason) {
+    g_uFailedConnects++;
+    Log("Connect failed #%u: %s (%s:%d)", g_uFailedConnects, szReason, m_szHostOrIp, m_iPort);
+    if (m_pRakClient) m_pRakClient->Disconnect(0);
+    ShowConnectError(m_szHostOrIp, m_iPort, szReason);
+    m_dwLastConnectAttempt = GetTickCount();
+    SetGameState(eNetworkState::WAIT_CONNECT);
+}
+
 CNetGame::~CNetGame() {
     Log("CNetGame::~CNetGame()");
 
@@ -177,34 +223,52 @@ void CNetGame::Process() {
     }
 
     if (GetGameState() == eNetworkState::WAIT_CONNECT &&
-        (GetTickCount() - m_dwLastConnectAttempt) > 3000) {
+        (GetTickCount() - m_dwLastConnectAttempt) > ConnectRetryDelay()) {
         CChatWindow::AddMessage(CLocalisation::GetMessage(E_MSG::CONNECTING));
 
-        m_pRakClient->Connect(m_szHostOrIp, m_iPort, 0, 0, 5);
-        Voice::Network::OnRaknetConnect(m_szHostOrIp, m_iPort);
         m_dwLastConnectAttempt = GetTickCount();
-        SetGameState(eNetworkState::CONNECTING);
+        // Connect() returns false when the socket cannot be opened or the host
+        // does not resolve (no network, bad address) - no packet ever arrives then
+        if (m_pRakClient && m_pRakClient->Connect(m_szHostOrIp, m_iPort, 0, 0, 5)) {
+            Voice::Network::OnRaknetConnect(m_szHostOrIp, m_iPort);
+            SetGameState(eNetworkState::CONNECTING);
+        } else {
+            OnConnectFailed("No network or invalid server address");
+        }
+    }
+
+    // RakNet reports a failed attempt itself, but never leave the client stuck
+    // in CONNECTING if that packet is lost
+    if (GetGameState() == eNetworkState::CONNECTING &&
+        (GetTickCount() - m_dwLastConnectAttempt) > 20000) {
+        OnConnectFailed("Server is not responding");
     }
 
 }
 
 void CNetGame::UpdateNetwork()
 {
+    if (!m_pRakClient) return;
+
     while (auto pkt = m_pRakClient->Receive())
     {
+        // Malformed/empty datagram: nothing to dispatch on
+        if (!pkt->data || pkt->length < 1) {
+            m_pRakClient->DeallocatePacket(pkt);
+            continue;
+        }
+
         switch (GetPacketID(pkt)) {
             case ID_AUTH_KEY:
                 packetAuthKey(pkt);
                 break;
 
             case ID_CONNECTION_ATTEMPT_FAILED:
-                CChatWindow::AddMessage(CLocalisation::GetMessage(E_MSG::CONNECTION_ATTEMPT_FAILED));
-                SetGameState(eNetworkState::WAIT_CONNECT);
+                OnConnectFailed("Server is not responding");
                 break;
 
             case ID_NO_FREE_INCOMING_CONNECTIONS:
-                CChatWindow::AddMessage("������ �����...");
-                SetGameState(eNetworkState::WAIT_CONNECT);
+                OnConnectFailed("Server is full");
                 break;
 
             case ID_DISCONNECTION_NOTIFICATION:
@@ -1469,8 +1533,11 @@ void CNetGame::packetAuthKey(Packet *pkt) {
     char szAuth[260];
 
     bsAuth.IgnoreBits(8);
-    bsAuth.Read(byteAuthLen);
-    bsAuth.Read(szAuth, byteAuthLen);
+    if (!bsAuth.Read(byteAuthLen) || byteAuthLen == 0 ||
+        !bsAuth.Read(szAuth, byteAuthLen)) {
+        OnConnectFailed("Bad handshake from server");
+        return;
+    }
     szAuth[byteAuthLen] = '\0';
 
     /*
@@ -1478,6 +1545,11 @@ void CNetGame::packetAuthKey(Packet *pkt) {
      * The method below works in samp and omp but does not work in ndk 26+
      */
     auto szAuthKey = findKey(szAuth);
+    if (!szAuthKey) {
+        // Unknown challenge: findKey() returns nullptr and strlen() below would crash
+        OnConnectFailed("Server handshake not supported by this client");
+        return;
+    }
 //    char szAuthKey[260];
 //    gen_auth_key(szAuthKey, szAuth);
 
@@ -1509,6 +1581,7 @@ void CNetGame::Packet_ConnectionLost(Packet *pkt) {
 #include <sstream>
 
 void CNetGame::Packet_ConnectionSucceeded(Packet *pkt) {
+    g_uFailedConnects = 0;
     CChatWindow::AddMessage(CLocalisation::GetMessage(E_MSG::CONNECTED));
     SetGameState(eNetworkState::AWAIT_JOIN);
 
