@@ -166,6 +166,7 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 
 	// 6. Return stFile if opened
 	if (f) {
+		Log("[file] OK   %s", path);
 #if VER_x32
 		auto *st = (stFile*)malloc(8);
 #else
@@ -188,7 +189,7 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 		if (origRes) return origRes;
 	}
 
-	Log("NVFOpen hook | Error: file not found (%s)", r1);
+	Log("[file] MISS %s", r1);
 	return nullptr;
 }
 
@@ -373,7 +374,7 @@ signed int OS_FileOpen_hook(unsigned int a1, OSFile *intoFile, const char *filen
     }
 
     signed int result = OS_FileOpen(a1, intoFile, cleanPath, a4);
-    if (result == 0) return 0;
+    if (result == 0) { Log("[file] OK   %s", cleanPath); return 0; }
 
     // 2. Try lowercase variant for Linux ext4
     char lowerPath[512];
@@ -383,7 +384,7 @@ signed int OS_FileOpen_hook(unsigned int a1, OSFile *intoFile, const char *filen
         *p = tolower((unsigned char)*p);
     }
     result = OS_FileOpen(a1, intoFile, lowerPath, a4);
-    if (result == 0) return 0;
+    if (result == 0) { Log("[file] OK   %s", lowerPath); return 0; }
 
     // 3. Try canonical fallback subpaths
     const char* subPath = nullptr;
@@ -405,10 +406,12 @@ signed int OS_FileOpen_hook(unsigned int a1, OSFile *intoFile, const char *filen
 
     if (subPath) {
         result = OS_FileOpen(a1, intoFile, subPath, a4);
-        if (result == 0) return 0;
+        if (result == 0) { Log("[file] OK   %s (as %s)", cleanPath, subPath); return 0; }
     }
 
-    return OS_FileOpen(a1, intoFile, filename, a4);
+    result = OS_FileOpen(a1, intoFile, filename, a4);
+    Log(result == 0 ? "[file] OK   %s" : "[file] MISS %s", filename);
+    return result;
 }
 
 size_t (*OS_FileRead)(OSFile a1, void *buffer, size_t numBytes);
