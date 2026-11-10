@@ -259,6 +259,24 @@ app.get('/api/launcher/config', (req, res) => {
         }
         if (contentPackSha256) break;
     }
+
+    // Kingmakers RP data package (tools/datapack/build_datapack.py): our own full game
+    // data. Offered only when both the zip and its checksum are in place; the launcher
+    // then downloads it instead of asking for the player's GTA: San Andreas data.
+    const dataPackName = 'kingmakers_data_pack_v1.zip';
+    let dataPack = null;
+    for (const d of searchDirs) {
+        const zipPath = path.join(d, dataPackName);
+        const shaPath = zipPath + '.sha256';
+        if (!fs.existsSync(zipPath) || !fs.existsSync(shaPath)) continue;
+        try {
+            const sha = fs.readFileSync(shaPath, 'utf8').trim().split(/\s+/)[0];
+            if (/^[0-9a-f]{64}$/i.test(sha)) {
+                dataPack = { sha, sizeMb: parseFloat((fs.statSync(zipPath).size / (1024 * 1024)).toFixed(1)) };
+                break;
+            }
+        } catch (e) {}
+    }
     res.json({
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
@@ -271,7 +289,10 @@ app.get('/api/launcher/config', (req, res) => {
         contentPackUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/${packName}`,
         contentPackSizeMb,
         contentPackSha256,
-        requiresOwnedGameData: true,
+        dataPackUrl: dataPack ? `http://${PUBLIC_HOST}:${PORT}/downloads/${dataPackName}` : '',
+        dataPackSizeMb: dataPack ? dataPack.sizeMb : 0,
+        dataPackSha256: dataPack ? dataPack.sha : '',
+        requiresOwnedGameData: !dataPack,
         defaultServer: {
             name: 'Kingmakers RP #1 [Los Santos]',
             ip: PUBLIC_HOST,

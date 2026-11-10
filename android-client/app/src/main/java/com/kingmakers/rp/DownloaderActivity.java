@@ -59,7 +59,7 @@ public class DownloaderActivity extends AppCompatActivity {
     private static final int REQ_STORAGE = 4101;
     private static final String CONTENT_MARKER = "kingmakers/.content_pack";
 
-    private enum Step { CHECKING, NEED_GAME_DATA, IMPORT_FOUND, NEED_CONTENT, READY, BUSY }
+    private enum Step { CHECKING, NEED_GAME_DATA, DATA_PACK_OFFER, IMPORT_FOUND, NEED_CONTENT, READY, BUSY }
 
     private ProgressBar progressBar;
     private TextView textTitle;
@@ -77,6 +77,11 @@ public class DownloaderActivity extends AppCompatActivity {
     private List<File> foundObbs = new ArrayList<>();
     private boolean foundObbsAreDropIn = false;
     private boolean storagePermissionAsked = false;
+
+    // Kingmakers data package offered by the server (empty url = not offered)
+    private String dataPackUrl = "";
+    private String dataPackSha256 = "";
+    private double dataPackSizeMb = 0;
 
     private ActivityResultLauncher<String[]> pickObbLauncher;
 
@@ -142,7 +147,11 @@ public class DownloaderActivity extends AppCompatActivity {
                 uris -> { if (uris != null && !uris.isEmpty()) importPickedFiles(uris); });
 
         btnAction.setOnClickListener(v -> onActionClicked());
-        btnPick.setOnClickListener(v -> openObbPicker());
+        btnPick.setOnClickListener(v -> {
+            // On the data package offer the secondary button switches to "use my own GTA SA"
+            if (step == Step.DATA_PACK_OFFER && !foundObbs.isEmpty()) showFoundInstallation(foundObbs);
+            else openObbPicker();
+        });
 
         checkState();
     }
@@ -163,6 +172,7 @@ public class DownloaderActivity extends AppCompatActivity {
     private void onActionClicked() {
         switch (step) {
             case NEED_GAME_DATA: openObbPicker(); break;
+            case DATA_PACK_OFFER: downloadDataPack(); break;
             case IMPORT_FOUND:   importInstalledObbs(); break;
             case NEED_CONTENT:   downloadContentPack(); break;
             case READY:          launchGame(); break;
@@ -186,12 +196,18 @@ public class DownloaderActivity extends AppCompatActivity {
                 List<File> dropIn = GameDataManager.findDropInObbs(dir);
                 boolean isDropIn = !dropIn.isEmpty();
                 List<File> obbs = isDropIn ? dropIn : GameDataManager.findInstalledObbs();
+                boolean packOffered = !isDropIn && queryDataPack();
                 runOnUiThread(() -> {
                     if (isDropIn) {
                         // Placed in our own folder (adb / Termux helper): import straight away
                         foundObbs = obbs;
                         foundObbsAreDropIn = true;
                         importInstalledObbs();
+                    } else if (packOffered) {
+                        // The server ships its own data package: no GTA SA needed
+                        foundObbs = obbs;
+                        foundObbsAreDropIn = false;
+                        showDataPackOffer();
                     } else if (!obbs.isEmpty()) {
                         foundObbs = obbs;
                         foundObbsAreDropIn = false;
@@ -252,6 +268,7 @@ public class DownloaderActivity extends AppCompatActivity {
         progressBar.setProgress(0);
         btnAction.setEnabled(true);
         btnAction.setText("IMPORT GAME DATA");
+        btnPick.setText("SELECT GTA SA OBB FILE");
         btnPick.setVisibility(View.VISIBLE);
     }
 
@@ -273,6 +290,20 @@ public class DownloaderActivity extends AppCompatActivity {
         btnAction.setEnabled(true);
         btnAction.setText("SELECT GTA SA OBB FILE");
         btnPick.setVisibility(View.GONE);
+    }
+
+    private void showDataPackOffer() {
+        step = Step.DATA_PACK_OFFER;
+        textTitle.setText("KINGMAKERS RP GAME DATA");
+        textStatus.setText(String.format(
+                "Download the Kingmakers RP game data (%.0f MB) to play.\n" +
+                "Wi-Fi is recommended. An interrupted download continues where it stopped.",
+                dataPackSizeMb));
+        progressBar.setProgress(0);
+        btnAction.setEnabled(true);
+        btnAction.setText("DOWNLOAD GAME DATA");
+        btnPick.setText("USE MY OWN GTA SA INSTEAD");
+        btnPick.setVisibility(View.VISIBLE);
     }
 
     private void showNeedContent() {
@@ -405,6 +436,93 @@ public class DownloaderActivity extends AppCompatActivity {
             if (c != null && c.moveToFirst() && !c.isNull(0)) return c.getLong(0);
         } catch (Exception ignored) {}
         return -1;
+    }
+
+    // ------------------------------------------------------------------
+    // Kingmakers RP data package (replaces the player's own GTA SA data)
+    // ------------------------------------------------------------------
+
+    /** Asks the server whether it offers a data package. Runs on the worker thread. */
+    private boolean queryDataPack() {
+        dataPackUrl = "";
+        try {
+            String apiUrl = getString(R.string.backend_api_url) + "/api/launcher/config";
+            try (Response res = httpClient.newCall(new Request.Builder().url(apiUrl).build()).execute()) {
+                if (!res.isSuccessful() || res.body() == null) return false;
+                JSONObject cfg = new JSONObject(res.body().string());
+                String url = cfg.optString("dataPackUrl", "");
+                String sha = cfg.optString("dataPackSha256", "");
+                // Never install a package the server cannot vouch for with a checksum
+                if (url.isEmpty() || sha.isEmpty()) return false;
+                dataPackUrl = url;
+                dataPackSha256 = sha;
+                dataPackSizeMb = cfg.optDouble("dataPackSizeMb", 0);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;   // offline or old server: fall back to the own-GTA-SA path
+        }
+    }
+
+    private void downloadDataPack() {
+        final String url = dataPackUrl;
+        final String sha = dataPackSha256;
+        final double sizeMb = dataPackSizeMb;
+        setBusy("DOWNLOADING GAME DATA", "Starting download...");
+        progressBar.setProgress(0);
+
+        executor.execute(() -> {
+            File dir = getGameStorageDir(this);
+            File cacheDir = getExternalCacheDir() != null ? getExternalCacheDir() : getCacheDir();
+            File packZip = new File(cacheDir, "km_data_pack.zip");
+            try {
+                // The zip and its extracted copy exist side by side until the import finishes
+                long alreadyHave = packZip.exists() ? packZip.length() : 0;
+                long needBytes = (long) (sizeMb * 2 * 1024 * 1024) - alreadyHave;
+                if (sizeMb > 0 && dir.getUsableSpace() < needBytes) {
+                    throw new Exception(String.format("Not enough free storage: %.0f MB needed, %.0f MB free.",
+                            needBytes / (1024.0 * 1024.0), dir.getUsableSpace() / (1024.0 * 1024.0)));
+                }
+
+                PackDownloader.download(url, packZip, sha, (done, total) -> runOnUiThread(() -> {
+                    int pct = total > 0 ? (int) Math.min(99, done * 100 / total) : 0;
+                    progressBar.setProgress(pct);
+                    textStatus.setText(String.format("Downloading: %.0f MB / %.0f MB (%d%%)",
+                            done / (1024.0 * 1024.0), total / (1024.0 * 1024.0), pct));
+                }));
+
+                runOnUiThread(() -> {
+                    textTitle.setText("INSTALLING GAME DATA");
+                    progressBar.setProgress(0);
+                });
+                try (InputStream in = new FileInputStream(packZip)) {
+                    GameDataManager.importArchive(in, packZip.length(), dir, progressListener("game data"));
+                }
+                packZip.delete();
+
+                GameDataManager.Result result = GameDataManager.validate(dir);
+                runOnUiThread(() -> {
+                    if (result.isValid()) {
+                        checkState();
+                    } else {
+                        showDataPackOffer();
+                        new AlertDialog.Builder(this)
+                                .setTitle("Game data incomplete")
+                                .setMessage("The downloaded game data is missing files:\n\n" + result.describe()
+                                        + "\n\nThis is a problem with the server's package. Please report it to the "
+                                        + "Kingmakers RP team.")
+                                .setPositiveButton("OK", null)
+                                .show();
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    showDataPackOffer();
+                    btnAction.setText("RETRY DOWNLOAD");
+                    textStatus.setText("Error: " + e.getMessage());
+                });
+            }
+        });
     }
 
     // ------------------------------------------------------------------

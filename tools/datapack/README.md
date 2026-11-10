@@ -28,6 +28,27 @@ python3 tools/datapack/build_datapack.py build datapack-src \
 `build` refuses to produce a package while required items are missing.
 `--allow-incomplete` makes a test package anyway; it will not run a full game.
 
+## Publishing the package
+
+The launcher offers the package as soon as the backend finds both files in
+its downloads folder:
+
+```
+backend/public/downloads/kingmakers_data_pack_v1.zip
+backend/public/downloads/kingmakers_data_pack_v1.zip.sha256
+```
+
+`build ... -o backend/public/downloads/kingmakers_data_pack_v1.zip` writes
+both. They are not committed to git (too large), so build or upload them on
+the VPS, in the service directory's `backend/public/downloads/`.
+`/api/launcher/config` then returns `dataPackUrl`, `dataPackSizeMb` and
+`dataPackSha256`, and players see "DOWNLOAD GAME DATA" instead of the GTA: San
+Andreas import. Remove either file to switch the offer off again.
+
+The launcher resumes interrupted downloads, verifies the checksum, runs the
+same data check as for an imported GTA SA, and refuses to start the game if
+the package is incomplete. Do not publish a `--allow-incomplete` build.
+
 ## Source layout
 
 ```
