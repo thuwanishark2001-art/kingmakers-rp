@@ -47,7 +47,7 @@ jobs:
         run: |
           chmod +x gradlew
           set -o pipefail
-          ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
+          ./gradlew bundleRelease --no-daemon --stacktrace 2>&1 | tee /tmp/build_log.txt || {
             echo "## ❌ Gradle Build Error Details" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             grep -B 5 -A 25 "FAILURE:" /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY || tail -n 80 /tmp/build_log.txt >> $GITHUB_STEP_SUMMARY
@@ -59,10 +59,7 @@ jobs:
         run: |
           mkdir -p build-out/split_apks /tmp/extracted_splits
           
-          # 1. Monolithic APK
-          cp android-client/app/build/outputs/apk/release/*.apk build-out/Kingmakers_RP_Standalone_v1.0.apk
-          
-          # 2. Android App Bundle (.aab)
+          # 1. Android App Bundle (.aab) - includes the ":game" install-time asset pack
           cp android-client/app/build/outputs/bundle/release/*.aab build-out/Kingmakers_RP_AppBundle_v1.0.aab
           
           # 3. Download Google Bundletool and Uber APK Signer
@@ -81,6 +78,18 @@ jobs:
             --ks-pass=pass:kingmakers \
             --ks-key-alias=kingmakers \
             --key-pass=pass:kingmakers
+
+          # 5b. Monolithic Standalone APK from the bundle (universal mode merges the
+          #     "game" asset pack in; assembleRelease would leave it out)
+          java -jar /tmp/bundletool.jar build-apks \
+            --bundle=build-out/Kingmakers_RP_AppBundle_v1.0.aab \
+            --output=/tmp/universal.apks \
+            --mode=universal \
+            --ks="$KEYSTORE" \
+            --ks-pass=pass:kingmakers \
+            --ks-key-alias=kingmakers \
+            --key-pass=pass:kingmakers
+          unzip -p /tmp/universal.apks universal.apk > build-out/Kingmakers_RP_Standalone_v1.0.apk
             
           # 6. Unpack splits and structure into Grand Mobile RP schema
           unzip -q build-out/Kingmakers_RP_Split_Bundle_v1.0.apks -d /tmp/extracted_splits

@@ -4,7 +4,8 @@ Kingmakers RP - Split APK Bundle Packager
 Packages Android App Bundle (AAB) or extracted splits into Grand Mobile RP compatible split bundle:
 - base.apk: Core application, DEX files, activities, resources
 - split_config.arm64_v8a.apk: Native RenderWare GTA SA 2.10 64-bit engine and multiplayer binaries
-- split_game.apk: Engine bytecode (SCM), IDE scripts, asset packages
+- split_game.apk: Kingmakers content from the ":game" install-time asset pack
+  (GUI, fonts, SAMP scripts/IDE, server config) - bundletool's game-master.apk
 - split_config.xhdpi.apk: Screen density graphical resources
 - split_config.en.apk: Language localization resources
 
@@ -52,7 +53,9 @@ def package_splits(splits_dir, output_dir, zip_name="Kingmakers_RP_Split_APKs_v1
         name = os.path.basename(f)
         lower = name.lower()
 
-        if "base-master" in lower or lower == "base.apk" or "standalone" in lower:
+        if lower.startswith("game-") or lower == "split_game.apk":
+            final_splits["split_game.apk"] = f
+        elif "base-master" in lower or lower == "base.apk" or "standalone" in lower:
             final_splits["base.apk"] = f
         elif "arm64" in lower:
             final_splits["split_config.arm64_v8a.apk"] = f
@@ -60,8 +63,6 @@ def package_splits(splits_dir, output_dir, zip_name="Kingmakers_RP_Split_APKs_v1
             final_splits["split_config.xhdpi.apk"] = f
         elif "-en" in lower or "en.apk" in lower:
             final_splits["split_config.en.apk"] = f
-        elif "game" in lower:
-            final_splits["split_game.apk"] = f
         elif "base.apk" not in final_splits and "master" in lower:
             final_splits["base.apk"] = f
 
@@ -78,6 +79,11 @@ def package_splits(splits_dir, output_dir, zip_name="Kingmakers_RP_Split_APKs_v1
             if "arm64" in os.path.basename(f).lower() or "v8a" in os.path.basename(f).lower():
                 final_splits["split_config.arm64_v8a.apk"] = f
                 break
+
+    missing = [n for n in ("base.apk", "split_config.arm64_v8a.apk", "split_game.apk") if n not in final_splits]
+    if missing:
+        print(f"Error: required splits not found: {', '.join(missing)}")
+        sys.exit(1)
 
     print("\nResolved Split Mapping (Grand Mobile RP Schema):")
     for target_name, src_path in final_splits.items():
