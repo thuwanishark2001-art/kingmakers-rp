@@ -223,7 +223,16 @@ public class DownloaderActivity extends AppCompatActivity {
                 return;
             }
 
-            boolean contentInstalled = new File(dir, CONTENT_MARKER).exists();
+            // The APK carries the same Kingmakers content the server pack does, and it was just
+            // extracted above. That is enough to play; the server pack only delivers updates.
+            File marker = new File(dir, CONTENT_MARKER);
+            if (!marker.exists() && new File(dir, "SAMP/peds.ide").exists()) {
+                try {
+                    if (marker.getParentFile() != null) marker.getParentFile().mkdirs();
+                    try (FileWriter fw = new FileWriter(marker, false)) { fw.write("bundled"); }
+                } catch (Exception ignored) {}
+            }
+            boolean contentInstalled = marker.exists();
             runOnUiThread(() -> {
                 if (!contentInstalled) showNeedContent();
                 else showReady();
@@ -323,7 +332,8 @@ public class DownloaderActivity extends AppCompatActivity {
         progressBar.setProgress(100);
         btnAction.setEnabled(true);
         btnAction.setText("PLAY NOW");
-        btnPick.setVisibility(View.GONE);
+        btnPick.setText("REPLACE GAME DATA");
+        btnPick.setVisibility(View.VISIBLE);
     }
 
     private void showValidationFailure(GameDataManager.Result result) {
@@ -741,6 +751,7 @@ public class DownloaderActivity extends AppCompatActivity {
         }
         try {
             ensureGameFiles(this, playerNick, serverIp, serverPort);
+            DebugLog.startNewRun(this);
 
             Intent gameIntent = new Intent(this, com.russia.game.core.Samp.class);
             gameIntent.putExtra("player_name", playerNick);

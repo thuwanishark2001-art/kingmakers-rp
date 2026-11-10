@@ -148,6 +148,17 @@
                 android:text="Settings"
                 android:textColor="@color/km_white"
                 android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCopyLog"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2C2D3E"
+                android:text="Copy log"
+                android:textColor="@color/km_white"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 

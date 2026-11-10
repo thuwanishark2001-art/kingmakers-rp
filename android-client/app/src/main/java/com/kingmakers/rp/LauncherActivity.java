@@ -76,6 +76,24 @@ public class LauncherActivity extends AppCompatActivity {
         btnSettings.setOnClickListener(v -> {
             startActivity(new Intent(this, SettingsActivity.class));
         });
+        // Testers cannot reach the game folder on recent Android: copy the log summary instead
+        findViewById(R.id.btnCopyLog).setOnClickListener(v -> {
+            try {
+                int chars = DebugLog.copyToClipboard(this);
+                Toast.makeText(this, "Debug log copied (" + chars + " characters). Paste it in the chat.",
+                        Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "Could not copy the log: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Long-press: reopen game data setup, to import a newer data file over the current one
+        findViewById(R.id.btnCopyLog).setOnLongClickListener(v -> {
+            Intent dIntent = new Intent(this, DownloaderActivity.class);
+            dIntent.putExtra("nick", editNickname.getText().toString().trim());
+            startActivity(dIntent);
+            return true;
+        });
 
         fetchServerStatus();
     }
@@ -118,6 +136,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void launchGameClient(String nick, String ip, int port) {
         writeSampSettings(nick, ip, port);
+        DebugLog.startNewRun(this);
 
         try {
             Intent gameIntent = new Intent(this, com.russia.game.core.Samp.class);
