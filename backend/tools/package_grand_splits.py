@@ -46,38 +46,28 @@ def package_splits(splits_dir, output_dir, zip_name="Kingmakers_RP_Split_APKs_v1
     for f in apk_files:
         print(f"  - {os.path.basename(f)} ({os.path.getsize(f) / (1024*1024):.2f} MB)")
 
-    # Mapping logic matching Grand Mobile RP naming convention
-    final_splits = {}
-
+    # Mapping to the Grand Mobile RP naming convention, by exact file name.
+    # bundletool's default mode emits one set of splits per variant: the first
+    # variant has no suffix (base-master.apk), later ones add _2, _3, ...
+    # (base-master_2.apk). Only the suffix-less names are taken, so every split
+    # comes from the same variant and the result does not depend on glob order.
+    # Variant 1 targets the lowest SDK, so it installs on every newer device too.
+    by_name = {}
     for f in apk_files:
-        name = os.path.basename(f)
-        lower = name.lower()
+        by_name.setdefault(os.path.basename(f).lower(), f)
 
-        if lower.startswith("game-") or lower == "split_game.apk":
-            final_splits["split_game.apk"] = f
-        elif "base-master" in lower or lower == "base.apk" or "standalone" in lower:
-            final_splits["base.apk"] = f
-        elif "arm64" in lower:
-            final_splits["split_config.arm64_v8a.apk"] = f
-        elif "xhdpi" in lower or "xxhdpi" in lower:
-            final_splits["split_config.xhdpi.apk"] = f
-        elif "-en" in lower or "en.apk" in lower:
-            final_splits["split_config.en.apk"] = f
-        elif "base.apk" not in final_splits and "master" in lower:
-            final_splits["base.apk"] = f
-
-    # If base.apk was not matched, pick the largest or first master
-    if "base.apk" not in final_splits:
-        for f in apk_files:
-            if "master" in os.path.basename(f).lower():
-                final_splits["base.apk"] = f
-                break
-
-    # If split_config.arm64_v8a.apk not matched
-    if "split_config.arm64_v8a.apk" not in final_splits:
-        for f in apk_files:
-            if "arm64" in os.path.basename(f).lower() or "v8a" in os.path.basename(f).lower():
-                final_splits["split_config.arm64_v8a.apk"] = f
+    candidates = {
+        "base.apk": ["base-master.apk", "base.apk"],
+        "split_config.arm64_v8a.apk": ["base-arm64_v8a.apk", "split_config.arm64_v8a.apk"],
+        "split_config.xhdpi.apk": ["base-xhdpi.apk", "split_config.xhdpi.apk"],
+        "split_config.en.apk": ["base-en.apk", "split_config.en.apk"],
+        "split_game.apk": ["game-master.apk", "split_game.apk"],
+    }
+    final_splits = {}
+    for target_name, names in candidates.items():
+        for n in names:
+            if n in by_name:
+                final_splits[target_name] = by_name[n]
                 break
 
     missing = [n for n in ("base.apk", "split_config.arm64_v8a.apk", "split_game.apk") if n not in final_splits]
