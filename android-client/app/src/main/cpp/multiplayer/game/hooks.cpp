@@ -177,18 +177,10 @@ stFile* NvFOpen(const char* r0, const char* r1, bool r2, bool r3)
 		return st;
 	}
 
-	// 7. Fallback to original NvFOpen inside libGTASA.so
-	if (orig_NvFOpen) {
-		stFile* origRes = orig_NvFOpen(r0, r1, r2, r3);
-		if (origRes) return origRes;
-
-		origRes = orig_NvFOpen(r0, cleanName, r2, r3);
-		if (origRes) return origRes;
-
-		origRes = orig_NvFOpen(r0, lowerName, r2, r3);
-		if (origRes) return origRes;
-	}
-
+	// 7. Not on storage: report the miss to the engine.
+	// Do NOT fall back to the engine's own NvFOpen: it reads from the APK through an
+	// AAssetManager this client never sets up, and crashes inside pthread_mutex_lock
+	// (seen in CFileMgr::Initialise -> ZIP_FileCreate -> "<name>.idx").
 	Log("[file] MISS %s", r1);
 	return nullptr;
 }
