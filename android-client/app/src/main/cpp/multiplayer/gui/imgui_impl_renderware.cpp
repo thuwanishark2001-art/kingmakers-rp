@@ -1,187 +1,212 @@
 #include "../main.h"
 #include "gui.h"
 #include "../game/game.h"
-
 #include "../game/RW/RenderWare.h"
 
-extern CGUI *pGUI;
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <limits>
+#include <memory>
 
 RwRaster* g_FontRaster = nullptr;
 
-#define MAX_VERTEXS 30000
+namespace {
 
-RwIm2DVertex* g_pVB = nullptr; // vertex buffer
-RwIm2DVertex* g_pVBEnd = nullptr;
-unsigned int g_VertexBufferSize = 0;
-ImVec4 g_ScissorRect;
+constexpr size_t kMaxVertices = 30000;
+std::unique_ptr<RwIm2DVertex[]> g_vertices;
+size_t g_vertexCapacity = 0;
+ImVec4 g_scissorRect{};
 
-void ImGui_ImplRenderWare_RenderDrawData(ImDrawData* draw_data)
-{
-	if (g_VertexBufferSize < MAX_VERTEXS)
-	{
-		if (!g_pVB || g_VertexBufferSize < draw_data->TotalVtxCount)
-		{
-			if (g_pVB) { delete[] g_pVB; g_pVB = nullptr; }
-			g_VertexBufferSize = MAX_VERTEXS;
+bool EnsureVertexCapacity(size_t required) {
+    if (required == 0 || required > kMaxVertices) return false;
+    if (g_vertexCapacity >= required) return true;
 
-			if (g_VertexBufferSize >= MAX_VERTEXS)
-			{
-				g_VertexBufferSize = MAX_VERTEXS;
-			}
+    const size_t capacity = std::min(kMaxVertices, std::max(required, g_vertexCapacity ? g_vertexCapacity * 2 : size_t{4096}));
+    std::unique_ptr<RwIm2DVertex[]> fresh(new (std::nothrow) RwIm2DVertex[capacity]);
+    if (!fresh) {
+        Log("GUI | Cannot allocate RenderWare ImGui vertex buffer (%zu vertices)", capacity);
+        return false;
+    }
+    g_vertices = std::move(fresh);
+    g_vertexCapacity = capacity;
+    return true;
+}
 
-			g_pVB = new RwIm2DVertex[g_VertexBufferSize];
-			g_pVBEnd = &g_pVB[g_VertexBufferSize];
-			if (!g_pVB)
-			{
-				Log("GUI | Error: couldn't allocate vertex buffer (size: %d)", g_VertexBufferSize);
-				return;
-			}
-			Log("GUI | Vertex buffer reallocated. Size: %d", g_VertexBufferSize);
-		}
-	}
-	RwIm2DVertex* vtx_dst = g_pVB;
-	int vtx_offset = 0;
+void SetScissor(const ImVec4& clip, const ImVec2& displaySize) {
+    const float x1 = std::clamp(clip.x, 0.0f, displaySize.x);
+    const float y1 = std::clamp(clip.y, 0.0f, displaySize.y);
+    const float x2 = std::clamp(clip.z, 0.0f, displaySize.x);
+    const float y2 = std::clamp(clip.w, 0.0f, displaySize.y);
+    if (x2 <= x1 || y2 <= y1) {
+        g_scissorRect = ImVec4(0, 0, 0, 0);
+    } else {
+        // Existing SetScissorRect expects the native bottom/top ordering.
+        g_scissorRect = ImVec4(x1, y2, x2, y1);
+    }
+    SetScissorRect(&g_scissorRect);
+}
 
-	for(int n = 0; n < draw_data->CmdListsCount; n++)
-	{
-		const ImDrawList* cmd_list = draw_data->CmdLists[n];
-        const ImDrawVert* vtx_src = cmd_list->VtxBuffer.Data;
-        const ImDrawIdx* idx_src = cmd_list->IdxBuffer.Data;
+}  // namespace
 
-		if (vtx_dst >= g_pVBEnd - 1)
-		{
-			return;
-		}
+void ImGui_ImplRenderWare_RenderDrawData(ImDrawData* drawData) {
+    if (drawData == nullptr || drawData->CmdListsCount <= 0 || drawData->TotalVtxCount <= 0) return;
+    if (drawData->TotalVtxCount > static_cast<int>(kMaxVertices) ||
+        !EnsureVertexCapacity(static_cast<size_t>(drawData->TotalVtxCount))) {
+        return;
+    }
 
-        for(int i = 0; i < cmd_list->VtxBuffer.Size; i++)
-        {
-			if (vtx_dst >= g_pVBEnd - 1)
-			{
-				return;
-			}
+    ImGuiIO& io = ImGui::GetIO();
+    const ImVec2 displaySize = io.DisplaySize;
+    if (displaySize.x <= 0.0f || displaySize.y <= 0.0f) return;
 
-        	RwIm2DVertexSetScreenX(vtx_dst, vtx_src->pos.x);
-        	RwIm2DVertexSetScreenY(vtx_dst, vtx_src->pos.y);
-        	RwIm2DVertexSetScreenZ(vtx_dst, CSprite2d::NearScreenZ);
-        	RwIm2DVertexSetRecipCameraZ(vtx_dst, CSprite2d::RecipNearClip);
-        	vtx_dst->emissiveColor = vtx_src->col;
-        	RwIm2DVertexSetU(vtx_dst, vtx_src->uv.x, recipCameraZ);
-        	RwIm2DVertexSetV(vtx_dst, vtx_src->uv.y, recipCameraZ);
+    RwIm2DVertex* const vertexBase = g_vertices.get();
+    size_t vertexOffset = 0;
 
-        	vtx_dst++;
-        	vtx_src++;
+    for (int listIndex = 0; listIndex < drawData->CmdListsCount; ++listIndex) {
+        const ImDrawList* list = drawData->CmdLists[listIndex];
+        if (list == nullptr) continue;
+        const size_t listVertexCount = static_cast<size_t>(list->VtxBuffer.Size);
+        if (vertexOffset + listVertexCount > g_vertexCapacity) return;
+
+        for (size_t i = 0; i < listVertexCount; ++i) {
+            const ImDrawVert& src = list->VtxBuffer[static_cast<int>(i)];
+            RwIm2DVertex* dst = &vertexBase[vertexOffset + i];
+            RwIm2DVertexSetScreenX(dst, src.pos.x);
+            RwIm2DVertexSetScreenY(dst, src.pos.y);
+            RwIm2DVertexSetScreenZ(dst, CSprite2d::NearScreenZ);
+            RwIm2DVertexSetRecipCameraZ(dst, CSprite2d::RecipNearClip);
+            dst->emissiveColor = src.col;
+            RwIm2DVertexSetU(dst, src.uv.x, recipCameraZ);
+            RwIm2DVertexSetV(dst, src.uv.y, recipCameraZ);
         }
-        const ImDrawIdx* idx_buffer = cmd_list->IdxBuffer.Data;
-        for(int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++)
-        {
-        	const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
 
-        	if(pcmd->UserCallback)
-        	{
-        		pcmd->UserCallback(cmd_list, pcmd);
-        	}
-        	else
-        	{
-        		g_ScissorRect.x = pcmd->ClipRect.x;
-        		g_ScissorRect.y = pcmd->ClipRect.w;
-        		g_ScissorRect.z = pcmd->ClipRect.z;
-        		g_ScissorRect.w = pcmd->ClipRect.y;
-        		SetScissorRect((void*)&g_ScissorRect);
+        for (int commandIndex = 0; commandIndex < list->CmdBuffer.Size; ++commandIndex) {
+            const ImDrawCmd& cmd = list->CmdBuffer[commandIndex];
+            if (cmd.UserCallback != nullptr) {
+                if (cmd.UserCallback == ImDrawCallback_ResetRenderState) {
+                    // State is set for every ordinary draw command below.
+                    RwRenderStateSet(rwRENDERSTATETEXTURERASTER, nullptr);
+                } else {
+                    cmd.UserCallback(list, &cmd);
+                }
+                continue;
+            }
+            if (cmd.ElemCount == 0 || cmd.IdxOffset + cmd.ElemCount > static_cast<unsigned int>(list->IdxBuffer.Size)) continue;
 
-        		RwRenderStateSet(rwRENDERSTATEZTESTENABLE, (void*)0);
-  				RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)0);
-  				RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)1);
-  				RwRenderStateSet(rwRENDERSTATESRCBLEND, (void*)rwBLENDSRCALPHA);
-  				RwRenderStateSet(rwRENDERSTATEDESTBLEND, (void*)rwBLENDINVSRCALPHA);
-  				RwRenderStateSet(rwRENDERSTATEFOGENABLE, (void*)0);
-  				RwRenderStateSet(rwRENDERSTATECULLMODE, (void*)rwCULLMODECULLNONE);
-  				RwRenderStateSet(rwRENDERSTATEBORDERCOLOR, (void*)0);
-  				RwRenderStateSet(rwRENDERSTATEALPHATESTFUNCTION, (void*)rwALPHATESTFUNCTIONGREATER);
-  				RwRenderStateSet(rwRENDERSTATEALPHATESTFUNCTIONREF, (void*)2);
-  				RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
-  				RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
-  				RwRenderStateSet(rwRENDERSTATETEXTURERASTER, (void*)pcmd->TextureId);
+            SetScissor(ImVec4(
+                (cmd.ClipRect.x - drawData->DisplayPos.x) * drawData->FramebufferScale.x,
+                (cmd.ClipRect.y - drawData->DisplayPos.y) * drawData->FramebufferScale.y,
+                (cmd.ClipRect.z - drawData->DisplayPos.x) * drawData->FramebufferScale.x,
+                (cmd.ClipRect.w - drawData->DisplayPos.y) * drawData->FramebufferScale.y), displaySize);
+            if (g_scissorRect.z <= g_scissorRect.x || g_scissorRect.y <= g_scissorRect.w) continue;
 
-  				RwIm2DRenderIndexedPrimitive(rwPRIMTYPETRILIST, 
-  					&g_pVB[vtx_offset], (RwInt32)cmd_list->VtxBuffer.Size,
-  					(RwImVertexIndex*)idx_buffer, pcmd->ElemCount);
-  				RwRenderStateSet(rwRENDERSTATETEXTURERASTER, (void*)0);
-  				g_ScissorRect.x = 0;
-        		g_ScissorRect.y = 0;
-        		g_ScissorRect.z = 0;
-        		g_ScissorRect.w = 0;
-        		SetScissorRect((void*)&g_ScissorRect);
-        	}
+            RwRenderStateSet(rwRENDERSTATEZTESTENABLE, RWRSTATE(FALSE));
+            RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, RWRSTATE(FALSE));
+            RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, RWRSTATE(TRUE));
+            RwRenderStateSet(rwRENDERSTATESRCBLEND, RWRSTATE(rwBLENDSRCALPHA));
+            RwRenderStateSet(rwRENDERSTATEDESTBLEND, RWRSTATE(rwBLENDINVSRCALPHA));
+            RwRenderStateSet(rwRENDERSTATEFOGENABLE, RWRSTATE(FALSE));
+            RwRenderStateSet(rwRENDERSTATECULLMODE, RWRSTATE(rwCULLMODECULLNONE));
+            RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, RWRSTATE(rwFILTERLINEAR));
+            RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, RWRSTATE(rwTEXTUREADDRESSCLAMP));
+            RwRenderStateSet(rwRENDERSTATETEXTURERASTER, cmd.GetTexID());
 
-        	idx_buffer += pcmd->ElemCount;
+            const ImDrawIdx* indexBase = list->IdxBuffer.Data + cmd.IdxOffset;
+            const size_t indexCount = cmd.ElemCount;
+            const size_t maxIndex = list->VtxBuffer.Size;
+            bool indicesValid = true;
+            for (size_t i = 0; i < indexCount; ++i) {
+                if (indexBase[i] >= maxIndex) {
+                    indicesValid = false;
+                    break;
+                }
+            }
+            if (indicesValid) {
+                RwIm2DRenderIndexedPrimitive(
+                    rwPRIMTYPETRILIST,
+                    &vertexBase[vertexOffset],
+                    static_cast<RwInt32>(listVertexCount),
+                    reinterpret_cast<RwImVertexIndex*>(const_cast<ImDrawIdx*>(indexBase)),
+                    static_cast<RwInt32>(cmd.ElemCount));
+            }
+            RwRenderStateSet(rwRENDERSTATETEXTURERASTER, nullptr);
         }
-        vtx_offset += cmd_list->VtxBuffer.Size;
-	}
-	return;
+        vertexOffset += listVertexCount;
+    }
+
+    g_scissorRect = ImVec4(0, 0, 0, 0);
+    SetScissorRect(&g_scissorRect);
 }
 
-bool ImGui_ImplRenderWare_Init()
-{
-	ImGuiIO &io = ImGui::GetIO();
-
-	io.DisplaySize = ImVec2((float)RsGlobal->maximumWidth, RsGlobal->maximumHeight);
-	Log("GUI | Display size: %f, %f", io.DisplaySize.x, io.DisplaySize.y);
-
-	return true;
+bool ImGui_ImplRenderWare_Init() {
+    if (RsGlobal == nullptr) return false;
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2(static_cast<float>(RsGlobal->maximumWidth), static_cast<float>(RsGlobal->maximumHeight));
+    return io.DisplaySize.x > 0.0f && io.DisplaySize.y > 0.0f;
 }
 
-bool ImGui_ImplRenderWare_CreateDeviceObjects()
-{
-	Log("GUI | CreateDeviceObjects.");
-	if(g_FontRaster) Log("GUI | Warning: Font raster != 0");
+bool ImGui_ImplRenderWare_CreateDeviceObjects() {
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.Fonts == nullptr) return false;
 
-	// Build texture atlas
-	ImGuiIO &io = ImGui::GetIO();
-	unsigned char* pxs;
-	int width, height, bytes_per_pixel;
-	io.Fonts->GetTexDataAsRGBA32(&pxs, &width, &height, &bytes_per_pixel);
-	Log("GUI | Font atlas width: %d, height: %d, depth: %d", width, height, bytes_per_pixel*8);
+    unsigned char* pixels = nullptr;
+    int width = 0, height = 0, bytesPerPixel = 0;
+    io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &bytesPerPixel);
+    if (pixels == nullptr || width <= 0 || height <= 0 || bytesPerPixel != 4) return false;
 
-	RwImage *font_img = RwImageCreate(width, height, bytes_per_pixel*8);
-	RwImageAllocatePixels(font_img);
+    RwImage* image = RwImageCreate(width, height, bytesPerPixel * 8);
+    if (image == nullptr) return false;
+    if (RwImageAllocatePixels(image) == nullptr || image->cpPixels == nullptr) {
+        RwImageDestroy(image);
+        return false;
+    }
 
-	RwUInt8 *pixels = font_img->cpPixels;
-	for(int y = 0; y < font_img->height; y++)
-	{
-		memcpy((unsigned char*)pixels, pxs + font_img->stride * y, font_img->stride);
-		pixels += font_img->stride;
-	}
+    const size_t rowBytes = static_cast<size_t>(width) * static_cast<size_t>(bytesPerPixel);
+    for (int y = 0; y < height; ++y) {
+        std::memcpy(image->cpPixels + static_cast<size_t>(y) * image->stride,
+                    pixels + static_cast<size_t>(y) * rowBytes,
+                    std::min(rowBytes, static_cast<size_t>(image->stride)));
+    }
 
-	RwInt32 w, h, d, flags;
-	RwImageFindRasterFormat(font_img, rwRASTERTYPETEXTURE, &w, &h, &d, &flags);
-	g_FontRaster = RwRasterCreate(w, h, d, flags);
-	g_FontRaster = RwRasterSetFromImage(g_FontRaster, font_img);
-	RwImageDestroy(font_img);
+    RwInt32 rasterWidth = 0, rasterHeight = 0, depth = 0, flags = 0;
+    if (!RwImageFindRasterFormat(image, rwRASTERTYPETEXTURE, &rasterWidth, &rasterHeight, &depth, &flags)) {
+        RwImageDestroy(image);
+        return false;
+    }
+    RwRaster* raster = RwRasterCreate(rasterWidth, rasterHeight, depth, flags);
+    if (raster == nullptr) {
+        RwImageDestroy(image);
+        return false;
+    }
+    raster = RwRasterSetFromImage(raster, image);
+    RwImageDestroy(image);
+    if (raster == nullptr) return false;
 
-	io.Fonts->TexID = (ImTextureID*)g_FontRaster;
-	return true;
+    if (g_FontRaster != nullptr) RwRasterDestroy(g_FontRaster);
+    g_FontRaster = raster;
+    io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(g_FontRaster));
+    return true;
 }
 
-void ImGui_ImplRenderWare_ShutDown()
-{
-	Log("ImGui ShutDown.");
-
-	ImGuiIO &io = ImGui::GetIO();
-
-	// destroy raster
-	RwRasterDestroy(g_FontRaster);
-	g_FontRaster = nullptr;
-	io.Fonts->TexID = nullptr;
-
-	// destroy vertex buffer
-	if(g_pVB) { delete g_pVB; g_pVB = nullptr; }
-	return;
+void ImGui_ImplRenderWare_ShutDown() {
+    if (g_FontRaster != nullptr) {
+        RwRasterDestroy(g_FontRaster);
+        g_FontRaster = nullptr;
+    }
+    if (ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().Fonts != nullptr) {
+        ImGui::GetIO().Fonts->SetTexID(nullptr);
+    }
+    g_vertices.reset();
+    g_vertexCapacity = 0;
 }
 
-void ImGui_ImplRenderWare_NewFrame()
-{
-	if(!g_FontRaster)
-		ImGui_ImplRenderWare_CreateDeviceObjects();
-
-
+bool ImGui_ImplRenderWare_NewFrame() {
+    if (RsGlobal == nullptr) return false;
+    ImGuiIO& io = ImGui::GetIO();
+    const ImVec2 newSize(static_cast<float>(RsGlobal->maximumWidth), static_cast<float>(RsGlobal->maximumHeight));
+    if (newSize.x <= 0.0f || newSize.y <= 0.0f) return false;
+    io.DisplaySize = newSize;
+    if (g_FontRaster == nullptr && !ImGui_ImplRenderWare_CreateDeviceObjects()) return false;
+    return true;
 }
