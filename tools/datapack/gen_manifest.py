@@ -46,6 +46,8 @@ CORE_FILES = [
 
 # Texture databases loaded in CGame::InitialiseRenderWare (VER_SAMP branch).
 TEXTURE_DATABASES = ["mobile", "txd", "gta3", "gta_int", "cutscene", "player", "menu"]
+# Loaded by the client only when installed (game.cpp); they hold its own UI textures.
+OPTIONAL_DATABASES = ["samp", "gui"]
 
 
 def read(path):
@@ -74,6 +76,23 @@ def parse_animations():
         blocks.setdefault(block.lower(), set()).update(n.lower() for n in names)
 
     return {b: sorted(n) for b, n in sorted(blocks.items())}, groups
+
+
+def parse_client_textures():
+    """Textures the client code itself looks up by name: database -> names."""
+    root = os.path.dirname(CPP)
+    found = {}
+    for dirpath, _dirs, files in os.walk(root):
+        if os.sep + "vendor" in dirpath:
+            continue
+        for name in files:
+            if not name.endswith((".cpp", ".h")):
+                continue
+            for line in read(os.path.join(dirpath, name)).splitlines():
+                code = line.split("//", 1)[0]
+                for db, tex in re.findall(r'LoadTextureFromDB\(\s*"([^"]+)"\s*,\s*"([^"]+)"', code):
+                    found.setdefault(db.lower(), set()).add(tex)
+    return {db: sorted(names) for db, names in sorted(found.items())}
 
 
 def ide_sections(path):
@@ -117,6 +136,7 @@ def main():
     usage = json.load(open(os.path.join(HERE, "gamemode_usage.json")))
     anim_blocks, anim_groups = parse_animations()
     peds, vehicles, weapons, objects = parse_models()
+    client_textures = parse_client_textures()
 
     def tier(entries, used, engine=()):
         for e in entries:
@@ -143,6 +163,9 @@ def main():
         },
         "core_files": CORE_FILES,
         "texture_databases": [{"name": n, "path": f"texdb/{n}/", "index": f"texdb/{n}/{n}.txt"} for n in TEXTURE_DATABASES],
+        "optional_texture_databases": [{"name": n, "path": f"texdb/{n}/", "index": f"texdb/{n}/{n}.txt",
+                                        "note": "client UI textures; loaded only when present"} for n in OPTIONAL_DATABASES],
+        "client_textures": client_textures,
         "animation_blocks": blocks,
         "animation_groups": anim_groups,
         "models": {"peds": peds, "vehicles": vehicles, "weapons": weapons, "objects": objects},
@@ -163,6 +186,7 @@ def main():
     total_anims = sum(len(b["animations"]) for b in blocks)
     ped = next(b for b in blocks if b["block"] == "ped")
     print(f"  animation blocks {len(blocks)} ({total_anims} animations; ped.ifp alone needs {len(ped['animations'])})")
+    print("  client-code textures: " + ", ".join(f"{db} {len(n)}" for db, n in client_textures.items()))
     missing = [i for i in usage["skins"] + usage["vehicles"] + usage["weapon_models"] if i not in defined_ids]
     if missing:
         print(f"  warning: gamemode ids not in the IDE files: {missing}")

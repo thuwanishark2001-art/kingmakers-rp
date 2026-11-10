@@ -239,6 +239,17 @@ def check(src, manifest):
     for name in os.listdir(src) if os.path.isdir(src) else []:
         if name.lower() in RESERVED_DIRS:
             rep.warnings.append(f"{name}/ belongs to the client content pack; it is left out of the data package")
+    for db in manifest.get("optional_texture_databases", []):
+        if not find_ci(src, db["index"]):
+            names = manifest.get("client_textures", {}).get(db["name"], [])
+            rep.warnings.append(f"optional database {db['path']} is not present; the client UI textures in it "
+                                f"will not show ({', '.join(names) or 'none listed'})")
+    extra = {db: n for db, n in manifest.get("client_textures", {}).items()
+             if db in {d["name"] for d in manifest["texture_databases"]}}
+    if extra:
+        listed = "; ".join(f"{db}: {', '.join(n)}" for db, n in extra.items())
+        rep.warnings.append("the client code looks up these textures by name in the required databases; "
+                            f"this tool cannot check they are inside: {listed}")
     if manifest["gamemode_objects"]:
         ids = ", ".join(str(o["id"]) for o in manifest["gamemode_objects"])
         rep.warnings.append("the gamemode also uses object models that no definition file here declares "
@@ -310,7 +321,7 @@ def build(src, out_zip, manifest, allow_incomplete):
 
 def init(src):
     for d in ("data/maps", "anim", "models/gta3", "models/gta_int", "audio",
-              *(f"texdb/{db}" for db in ("mobile", "txd", "gta3", "gta_int", "cutscene", "player", "menu"))):
+              *(f"texdb/{db}" for db in ("mobile", "txd", "gta3", "gta_int", "cutscene", "player", "menu", "samp", "gui"))):
         os.makedirs(os.path.join(src, d), exist_ok=True)
     print(f"created the source layout in {src}\nnext: add your assets, then run  check {src}")
 

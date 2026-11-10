@@ -1,4 +1,5 @@
 #include "../main.h"
+#include <unistd.h>
 #include "game.h"
 #include "util/CJavaWrapper.h"
 #include "net/netgame.h"
@@ -465,6 +466,19 @@ bool CGame::InitialiseRenderWare() {
     TextureDatabaseRuntime::Load("cutscene", false, TextureDatabaseFormat::DF_Default);
     TextureDatabaseRuntime::Load("player", false, TextureDatabaseFormat::DF_PVR);
     TextureDatabaseRuntime::Load("menu", false, TextureDatabaseFormat::DF_PVR);
+
+    // Client UI textures (plates, neon, voice/AFK icons) live in the "samp" and "gui"
+    // databases. Stock GTA SA data does not have them, so load each only when the
+    // installed data provides it; lookups in a missing database return nullptr.
+    for (const char* szOptionalDb : {"samp", "gui"}) {
+        char szIndex[512];
+        snprintf(szIndex, sizeof(szIndex), "%stexdb/%s/%s.txt", GetStorageDirectory(), szOptionalDb, szOptionalDb);
+        if (access(szIndex, R_OK) == 0) {
+            TextureDatabaseRuntime::Load(szOptionalDb, false, TextureDatabaseFormat::DF_Default);
+        } else {
+            Log("Optional texture database '%s' not installed, its UI textures are disabled", szOptionalDb);
+        }
+    }
 #else
 	TextureDatabaseRuntime::Load("samp", false, TextureDatabaseFormat::DF_DXT);
 	TextureDatabaseRuntime::Load("gui", false, TextureDatabaseFormat::DF_DXT);
