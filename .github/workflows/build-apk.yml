@@ -40,10 +40,29 @@ jobs:
           cp -r /tmp/upstream_libs/app/src/main/jniLibs/* android-client/app/src/main/jniLibs/
           ls -la android-client/app/src/main/jniLibs/arm64-v8a/
 
+      - name: Restore Release Keystore from Secrets
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          for v in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Repository secret $v is not set. Add it under Settings > Secrets and variables > Actions."
+              exit 1
+            fi
+          done
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+          echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+
       - name: Build Standalone APK & App Bundle
         working-directory: android-client
         env:
           ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/26.1.10909125
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           chmod +x gradlew
           set -o pipefail
@@ -56,6 +75,10 @@ jobs:
           }
 
       - name: Generate Split APK Bundle (Grand Mobile Architecture)
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           mkdir -p build-out/split_apks /tmp/extracted_splits
           
@@ -66,8 +89,8 @@ jobs:
           curl -sSL https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o /tmp/bundletool.jar
           curl -sSL https://github.com/patrickfav/uber-apk-signer/releases/download/v1.3.0/uber-apk-signer-1.3.0.jar -o /tmp/uber-apk-signer.jar
           
-          # 4. Use tracked repository release keystore
-          KEYSTORE="android-client/keystore/release.keystore"
+          # 4. Release keystore restored from repository secrets
+          KEYSTORE="$ANDROID_KEYSTORE_FILE"
           
           # 5. Build .apks (Split APKs archive)
           java -jar /tmp/bundletool.jar build-apks \
@@ -75,9 +98,9 @@ jobs:
             --output=build-out/Kingmakers_RP_Split_Bundle_v1.0.apks \
             --mode=default \
             --ks="$KEYSTORE" \
-            --ks-pass=pass:kingmakers \
-            --ks-key-alias=kingmakers \
-            --key-pass=pass:kingmakers
+            --ks-pass="pass:$ANDROID_KEYSTORE_PASSWORD" \
+            --ks-key-alias="$ANDROID_KEY_ALIAS" \
+            --key-pass="pass:$ANDROID_KEY_PASSWORD"
 
           # 5b. Monolithic Standalone APK from the bundle (universal mode merges the
           #     "game" asset pack in; assembleRelease would leave it out)
@@ -86,9 +109,9 @@ jobs:
             --output=/tmp/universal.apks \
             --mode=universal \
             --ks="$KEYSTORE" \
-            --ks-pass=pass:kingmakers \
-            --ks-key-alias=kingmakers \
-            --key-pass=pass:kingmakers
+            --ks-pass="pass:$ANDROID_KEYSTORE_PASSWORD" \
+            --ks-key-alias="$ANDROID_KEY_ALIAS" \
+            --key-pass="pass:$ANDROID_KEY_PASSWORD"
           unzip -p /tmp/universal.apks universal.apk > build-out/Kingmakers_RP_Standalone_v1.0.apk
             
           # 6. Unpack splits and structure into Grand Mobile RP schema
@@ -99,9 +122,9 @@ jobs:
           java -jar /tmp/uber-apk-signer.jar \
             -a build-out/Kingmakers_RP_Standalone_v1.0.apk build-out/split_apks/*.apk \
             --ks "$KEYSTORE" \
-            --ksAlias kingmakers \
-            --ksPass kingmakers \
-            --ksKeyPass kingmakers \
+            --ksAlias "$ANDROID_KEY_ALIAS" \
+            --ksPass "$ANDROID_KEYSTORE_PASSWORD" \
+            --ksKeyPass "$ANDROID_KEY_PASSWORD" \
             --allowResign \
             --overwrite \
             --verbose
