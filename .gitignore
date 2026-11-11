@@ -16,3 +16,6 @@ android-client/app/src/main/jniLibs/
 # Data package sources and builds (your own assets; large)
 datapack-src/
 *.stage/
+
+# Unity game API data (accounts, characters)
+backend/data/

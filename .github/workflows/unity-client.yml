@@ -1,0 +1,77 @@
+name: Build Unity client (Kingsport)
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'unity-client/**', '.github/workflows/unity-client.yml' ]
+  pull_request:
+    paths: [ 'unity-client/**', '.github/workflows/unity-client.yml' ]
+  workflow_dispatch:
+
+jobs:
+  check-license:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          if [ -n "$UNITY_LICENSE" ] && [ -n "$UNITY_EMAIL" ] && [ -n "$UNITY_PASSWORD" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Unity build skipped: add the UNITY_LICENSE, UNITY_EMAIL and UNITY_PASSWORD repository secrets (see unity-client/README.md)."
+          fi
+
+  build:
+    needs: check-license
+    if: needs.check-license.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: Android
+            method: Kingmakers.EditorTools.BuildScript.BuildAndroid
+            name: KingmakersRP
+          - target: StandaloneLinux64
+            method: Kingmakers.EditorTools.BuildScript.BuildLinuxServer
+            name: KingsportServer
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: false
+          large-packages: false
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: unity-client/Library
+          key: Library-${{ matrix.target }}-${{ hashFiles('unity-client/Packages/manifest.json', 'unity-client/Assets/**/*.cs') }}
+          restore-keys: Library-${{ matrix.target }}-
+
+      - name: Build ${{ matrix.target }}
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: unity-client
+          unityVersion: auto
+          targetPlatform: ${{ matrix.target }}
+          buildMethod: ${{ matrix.method }}
+          buildName: ${{ matrix.name }}
+          androidExportType: androidPackage
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kingsport-${{ matrix.target }}
+          path: build/${{ matrix.target }}
+          if-no-files-found: error

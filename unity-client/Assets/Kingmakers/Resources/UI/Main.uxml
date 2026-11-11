@@ -1,0 +1,112 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="root" class="root">
+
+        <!-- ============ LOGIN ============ -->
+        <ui:VisualElement name="login" class="screen login">
+            <ui:VisualElement class="login-card">
+                <ui:Label text="KINGMAKERS" class="brand" />
+                <ui:Label text="Kingsport Roleplay" class="brand-sub" />
+                <ui:TextField name="username" label="Username" class="field" />
+                <ui:TextField name="password" label="Password" password="true" class="field" />
+                <ui:TextField name="character" label="Character name (Firstname_Lastname)" class="field" />
+                <ui:Label name="login-status" class="status" />
+                <ui:Button name="btn-submit" text="LOG IN" class="btn primary wide" />
+                <ui:Button name="btn-mode" text="New here? Create an account" class="btn link" />
+                <ui:Button name="btn-offline" text="Play offline on this device" class="btn link" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ============ HUD ============ -->
+        <ui:VisualElement name="hud" class="screen hud">
+            <ui:VisualElement name="look-area" class="look-area" />
+            <ui:VisualElement name="labels" class="labels" picking-mode="Ignore" />
+
+            <ui:VisualElement class="top-left" picking-mode="Ignore">
+                <ui:Label name="location" class="location" picking-mode="Ignore" />
+                <ui:VisualElement name="chat-log" class="chat-log" picking-mode="Ignore" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="top-center" picking-mode="Ignore">
+                <ui:Label name="objective" class="objective" picking-mode="Ignore" />
+                <ui:VisualElement name="toasts" class="toasts" picking-mode="Ignore" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="money" picking-mode="Ignore">
+                <ui:Label name="cash" class="cash" picking-mode="Ignore" />
+                <ui:Label name="bank" class="bank-line" picking-mode="Ignore" />
+                <ui:Label name="level" class="level" picking-mode="Ignore" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="joystick" class="joystick">
+                <ui:VisualElement name="knob" class="knob" picking-mode="Ignore" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="speedo" class="speedo" picking-mode="Ignore">
+                <ui:Label name="speed" class="speed" picking-mode="Ignore" />
+                <ui:Label text="km/h" class="speed-unit" picking-mode="Ignore" />
+                <ui:VisualElement class="fuel-bar" picking-mode="Ignore">
+                    <ui:VisualElement name="fuel-fill" class="fuel-fill" picking-mode="Ignore" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="buttons">
+                <ui:Button name="btn-action" text="ACTION" class="round big action" />
+                <ui:Button name="btn-vehicle" text="ENTER" class="round vehicle" />
+                <ui:Button name="btn-sprint" text="RUN" class="round" />
+                <ui:Button name="btn-brake" text="BRAKE" class="round" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="corner-buttons">
+                <ui:Button name="btn-chat" text="CHAT" class="pill" />
+                <ui:Button name="btn-phone" text="PHONE" class="pill gold" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="chat-input-row" class="chat-input-row">
+                <ui:TextField name="chat-input" class="chat-input" max-length="120" />
+                <ui:Button name="btn-chat-send" text="SEND" class="btn primary" />
+            </ui:VisualElement>
+
+            <!-- ============ PHONE ============ -->
+            <ui:VisualElement name="phone" class="phone">
+                <ui:VisualElement class="phone-header">
+                    <ui:Button name="phone-back" text="&lt;" class="phone-back" />
+                    <ui:Label name="phone-title" text="KingPhone" class="phone-title" />
+                    <ui:Button name="phone-close" text="X" class="phone-back" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="page-home" class="page app-grid">
+                    <ui:Button name="app-bank" text="Bank" class="app bank-app" />
+                    <ui:Button name="app-gps" text="GPS" class="app gps-app" />
+                    <ui:Button name="app-jobs" text="Jobs" class="app jobs-app" />
+                    <ui:Button name="app-settings" text="Settings" class="app settings-app" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="page-bank" class="page">
+                    <ui:Label name="bank-balance" class="big-number" />
+                    <ui:Label name="bank-cash" class="muted" />
+                    <ui:TextField name="bank-amount" label="Amount" class="field" />
+                    <ui:VisualElement class="row">
+                        <ui:Button name="bank-deposit" text="Deposit" class="btn primary" />
+                        <ui:Button name="bank-withdraw" text="Withdraw" class="btn" />
+                    </ui:VisualElement>
+                    <ui:Label text="Deposits and withdrawals work at ATMs and Crown Bank (green markers)." class="muted small" />
+                    <ui:TextField name="bank-to" label="Send to (Firstname_Lastname)" class="field" />
+                    <ui:Button name="bank-send" text="Send from bank" class="btn" />
+                </ui:VisualElement>
+
+                <ui:ScrollView name="page-gps" class="page gps-list" />
+
+                <ui:VisualElement name="page-jobs" class="page">
+                    <ui:Label name="job-status" class="muted" />
+                    <ui:Label text="Delivery driver: start at the Harbor Delivery Depot (orange marker). Rent a car at Bayside Motors (blue marker) if you need one." class="muted small" />
+                    <ui:Button name="job-quit" text="Quit job" class="btn" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="page-settings" class="page">
+                    <ui:Label name="settings-info" class="muted" />
+                    <ui:Button name="settings-leave" text="Leave game" class="btn danger" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
