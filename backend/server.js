@@ -234,6 +234,9 @@ app.get('/api/status', async (req, res) => {
     });
 });
 
+// Built APKs/bundles are published by CI as GitHub release assets, not committed to the repo.
+const RELEASE_DOWNLOAD_BASE = 'https://github.com/thuwanishark2001-art/kingmakers-rp/releases/download/v1.0.0-standalone';
+
 app.get('/api/launcher/config', (req, res) => {
     // Kingmakers RP content pack: our own SAMP/GUI/font/config files only.
     // GTA: San Andreas engine data is imported on the device from the player's own copy.
@@ -280,12 +283,12 @@ app.get('/api/launcher/config', (req, res) => {
     res.json({
         latestVersion: '1.0.0',
         mandatoryUpdate: false,
-        clientApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Launcher_v1.0.apk`,
-        standaloneApkUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Standalone_v1.0.apk`,
-        splitApksUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_APKs_v1.0.zip`,
-        splitApksZipAlias: `http://${PUBLIC_HOST}:${PORT}/downloads/apks.zip`,
-        splitBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_Split_Bundle_v1.0.apks`,
-        appBundleUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/Kingmakers_RP_AppBundle_v1.0.aab`,
+        clientApkUrl: `${RELEASE_DOWNLOAD_BASE}/Kingmakers_RP_Launcher_v1.0.apk`,
+        standaloneApkUrl: `${RELEASE_DOWNLOAD_BASE}/Kingmakers_RP_Standalone_v1.0.apk`,
+        splitApksUrl: `${RELEASE_DOWNLOAD_BASE}/Kingmakers_RP_Split_APKs_v1.0.zip`,
+        splitApksZipAlias: `${RELEASE_DOWNLOAD_BASE}/apks.zip`,
+        splitBundleUrl: `${RELEASE_DOWNLOAD_BASE}/Kingmakers_RP_Split_Bundle_v1.0.apks`,
+        appBundleUrl: `${RELEASE_DOWNLOAD_BASE}/Kingmakers_RP_AppBundle_v1.0.aab`,
         contentPackUrl: `http://${PUBLIC_HOST}:${PORT}/downloads/${packName}`,
         contentPackSizeMb,
         contentPackSha256,
@@ -356,8 +359,7 @@ app.get('/downloads/:filename', (req, res) => {
     if (fs.existsSync(filePath)) {
         return res.sendFile(filePath);
     }
-    const githubReleaseBase = 'https://github.com/thuwanishark2001-art/kingmakers-rp/releases/download/v1.0.0-standalone';
-    return res.redirect(302, `${githubReleaseBase}/${encodeURIComponent(req.params.filename)}`);
+    return res.redirect(302, `${RELEASE_DOWNLOAD_BASE}/${encodeURIComponent(req.params.filename)}`);
 });
 
 app.get('*', (req, res) => {

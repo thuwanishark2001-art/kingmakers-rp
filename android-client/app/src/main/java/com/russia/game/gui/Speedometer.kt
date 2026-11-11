@@ -76,7 +76,7 @@ class Speedometer : NativeGui<SpeedometrBinding>(SpeedometrBinding::class) {
     }
 
     override fun receivePacket(actionId: Int, data: String) {
-        TODO("Not yet implemented")
+        // No server packets handled by this screen yet; ignore instead of crashing.
     }
 
     fun updateSpeed(speed: Int) {
