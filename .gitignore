@@ -21,6 +21,9 @@ android-client/app/src/main/jniLibs/
 datapack-src/
 *.stage/
 
+# Unity game API data (accounts, characters)
+backend/data/
+
 # Live server state (written by the running server)
 server/log.txt
 server/bans.json

@@ -1,0 +1,254 @@
+/* Kingmakers RP mobile UI: dark glass panels with gold accents. Reference size 1920x1080. */
+
+.root { flex-grow: 1; }
+.screen { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.hidden { display: none; }
+
+Label { color: rgb(240, 240, 245); }
+
+/* ---------- login ---------- */
+.login {
+    background-color: rgba(8, 10, 16, 0.86);
+    align-items: center;
+    justify-content: center;
+}
+.login-card {
+    width: 760px;
+    padding: 48px 56px;
+    background-color: rgba(20, 23, 32, 0.95);
+    border-radius: 28px;
+    border-width: 2px;
+    border-color: rgb(212, 175, 55);
+}
+.brand { font-size: 72px; -unity-font-style: bold; color: rgb(212, 175, 55); -unity-text-align: middle-center; }
+.brand-sub { font-size: 28px; color: rgb(170, 175, 190); -unity-text-align: middle-center; margin-bottom: 28px; }
+.status { font-size: 24px; color: rgb(255, 120, 110); white-space: normal; min-height: 36px; margin: 8px 0; -unity-text-align: middle-center; }
+
+.field { margin: 8px 0; flex-direction: column; }
+.field > Label { font-size: 22px; color: rgb(170, 175, 190); min-width: 0; margin-bottom: 4px; }
+.field .unity-base-text-field__input, .field .unity-text-field__input {
+    font-size: 30px;
+    min-height: 64px;
+    padding: 0 16px;
+    background-color: rgb(34, 38, 50);
+    border-radius: 12px;
+    border-width: 0;
+    color: rgb(245, 245, 250);
+}
+
+.btn {
+    font-size: 28px;
+    -unity-font-style: bold;
+    min-height: 68px;
+    padding: 0 28px;
+    margin: 6px;
+    border-radius: 14px;
+    border-width: 0;
+    background-color: rgb(45, 50, 66);
+    color: rgb(240, 240, 245);
+}
+.btn:active { scale: 0.97 0.97; }
+.primary { background-color: rgb(212, 175, 55); color: rgb(20, 20, 24); }
+.danger { background-color: rgb(190, 50, 50); }
+.wide { margin: 14px 0 6px 0; min-height: 80px; font-size: 32px; }
+.link { background-color: rgba(0, 0, 0, 0); color: rgb(212, 175, 55); font-size: 24px; min-height: 52px; -unity-font-style: normal; }
+.row { flex-direction: row; justify-content: center; }
+.muted { color: rgb(170, 175, 190); font-size: 24px; white-space: normal; margin: 6px 0; }
+.small { font-size: 20px; }
+.big-number { font-size: 56px; -unity-font-style: bold; color: rgb(120, 230, 150); }
+
+/* ---------- HUD ---------- */
+.look-area { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.labels { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.world-label {
+    position: absolute;
+    font-size: 22px;
+    -unity-font-style: bold;
+    padding: 2px 10px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.45);
+    translate: -50% -100%;
+}
+.world-label.poi { color: rgb(255, 225, 120); }
+
+.top-left { position: absolute; left: 32px; top: 24px; width: 760px; }
+.location { font-size: 26px; -unity-font-style: bold; color: rgb(212, 175, 55); margin-bottom: 8px; }
+.chat-log { }
+.chat-line { font-size: 22px; white-space: normal; color: rgb(235, 235, 240); padding: 2px 10px; background-color: rgba(0, 0, 0, 0.30); margin-bottom: 2px; border-radius: 6px; }
+.chat-line.system { color: rgb(255, 214, 102); }
+
+.top-center { position: absolute; left: 30%; right: 30%; top: 24px; align-items: center; }
+.objective {
+    font-size: 26px;
+    -unity-font-style: bold;
+    padding: 10px 24px;
+    border-radius: 16px;
+    background-color: rgba(255, 150, 30, 0.85);
+    color: rgb(20, 20, 24);
+}
+.toasts { align-items: center; margin-top: 12px; }
+.toast {
+    font-size: 24px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+    padding: 10px 24px;
+    margin-top: 8px;
+    border-radius: 14px;
+    background-color: rgba(20, 23, 32, 0.92);
+    border-left-width: 6px;
+    border-color: rgb(212, 175, 55);
+}
+
+.money {
+    position: absolute;
+    right: 32px;
+    top: 24px;
+    align-items: flex-end;
+    padding: 12px 22px;
+    border-radius: 16px;
+    background-color: rgba(10, 12, 18, 0.55);
+}
+.cash { font-size: 44px; -unity-font-style: bold; color: rgb(120, 230, 150); }
+.bank-line { font-size: 24px; color: rgb(190, 195, 210); }
+.level { font-size: 22px; color: rgb(212, 175, 55); }
+
+.joystick {
+    position: absolute;
+    left: 80px;
+    bottom: 70px;
+    width: 280px;
+    height: 280px;
+    border-radius: 140px;
+    background-color: rgba(255, 255, 255, 0.10);
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.25);
+    align-items: center;
+    justify-content: center;
+}
+.knob {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    background-color: rgba(212, 175, 55, 0.85);
+}
+
+.speedo {
+    position: absolute;
+    left: 42%;
+    right: 42%;
+    bottom: 40px;
+    align-items: center;
+    padding: 10px 0;
+    border-radius: 18px;
+    background-color: rgba(10, 12, 18, 0.65);
+}
+.speed { font-size: 64px; -unity-font-style: bold; }
+.speed-unit { font-size: 20px; color: rgb(170, 175, 190); }
+.fuel-bar { width: 80%; height: 12px; margin-top: 8px; border-radius: 6px; background-color: rgba(255, 255, 255, 0.15); }
+.fuel-fill { height: 100%; width: 100%; border-radius: 6px; background-color: rgb(255, 200, 40); }
+
+.buttons {
+    position: absolute;
+    right: 60px;
+    bottom: 60px;
+    width: 420px;
+    height: 380px;
+}
+.round {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 75px;
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.35);
+    background-color: rgba(20, 23, 32, 0.70);
+    color: rgb(240, 240, 245);
+    font-size: 24px;
+    -unity-font-style: bold;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+.round:active { background-color: rgba(212, 175, 55, 0.85); color: rgb(20, 20, 24); }
+.round.big { width: 190px; height: 190px; border-radius: 95px; right: 0; bottom: 0; }
+.action { background-color: rgba(212, 175, 55, 0.90); color: rgb(20, 20, 24); }
+#btn-vehicle { right: 210px; bottom: 0; }
+#btn-sprint { right: 20px; bottom: 210px; }
+#btn-brake { right: 20px; bottom: 210px; }
+
+.corner-buttons { position: absolute; right: 32px; top: 200px; }
+.pill {
+    font-size: 24px;
+    -unity-font-style: bold;
+    min-width: 150px;
+    min-height: 64px;
+    margin-bottom: 12px;
+    border-radius: 32px;
+    border-width: 0;
+    background-color: rgba(20, 23, 32, 0.80);
+    color: rgb(240, 240, 245);
+}
+.pill.gold { background-color: rgb(212, 175, 55); color: rgb(20, 20, 24); }
+
+.chat-input-row {
+    position: absolute;
+    left: 32px;
+    right: 32%;
+    top: 360px;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    border-radius: 16px;
+    background-color: rgba(10, 12, 18, 0.85);
+}
+.chat-input { flex-grow: 1; }
+.chat-input .unity-base-text-field__input, .chat-input .unity-text-field__input {
+    font-size: 28px; min-height: 60px; background-color: rgb(34, 38, 50); color: rgb(245, 245, 250); border-width: 0; border-radius: 10px;
+}
+
+/* ---------- phone ---------- */
+.phone {
+    position: absolute;
+    right: 220px;
+    bottom: 40px;
+    width: 560px;
+    height: 960px;
+    padding: 20px 26px;
+    border-radius: 48px;
+    border-width: 6px;
+    border-color: rgb(30, 32, 40);
+    background-color: rgb(14, 16, 22);
+}
+.phone-header { flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.phone-title { font-size: 32px; -unity-font-style: bold; }
+.phone-back {
+    width: 64px; height: 64px; border-radius: 32px; border-width: 0;
+    background-color: rgb(40, 44, 58); color: rgb(240, 240, 245); font-size: 28px; -unity-font-style: bold;
+}
+.page { flex-grow: 1; }
+.app-grid { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: flex-start; }
+.app {
+    width: 230px;
+    height: 200px;
+    margin-bottom: 24px;
+    border-radius: 36px;
+    border-width: 0;
+    font-size: 30px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+.bank-app { background-color: rgb(40, 160, 90); }
+.gps-app { background-color: rgb(40, 110, 210); }
+.jobs-app { background-color: rgb(230, 140, 30); }
+.settings-app { background-color: rgb(90, 95, 110); }
+.gps-item {
+    font-size: 24px;
+    min-height: 72px;
+    margin: 4px 0;
+    border-radius: 14px;
+    border-width: 0;
+    -unity-text-align: middle-left;
+    padding: 0 18px;
+    background-color: rgb(30, 34, 46);
+    color: rgb(240, 240, 245);
+    white-space: normal;
+}

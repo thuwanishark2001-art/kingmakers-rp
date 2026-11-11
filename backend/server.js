@@ -342,6 +342,18 @@ app.get('/api/turfs', (req, res) => {
     }
 });
 
+// Unity client & game server API (accounts, sessions, character saves)
+if (!process.env.GAME_TOKEN_SECRET) {
+    console.warn('[KM Backend] GAME_TOKEN_SECRET is not set: login tokens stop working after a restart');
+}
+app.use('/api/v2', require('./game-api').createGameApi({
+    dataFile: process.env.GAME_DATA_FILE,
+    tokenSecret: process.env.GAME_TOKEN_SECRET,
+    serverKey: process.env.GAME_SERVER_KEY,
+    gameHost: process.env.GAME_HOST || PUBLIC_HOST,
+    gamePort: parseInt(process.env.GAME_PORT || '7778', 10),
+}));
+
 app.get('/downloads/:filename', (req, res) => {
     const filePath = path.join(publicDir, 'downloads', req.params.filename);
     if (fs.existsSync(filePath)) {
